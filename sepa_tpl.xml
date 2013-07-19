@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<?python
+  import time
+?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03" xmlns:py="http://genshi.edgewall.org/">
+    <CstmrCdtTrfInitn>
+        <GrpHdr>
+            <MsgId py:content="time.strftime('%Y%m%d%H%M%S')">1256ADHY- 65897</MsgId>
+            <CreDtTm py:content="time.strftime('%Y-%m-%dT%H:%M:%S')">2011-01-28T09:07:00</CreDtTm>
+            <NbOfTxs py:content="len(lines)">1</NbOfTxs>
+            <CtrlSum py:content="voucher.amount">71252.98</CtrlSum>
+            <InitgPty>
+                <Nm py:content="voucher.company_id.name[:70]">TOTO Services</Nm>
+            </InitgPty>
+        </GrpHdr>
+        <PmtInf>
+            <PmtInfId py:content="time.strftime('%Y%m%d%H%M%S')">Remise 28/1/2011 No 1235874</PmtInfId>
+            <PmtMtd py:content="voucher.currency_id.name">EUR</PmtMtd>
+            <NbOfTxs py:content="len(lines)">1</NbOfTxs>
+            <CtrlSum py:content="voucher.amount">51252.98</CtrlSum>
+            <PmtTpInf>
+                <SvcLvl>
+                    <Cd>SEPA</Cd>
+                </SvcLvl>
+            </PmtTpInf>
+            <ReqdExctnDt py:content="time.strftime('%Y-%m-%d')">2011-01-28</ReqdExctnDt>
+            <Dbtr>
+                <Nm py:content="voucher.company_id.name[:70]">TOTO Paiements</Nm>
+            </Dbtr>
+            <DbtrAcct>
+                <Id>
+                    <IBAN py:content="(bank.iban or bank.acc_number).replace(' ', '').upper()">BLAHHHHHHHHHH</IBAN>
+                </Id>
+            </DbtrAcct>
+            <DbtrAgt>
+                <FinInstnId>
+                    <BIC py:content="bank.bank_bic.replace(' ', '').upper()">BLUHHHHH</BIC>
+                </FinInstnId>
+            </DbtrAgt>
+            <!--!<UltmtDbtr>
+                <Nm>TOTO Distribution SA</Nm>
+            </UltmtDbtr>-->
+            <CdtTrfTxInf py:for="line in lines" py:with="bank = line.partner_id.bank_ids[0]">
+                <PmtId>
+                    <EndToEndId py:content="line.name">8752369875</EndToEndId>
+                </PmtId>
+                <Amt>
+                    <InstdAmt Ccy="${voucher.currency_id.name}" py:content="line.amount">51252.98</InstdAmt>
+                </Amt>
+                <CdtrAgt>
+                    <FinInstnId>
+                        <BIC py:content="bank.bank_bic.replace(' ','').upper()">BLUHHH</BIC>
+                    </FinInstnId>
+                </CdtrAgt>
+                <Cdtr>
+                    <Nm py:content="line.partner_id.name">TP Name</Nm>
+                </Cdtr>
+                <CdtrAcct>
+                    <Id>
+                        <IBAN py:content="(bank.iban or bank.acc_number).replace(' ', '').upper()">DEBLAHHHH</IBAN>
+                    </Id>
+                </CdtrAcct>
+                <RmtInf>
+                    <Ustrd py:content="line.name">Invoice numbers...</Ustrd>
+                </RmtInf>
+            </CdtTrfTxInf>
+        </PmtInf>
+    </CstmrCdtTrfInitn>
+</Document>

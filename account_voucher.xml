@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--<record id="account_voucher_sepa_view_inherit" model="ir.ui.view">
+            <field name="name">account.voucher.sepa.view.inherit</field>
+            <field name="model">account.voucher</field>
+            <field name="inherit_id" ref="account_voucher.view_voucher_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='currency_id']" position="after">
+                        <button name="generate_sepa" string="Generate SEPA File" type="object" />
+                    </xpath>
+                </data>
+            </field>
+        </record>-->
+
+        <!-- a simple action that pops a new wizard up for payment selection -->
+        <record id="action_generate_sepa" model="ir.actions.server">
+            <field name="name">Generate Sepa</field>
+            <field name="model_id" ref="model_account_voucher"/>
+            <field name="state">code</field>
+            <field name="code">action = obj.generate_sepa()</field>
+        </record>
+        <!-- contextual menu for account.move.line to make them as good to pay -->
+        <record id="value_contextual_action_payment_selection" model="ir.values">
+            <field name="model_id" ref="model_account_voucher" />
+            <field name="name">Generate Sepa</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.server,%d'%action_generate_sepa" />
+            <field name="object" eval="True" />
+            <field name="key">action</field>
+            <field name="model">account.voucher</field>
+        </record>
+    </data>
+</openerp>
