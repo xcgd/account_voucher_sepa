@@ -20,26 +20,25 @@
 ##############################################################################
 
 {
-    "name" : "Account Voucher SEPA",
-    "version" : "0.1",
-    "author" : "XCG Consulting",
+    "name": "Account Voucher SEPA",
+    "version": "0.1",
+    "author": "XCG Consulting",
     "website": "http://www.openerp-experts.com",
     "category": 'Accounting',
-    "description": """
-    
-    Account Voucher Payment SEPA Plugin for Open ERP.
+    "description": """Account Voucher Payment SEPA Plugin for Open ERP.
     Currently only supports pain.001.001.03 with outbound bank transfer.
-    
-     
     """,
-    "depends" : [
-                 'base',
-                 'account_voucher',
-                 'base_iban'
-                 ],
+
+    "depends": [
+        'base',
+        'account_voucher',
+        'base_iban'
+    ],
+
     "data": [
-            'account_voucher.xml',
-                  ],
+        'account_voucher.xml',
+    ],
+
     'demo_xml': [],
     'test': [],
     'installable': True,
@@ -48,4 +47,3 @@
         'python': ['genshi']
     }
 }
-
