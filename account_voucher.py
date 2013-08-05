@@ -8,12 +8,16 @@ import base64
 TEMPLATE = "sepa_tpl.xml"
 
 
-class account_voucher(osv.Model):
-    _name = "account.voucher"
-    _inherit = "account.voucher"
+class account_voucher_sepa(osv.TransientModel):
+    _name = "account.voucher.sepa"
 
     def generate_sepa(self, cr, uid, ids, context=None):
-        items = self.browse(cr, uid, ids, context=context)
+        if not context:
+            context = {}
+
+        active_ids = context.get("active_ids")
+        account_voucher_osv = self.pool.get("account.voucher")
+        items = account_voucher_osv.browse(cr, uid, active_ids, context=context)
 
         ir_attachment_osv = self.pool.get("ir.attachment")
         payment_mode_osv = self.pool.get("payment.mode")
@@ -26,6 +30,11 @@ class account_voucher(osv.Model):
         now_str = now.strftime("%Y%m%d%H%M%S")
 
         for voucher in items:
+            if voucher.state != 'posted':
+                raise osv.except_osv(
+                    _("State error"),
+                    _("The voucher must be posted"
+                      " before generating SEPA file"))
             if not len(voucher.partner_id.bank_ids):
                 raise osv.except_osv(
                     _("No bank account for Partner"),
@@ -60,6 +69,11 @@ class account_voucher(osv.Model):
                     _("No origin bank account found"),
                     _("Bank account for journal %s is not found" %
                       voucher.journal_id.name))
+            if not company_bank.bank_bic:
+                raise osv.except_osv(
+                    _("Bank BIC"),
+                    _("Please set the bank BIC for the bank %s" %
+                      company_bank.name))
 
             lines = voucher.line_ids
             content = str(tpl.generate(bank=company_bank,
@@ -74,3 +88,9 @@ class account_voucher(osv.Model):
                               res_model="account.voucher")
             ir_attachment_osv.create(cr, uid, att_values, context=context)
             # don't write for now (testing)
+
+
+class account_voucher(osv.Model):
+    _name = "account.voucher"
+    _inherit = "account.voucher"
+
