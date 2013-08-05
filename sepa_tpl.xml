@@ -5,63 +5,88 @@
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03" xmlns:py="http://genshi.edgewall.org/">
     <CstmrCdtTrfInitn>
         <GrpHdr>
-            <MsgId py:content="time.strftime('%Y%m%d%H%M%S')">1256ADHY- 65897</MsgId>
-            <CreDtTm py:content="time.strftime('%Y-%m-%dT%H:%M:%S')">2011-01-28T09:07:00</CreDtTm>
-            <NbOfTxs py:content="len(lines)">1</NbOfTxs>
-            <CtrlSum py:content="voucher.amount">71252.98</CtrlSum>
+            <MsgId py:content="time.strftime('%Y%m%d%H%M%S')"></MsgId>
+            <CreDtTm py:content="time.strftime('%Y-%m-%dT%H:%M:%S')"></CreDtTm>
+            <NbOfTxs py:content="len(lines)"></NbOfTxs>
+            <CtrlSum py:content="voucher.amount"></CtrlSum>
             <InitgPty>
-                <Nm py:content="voucher.company_id.name[:70]">TOTO Services</Nm>
+                <Nm py:content="voucher.company_id.name[:70]"></Nm>
             </InitgPty>
         </GrpHdr>
         <PmtInf>
-            <PmtInfId py:content="time.strftime('%Y%m%d%H%M%S')">Remise 28/1/2011 No 1235874</PmtInfId>
-            <PmtMtd py:content="voucher.currency_id.name">EUR</PmtMtd>
-            <NbOfTxs py:content="len(lines)">1</NbOfTxs>
-            <CtrlSum py:content="voucher.amount">51252.98</CtrlSum>
+            <PmtInfId py:content="time.strftime('%Y%m%d%H%M%S')"></PmtInfId> <!-- add id voucher -->
+            <PmtMtd>TRF</PmtMtd>
+            <NbOfTxs py:content="len(lines)"></NbOfTxs>
+            <CtrlSum py:content="voucher.amount"></CtrlSum>
             <PmtTpInf>
                 <SvcLvl>
                     <Cd>SEPA</Cd>
                 </SvcLvl>
             </PmtTpInf>
-            <ReqdExctnDt py:content="time.strftime('%Y-%m-%d')">2011-01-28</ReqdExctnDt>
+            <ReqdExctnDt py:content="time.strftime('%Y-%m-%d')"></ReqdExctnDt>
             <Dbtr>
-                <Nm py:content="voucher.company_id.name[:70]">TOTO Paiements</Nm>
+                <Nm py:content="voucher.company_id.name[:70]"></Nm>
+                <Id>
+                    <OrgId>
+                        <Othr>
+                            <Id></Id>
+                        </Othr>
+                    </OrgId>
+                </Id>
             </Dbtr>
             <DbtrAcct>
                 <Id>
-                    <IBAN py:content="(bank.iban or bank.acc_number).replace(' ', '').upper()">BLAHHHHHHHHHH</IBAN>
+                    <IBAN py:content="(bank.iban or bank.acc_number).replace(' ', '').upper()"></IBAN>
                 </Id>
             </DbtrAcct>
             <DbtrAgt>
                 <FinInstnId>
-                    <BIC py:content="bank.bank_bic.replace(' ', '').upper()">BLUHHHHH</BIC>
+                    <BIC py:content="bank.bank_bic.replace(' ', '').upper()"></BIC>
                 </FinInstnId>
             </DbtrAgt>
-            <!--!<UltmtDbtr>
-                <Nm>TOTO Distribution SA</Nm>
-            </UltmtDbtr>-->
+            <UltmtDbtr>
+                <Nm py:content="voucher.company_id.name[:70]"></Nm>
+            </UltmtDbtr>
+            <ChrgBr>SLEV</ChrgBr>
             <CdtTrfTxInf py:for="line in lines" py:with="bank = line.partner_id.bank_ids[0]">
                 <PmtId>
-                    <EndToEndId py:content="line.name">8752369875</EndToEndId>
+                    <InstrId></InstrId>
+                    <EndToEndId py:content="line.name"></EndToEndId>
                 </PmtId>
                 <Amt>
-                    <InstdAmt Ccy="${voucher.currency_id.name}" py:content="line.amount">51252.98</InstdAmt>
+                    <InstdAmt Ccy="${voucher.currency_id.name}" py:content="line.amount"></InstdAmt>
                 </Amt>
                 <CdtrAgt>
                     <FinInstnId>
-                        <BIC py:content="bank.bank_bic.replace(' ','').upper()">BLUHHH</BIC>
+                        <BIC py:content="bank.bank_bic.replace(' ','').upper()"></BIC>
                     </FinInstnId>
                 </CdtrAgt>
                 <Cdtr>
-                    <Nm py:content="line.partner_id.name">TP Name</Nm>
+                    <Nm py:content="line.partner_id.name"></Nm>
                 </Cdtr>
                 <CdtrAcct>
                     <Id>
-                        <IBAN py:content="(bank.iban or bank.acc_number).replace(' ', '').upper()">DEBLAHHHH</IBAN>
+                        <IBAN py:content="(bank.iban or bank.acc_number).replace(' ', '').upper()"></IBAN>
                     </Id>
                 </CdtrAcct>
+                <UltmtCdtr>
+                    <Nm></Nm>
+                </UltmtCdtr>
+                <Purp>
+                    <Cd></Cd>
+                </Purp>
                 <RmtInf>
-                    <Ustrd py:content="line.name">Invoice numbers...</Ustrd>
+                    <Ustrd py:content="line.name"></Ustrd>
+                    <Strd>
+                        <CdtrRefinf>
+                            <Tp>
+                                <CdOrPrtry>
+                                    <Cd>SCOR</Cd>
+                                </CdOrPrtry>
+                            </Tp>
+                            <Ref></Ref>
+                        </CdtrRefinf>
+                    </Strd>
                 </RmtInf>
             </CdtTrfTxInf>
         </PmtInf>
