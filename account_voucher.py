@@ -62,15 +62,11 @@ class account_voucher(osv.Model):
                       voucher.journal_id.name))
 
             lines = voucher.line_ids
-            print "*" * 35
-            print company_bank.bank_bic
-            print "*" * 35
             content = str(tpl.generate(bank=company_bank,
                                        voucher=voucher,
                                        lines=lines))
             fname = "PAYMENT_%s_%s.xml" % (
                 voucher.partner_id.name.replace(" ", "_"), now_str)
-            #print content
             att_values = dict(datas=base64.encodestring(content),
                               datas_fname=fname,
                               name=fname,
