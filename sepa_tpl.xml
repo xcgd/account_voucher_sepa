@@ -14,7 +14,7 @@
             </InitgPty>
         </GrpHdr>
         <PmtInf>
-            <PmtInfId py:content="time.strftime('%Y%m%d%H%M%S')"></PmtInfId> <!-- add id voucher -->
+            <PmtInfId py:content="voucher.number"></PmtInfId>
             <PmtMtd>TRF</PmtMtd>
             <NbOfTxs py:content="len(lines)"></NbOfTxs>
             <CtrlSum py:content="voucher.amount"></CtrlSum>
