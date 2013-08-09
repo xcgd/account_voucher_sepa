@@ -26,13 +26,6 @@
             <ReqdExctnDt py:content="time.strftime('%Y-%m-%d')"></ReqdExctnDt>
             <Dbtr>
                 <Nm py:content="voucher.company_id.name[:70]"></Nm>
-                <Id>
-                    <OrgId>
-                        <Othr>
-                            <Id></Id>
-                        </Othr>
-                    </OrgId>
-                </Id>
             </Dbtr>
             <DbtrAcct>
                 <Id>
@@ -50,7 +43,6 @@
             <ChrgBr>SLEV</ChrgBr>
             <CdtTrfTxInf py:for="line in lines" py:with="bank = line.partner_id.bank_ids[0]">
                 <PmtId>
-                    <InstrId></InstrId>
                     <EndToEndId py:content="line.name"></EndToEndId>
                 </PmtId>
                 <Amt>
@@ -69,23 +61,16 @@
                         <IBAN py:content="(bank.iban or bank.acc_number).replace(' ', '').upper()"></IBAN>
                     </Id>
                 </CdtrAcct>
-                <UltmtCdtr>
-                    <Nm></Nm>
-                </UltmtCdtr>
-                <Purp>
-                    <Cd></Cd>
-                </Purp>
                 <RmtInf>
                     <Ustrd py:content="line.name"></Ustrd>
                     <Strd>
-                        <CdtrRefinf>
+                        <CdtrRefInf>
                             <Tp>
                                 <CdOrPrtry>
                                     <Cd>SCOR</Cd>
                                 </CdOrPrtry>
                             </Tp>
-                            <Ref></Ref>
-                        </CdtrRefinf>
+                        </CdtrRefInf>
                     </Strd>
                 </RmtInf>
             </CdtTrfTxInf>
