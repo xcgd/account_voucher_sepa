@@ -14,7 +14,36 @@ class account_voucher_sepa(osv.TransientModel):
         'group_suppliers': fields.boolean("Group suppliers"),
     }
 
+    def _group_voucher(self, items, batch_id):
+        # Here we create our new account.voucher.sepa object
+        #  using values from the list of vouchers 'items'
+        result = {}
+
+        result['partner_id'] = items[0]['partner_id'][0]
+        result['batch_id'] = batch_id
+        for item in items:
+            result['amount'] += item['amount']
+        
+        return result
+
     def _group_by_suppliers(self, items):
+        # This function will concatenate vouchers that
+        #  have the same 'partner_id' and 'journal_id'
+        # The result is created so we can easily write
+        #  it on a account.voucher.sepa_batch object directly
+        result = {}
+
+        while items:
+            item = items[0]
+
+            # Get all element that equals the first one
+            cur_items = [x for x in items if x['partner_id'][0] == item['partner_id'][0] and x['journal_id'][0] == item['journal_id'][0]]
+
+            # Group those element and add it to the result
+            result.append(self._group_voucher(cur_items))
+
+            # Drop those element from the original list
+            items = [x for x in items if x not in cur_items]
 
         return items
 
@@ -58,7 +87,7 @@ class account_voucher_sepa(osv.TransientModel):
 
         active_ids = context.get("active_ids")
         account_voucher_osv = self.pool.get("account.voucher")
-        items = account_voucher_osv.browse(cr, uid, active_ids, context=context)
+        items = account_voucher_osv.read(cr, uid, active_ids, context=context)
 
         ir_attachment_osv = self.pool.get("ir.attachment")
         payment_mode_osv = self.pool.get("payment.mode")
@@ -71,8 +100,10 @@ class account_voucher_sepa(osv.TransientModel):
         now_str = now.strftime("%Y%m%d%H%M%S")
 
         #We sort to group faster the voucher by partner_id
-        items = sorted(items, key=lambda i: i.partner_id.id)
+        items = sorted(items, key=lambda x: [x['partner_id'][0], x['journal_id'][0]])
         items = self._group_by_suppliers(items)
+
+        return
 
         for voucher in items:
             if voucher.state != 'posted':

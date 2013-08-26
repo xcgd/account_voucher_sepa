@@ -37,6 +37,7 @@
 
     "data": [
         'account_voucher.xml',
+        'sepa_batch.xml',
     ],
 
     'demo_xml': [],
