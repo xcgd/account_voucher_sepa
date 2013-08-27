@@ -4,18 +4,70 @@ from genshi.template import TemplateLoader
 import os
 import datetime
 import base64
+import openerp.addons.decimal_precision as dp
 
 TEMPLATE = "sepa_tpl.xml"
+
+
+class account_voucher_sepa_line(osv.TransientModel):
+    _name = "account.voucher.sepa.line"
+    _columns = {
+        'partner_id': fields.many2one("res.partner", "Partner"),
+        'amount': fields.float(
+            'Total',
+            digits_compute=dp.get_precision('Account'),
+            readonly=True,
+            required=True
+        ),
+        'partner_bank_id': fields.many2one(
+            'res.partner.bank',
+            'Patner Bank',
+            domain="[('partner_id', '=', partner_id)]"
+        ),
+        'sepa_id': fields.many2one("account.voucher.sepa"),
+    }
 
 
 class account_voucher_sepa(osv.TransientModel):
     _name = "account.voucher.sepa"
     _columns = {
         'group_suppliers': fields.boolean("Group suppliers"),
+        'voucher_ids': fields.many2many(
+            "account.voucher",
+            'account_voucher_sepa_rel_',
+            'voucher_id',
+            'sepa_id',
+            'Lines',
+        ),
+        'batch_valid': fields.boolean("Batch valid for sepa"),
     }
 
+    _defaults = {
+        'batch_valid': True,
+    }
+
+    def default_get(self, cr, uid, fields_list=None, context=None):
+        if not 'active_ids' in context:
+            return {}
+        vals = {}
+        #voucher_osv = self.pool.get("account.voucher")
+        #voucher_brs = voucher_osv.browse(
+        #    cr,
+        #    uid,
+        #    context['active_ids'],
+        #    context=context
+        #)
+        voucher_lines = [(6, 0, context['active_ids'])]
+        #voucher_lines = []
+        #for _id in context['active_ids']:
+        #    voucher_lines.append(
+        #        (0, 0, {'sepa_id': 1, 'voucher_id': _id})
+        #    )
+        vals['voucher_ids'] = voucher_lines
+        return vals
+
     def _group_voucher(self, items, batch_id):
-        # Here we create our new account.voucher.sepa object
+        # Here we create our new account.voucher.sepa_batch object
         #  using values from the list of vouchers 'items'
         result = {}
 
@@ -81,9 +133,34 @@ class account_voucher_sepa(osv.TransientModel):
 #        now_str = now.strftime("%Y%m%d%H%M%S")
 #        for voucher in items:
 
+    def onchange_voucher_ids(self, cr, uid, ids, voucher_ids, context=None):
+        result = {'value': {'batch_valid': False}}
+        return result
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(account_voucher_sepa, self).fields_view_get(
+            cr, uid,
+            view_id=view_id,
+            view_type=view_type,
+            context=context,
+            toolbar=toolbar,
+            submenu=submenu
+        )
+        print res
+        voucher_osv = self.pool.get("account.voucher")
+        voucher_sepa_osv = self.pool.get("account.voucher.sepa")
+
+        voucher_sepa_brs = self.browse(cr, uid, [], context=context)
+        for voucher_sepa_br in voucher_sepa_brs:
+            print voucher_sepa_br.id
+        return res
+
     def generate_sepa(self, cr, uid, ids, context=None):
         if not context:
             context = {}
+
+        data = self.read(cr, uid, ids, context=context)[0]
+        print data
 
         active_ids = context.get("active_ids")
         account_voucher_osv = self.pool.get("account.voucher")
@@ -100,7 +177,7 @@ class account_voucher_sepa(osv.TransientModel):
         now_str = now.strftime("%Y%m%d%H%M%S")
 
         #We sort to group faster the voucher by partner_id
-        items = sorted(items, key=lambda x: [x['partner_id'][0], x['journal_id'][0]])
+        #items = sorted(items, key=lambda x: [x['partner_id'][0], x['journal_id'][0]])
         items = self._group_by_suppliers(items)
 
         return
@@ -186,13 +263,30 @@ class account_voucher(osv.Model):
 
         return res
 
+    def _get_sepa_valid(self, cr, uid, ids, fields, arg, context):
+        voucher_brs = self.browse(cr, uid, ids, context=context)
+        res = {}
+        for voucher_br in voucher_brs:
+            res[voucher_br.id] = bool(voucher_br.partner_bank_id)
+        return res
+
     #This field allow us to force the user to select only one account to pay
     # instead of always choose the first bank account of the partner
     _columns = {
+        "sepa_valid": fields.function(
+            _get_sepa_valid,
+            type="boolean",
+            method=True,
+            string="Valid for SEPA payments"
+        ),
         "partner_bank_id": fields.many2one(
             "res.partner.bank",
             "Patner Bank",
             domain="[('partner_id', '=', partner_id)]"
-        )
+        ),
+        "batch_id": fields.many2one(
+            "account.voucher.sepa_batch",
+            "Sepa Batch"
+        ),
     }
 

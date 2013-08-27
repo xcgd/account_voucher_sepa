@@ -24,7 +24,16 @@
                 <form string="Generate SEPA" version="7.0">
                     <group>
                         <field name="group_suppliers" />
+                        <field name="batch_valid" invisible="True" />
                     </group>
+                    <field name="voucher_ids">
+                        <tree string="Lines" version="7.0" editable="bottom" onchange="onchange_voucher_ids(voucher_ids)">
+                            <field readonly="1" name="partner_id" />
+                            <field readonly="1" name="amount" />
+                            <field required="1" name="partner_bank_id" placeholder="No bank account found. Cannot generate file"/>
+                            <field name="state" invisible="True" />
+                        </tree>
+                    </field>
                     <footer>
                         <button string="Generate SEPA" name="generate_sepa" type="object" class="oe_highlight"/>
                         <button string="Cancel" class="oe_link" special="cancel"/>
