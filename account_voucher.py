@@ -133,27 +133,10 @@ class account_voucher_sepa(osv.TransientModel):
 #        now_str = now.strftime("%Y%m%d%H%M%S")
 #        for voucher in items:
 
+#TODO
     def onchange_voucher_ids(self, cr, uid, ids, voucher_ids, context=None):
         result = {'value': {'batch_valid': False}}
         return result
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(account_voucher_sepa, self).fields_view_get(
-            cr, uid,
-            view_id=view_id,
-            view_type=view_type,
-            context=context,
-            toolbar=toolbar,
-            submenu=submenu
-        )
-        print res
-        voucher_osv = self.pool.get("account.voucher")
-        voucher_sepa_osv = self.pool.get("account.voucher.sepa")
-
-        voucher_sepa_brs = self.browse(cr, uid, [], context=context)
-        for voucher_sepa_br in voucher_sepa_brs:
-            print voucher_sepa_br.id
-        return res
 
     def generate_sepa(self, cr, uid, ids, context=None):
         if not context:
