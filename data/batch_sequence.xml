@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Sequences for account.voucher.sepa_batch -->
+        <record id="seq_type_sepa_batch" model="ir.sequence.type">
+            <field name="name">SEPA Batch</field>
+            <field name="code">account.voucher.sepa_batch</field>
+        </record>
+
+        <record id="seq_sepa_batch" model="ir.sequence">
+            <field name="name">SEPA Batch</field>
+            <field name="code">account.voucher.sepa_batch</field>
+            <field name="prefix">BA</field>
+            <field name="padding">5</field>
+        </record>
+
+    </data>
+</openerp>
