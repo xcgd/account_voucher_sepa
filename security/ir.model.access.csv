@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+sepa_batch_all_user,sepa_batch_all_user_id,model_account_voucher_sepa_batch,base.group_user,1,1,1,1

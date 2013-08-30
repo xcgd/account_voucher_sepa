@@ -1,0 +1,112 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* account_voucher_sepa
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-08-30 12:05+0000\n"
+"PO-Revision-Date: 2013-08-30 12:05+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: account_voucher_sepa
+#: model:ir.model,name:account_voucher_sepa.model_account_voucher_sepa_line
+msgid "account.voucher.sepa.line"
+msgstr "account.voucher.sepa.line"
+
+#. module: account_voucher_sepa
+#: model:ir.actions.act_window,name:account_voucher_sepa.action_generate_sepa
+msgid "Generate Sepa"
+msgstr "Générer Sepa"
+
+#. module: account_voucher_sepa
+#: field:account.voucher.sepa_batch,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: account_voucher_sepa
+#: model:ir.model,name:account_voucher_sepa.model_account_voucher_sepa_batch_line
+msgid "account.voucher.sepa_batch.line"
+msgstr "account.voucher.sepa_batch.line"
+
+#. module: account_voucher_sepa
+#: field:account.voucher.sepa,group_suppliers:0
+msgid "Group suppliers"
+msgstr "Grouper par fournisseur"
+
+#. module: account_voucher_sepa
+#: view:account.voucher.sepa_batch:0
+msgid "SEPA Batch"
+msgstr "Lot SEPA"
+
+#. module: account_voucher_sepa
+#: model:ir.model,name:account_voucher_sepa.model_account_voucher
+msgid "Accounting Voucher"
+msgstr "Justificatif comptable"
+
+#. module: account_voucher_sepa
+#: view:account.voucher.sepa:0
+#: field:account.voucher.sepa,voucher_ids:0
+#: view:account.voucher.sepa_batch:0
+#: field:account.voucher.sepa_batch,line_ids:0
+msgid "Lines"
+msgstr "Lignes"
+
+#. module: account_voucher_sepa
+#: sql_constraint:account.voucher.sepa_batch:0
+msgid "The name must be unique."
+msgstr "Le nom doit etre unique."
+
+#. module: account_voucher_sepa
+#: field:account.voucher,batch_id:0
+#: model:ir.actions.act_window,name:account_voucher_sepa.action_sepa_batch_view
+#: model:ir.ui.menu,name:account_voucher_sepa.menu_action_sepa_batch_view
+msgid "SEPA Batch"
+msgstr "Lot SEPA"
+
+#. module: account_voucher_sepa
+#: model:ir.model,name:account_voucher_sepa.model_account_voucher_sepa_batch
+msgid "account.voucher.sepa_batch"
+msgstr "account.voucher.sepa_batch"
+
+#. module: account_voucher_sepa
+#: field:account.voucher,partner_bank_id:0
+msgid "Patner Bank"
+msgstr "Banque fournisseur"
+
+#. module: account_voucher_sepa
+#: model:ir.model,name:account_voucher_sepa.model_account_voucher_sepa
+msgid "account.voucher.sepa"
+msgstr "account.voucher.sepa"
+
+#. module: account_voucher_sepa
+#: view:account.voucher.sepa:0
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: account_voucher_sepa
+#: view:account.voucher.sepa:0
+msgid "Generate SEPA"
+msgstr "Générer SEPA"
+
+#. module: account_voucher_sepa
+#: view:account.voucher:0
+msgid "True"
+msgstr "Vrai"
+
+#. module: account_voucher_sepa
+#: field:account.voucher,sepa_valid:0
+msgid "Valid for SEPA payments"
+msgstr "Valide pour le paiement SEPA"
+
+#. module: account_voucher_sepa
+#: field:account.voucher.sepa_batch,amount:0
+msgid "Total Amount"
+msgstr "Montant total"
+
