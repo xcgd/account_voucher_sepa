@@ -7,6 +7,9 @@
             <field name="model">account.voucher</field>
             <field name="inherit_id" ref="account_voucher.view_vendor_payment_form" />
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='journal_id']" position="after">
+                    <field name="batch_id" />
+                </xpath>
                 <xpath expr="//field[@name='analytic_id']" position="attributes">
                     <attribute name="invisible">True</attribute>
                 </xpath>
@@ -24,7 +27,6 @@
                 <form string="Generate SEPA" version="7.0">
                     <group>
                         <field name="group_suppliers" />
-                        <field name="batch_valid" invisible="True" />
                     </group>
                     <field name="voucher_ids">
                         <tree string="Lines" version="7.0" editable="bottom" onchange="onchange_voucher_ids(voucher_ids)">
@@ -45,10 +47,12 @@
         <!-- a simple action that pops a new wizard up for payment selection -->
         <record id="action_generate_sepa" model="ir.actions.act_window">
             <field name="name">Generate Sepa</field>
+            <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.voucher.sepa</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_account_voucher_sepa"/>
+            <field name="context">{'record_id':active_id}</field>
             <field name="target">new</field>
         </record>
         <!-- contextual menu for account.move.line to make them as good to pay -->

@@ -7,17 +7,17 @@
         <GrpHdr>
             <MsgId py:content="time.strftime('%Y%m%d%H%M%S')"></MsgId>
             <CreDtTm py:content="time.strftime('%Y-%m-%dT%H:%M:%S')"></CreDtTm>
-            <NbOfTxs py:content="len(lines)"></NbOfTxs>
-            <CtrlSum py:content="voucher.amount"></CtrlSum>
+            <NbOfTxs py:content="len(list_voucher)"></NbOfTxs>
+            <CtrlSum py:content="total_amount"></CtrlSum>
             <InitgPty>
-                <Nm py:content="voucher.company_id.name[:70]"></Nm>
+                <Nm py:content="company_name[:70]"></Nm>
             </InitgPty>
         </GrpHdr>
         <PmtInf>
-            <PmtInfId py:content="voucher.number"></PmtInfId>
+            <PmtInfId py:content="list_voucher[0].number"></PmtInfId>
             <PmtMtd>TRF</PmtMtd>
-            <NbOfTxs py:content="len(lines)"></NbOfTxs>
-            <CtrlSum py:content="voucher.amount"></CtrlSum>
+            <NbOfTxs py:content="len(list_voucher)"></NbOfTxs>
+            <CtrlSum py:content="total_amount"></CtrlSum>
             <PmtTpInf>
                 <SvcLvl>
                     <Cd>SEPA</Cd>
@@ -25,44 +25,44 @@
             </PmtTpInf>
             <ReqdExctnDt py:content="time.strftime('%Y-%m-%d')"></ReqdExctnDt>
             <Dbtr>
-                <Nm py:content="voucher.company_id.name[:70]"></Nm>
+                <Nm py:content="company_name[:70]"></Nm>
             </Dbtr>
             <DbtrAcct>
                 <Id>
-                    <IBAN py:content="(bank.iban or bank.acc_number).replace(' ', '').upper()"></IBAN>
+                    <IBAN py:content="(debtor_bank.iban or debtor_bank.acc_number).replace(' ', '').upper()"></IBAN>
                 </Id>
             </DbtrAcct>
             <DbtrAgt>
                 <FinInstnId>
-                    <BIC py:content="bank.bank_bic.replace(' ', '').upper()"></BIC>
+                    <BIC py:content="debtor_bank.bank_bic.replace(' ', '').upper()"></BIC>
                 </FinInstnId>
             </DbtrAgt>
             <UltmtDbtr>
-                <Nm py:content="voucher.company_id.name[:70]"></Nm>
+                <Nm py:content="company_name[:70]"></Nm>
             </UltmtDbtr>
             <ChrgBr>SLEV</ChrgBr>
-            <CdtTrfTxInf py:for="line in lines" py:with="bank = line.partner_id.bank_ids[0]">
+            <CdtTrfTxInf py:for="voucher in list_voucher">
                 <PmtId>
-                    <EndToEndId py:content="line.name"></EndToEndId>
+                    <EndToEndId py:content="voucher.name"></EndToEndId>
                 </PmtId>
                 <Amt>
-                    <InstdAmt Ccy="${voucher.currency_id.name}" py:content="line.amount"></InstdAmt>
+                    <InstdAmt Ccy="${voucher.currency_id.name}" py:content="voucher.amount"></InstdAmt>
                 </Amt>
                 <CdtrAgt>
                     <FinInstnId>
-                        <BIC py:content="bank.bank_bic.replace(' ','').upper()"></BIC>
+                        <BIC py:content="voucher.partner_bank_id.bank_bic.replace(' ','').upper()"></BIC>
                     </FinInstnId>
                 </CdtrAgt>
                 <Cdtr>
-                    <Nm py:content="line.partner_id.name"></Nm>
+                    <Nm py:content="voucher.partner_id.name"></Nm>
                 </Cdtr>
                 <CdtrAcct>
                     <Id>
-                        <IBAN py:content="(bank.iban or bank.acc_number).replace(' ', '').upper()"></IBAN>
+                        <IBAN py:content="(voucher.partner_bank_id.iban or voucher.partner_bank_id.acc_number).replace(' ', '').upper()"></IBAN>
                     </Id>
                 </CdtrAcct>
                 <RmtInf>
-                    <Ustrd py:content="line.name"></Ustrd>
+                    <Ustrd py:content="voucher.name"></Ustrd>
                     <Strd>
                         <CdtrRefInf>
                             <Tp>

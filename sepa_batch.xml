@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_account_voucher_sepa_batch_form" model="ir.ui.view">
+            <field name="name">view.account.voucher.sepa.batch</field>
+            <field name="model">account.voucher.sepa_batch</field>
+            <field name="arch" type="xml">
+                <form string="SEPA Batch" version="7.0">
+                    <group>
+                        <field name="name" />
+                        <field name="amount" />
+                        <field name="creditor_bank_id" />
+                        <field name="line_ids">
+                            <tree string="Lines" version="7.0">
+                                <field name="number" />
+                                <field name="amount" />
+                                <field name="partner_id" />
+                                <field name="partner_bank_id" />
+                                <field name="state" invisible="True" />
+                            </tree>
+                        </field>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_voucher_sepa_batch_tree" model="ir.ui.view">
+            <field name="name">view.account.voucher.sepa.batch</field>
+            <field name="model">account.voucher.sepa_batch</field>
+            <field name="arch" type="xml">
+                <tree string="SEPA Batch" version="7.0">
+                    <field name="name" />
+                    <field name="amount" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_sepa_batch_view" model="ir.actions.act_window">
+            <field name="name">Sepa Batch</field>
+            <field name="res_model">account.voucher.sepa_batch</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+            action="action_sepa_batch_view"
+            id="menu_action_sepa_batch_view"
+            parent="account_payment.menu_main_payment"
+            groups="account.group_account_user"
+        />
+    </data>
+</openerp>
+

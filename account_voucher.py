@@ -5,153 +5,42 @@ import os
 import datetime
 import base64
 import openerp.addons.decimal_precision as dp
+from lxml import etree
 
 TEMPLATE = "sepa_tpl.xml"
-
-
-class account_voucher_sepa_line(osv.TransientModel):
-    _name = "account.voucher.sepa.line"
-    _columns = {
-        'partner_id': fields.many2one("res.partner", "Partner"),
-        'amount': fields.float(
-            'Total',
-            digits_compute=dp.get_precision('Account'),
-            readonly=True,
-            required=True
-        ),
-        'partner_bank_id': fields.many2one(
-            'res.partner.bank',
-            'Patner Bank',
-            domain="[('partner_id', '=', partner_id)]"
-        ),
-        'sepa_id': fields.many2one("account.voucher.sepa"),
-    }
 
 
 class account_voucher_sepa(osv.TransientModel):
     _name = "account.voucher.sepa"
     _columns = {
-        'group_suppliers': fields.boolean("Group suppliers"),
+        'group_suppliers': fields.boolean(_("Group suppliers")),
         'voucher_ids': fields.many2many(
             "account.voucher",
-            'account_voucher_sepa_rel_',
+            'account_voucher_rel_',
             'voucher_id',
             'sepa_id',
-            'Lines',
+            _('Lines'),
         ),
-        'batch_valid': fields.boolean("Batch valid for sepa"),
     }
-
-    _defaults = {
-        'batch_valid': True,
-    }
-
-    def default_get(self, cr, uid, fields_list=None, context=None):
-        if not 'active_ids' in context:
-            return {}
-        vals = {}
-        #voucher_osv = self.pool.get("account.voucher")
-        #voucher_brs = voucher_osv.browse(
-        #    cr,
-        #    uid,
-        #    context['active_ids'],
-        #    context=context
-        #)
-        voucher_lines = [(6, 0, context['active_ids'])]
-        #voucher_lines = []
-        #for _id in context['active_ids']:
-        #    voucher_lines.append(
-        #        (0, 0, {'sepa_id': 1, 'voucher_id': _id})
-        #    )
-        vals['voucher_ids'] = voucher_lines
-        return vals
-
-    def _group_voucher(self, items, batch_id):
-        # Here we create our new account.voucher.sepa_batch object
-        #  using values from the list of vouchers 'items'
-        result = {}
-
-        result['partner_id'] = items[0]['partner_id'][0]
-        result['batch_id'] = batch_id
-        for item in items:
-            result['amount'] += item['amount']
-        
-        return result
-
-    def _group_by_suppliers(self, items):
-        # This function will concatenate vouchers that
-        #  have the same 'partner_id' and 'journal_id'
-        # The result is created so we can easily write
-        #  it on a account.voucher.sepa_batch object directly
-        result = {}
-
-        while items:
-            item = items[0]
-
-            # Get all element that equals the first one
-            cur_items = [x for x in items if x['partner_id'][0] == item['partner_id'][0] and x['journal_id'][0] == item['journal_id'][0]]
-
-            # Group those element and add it to the result
-            result.append(self._group_voucher(cur_items))
-
-            # Drop those element from the original list
-            items = [x for x in items if x not in cur_items]
-
-        return items
-
-#THIS FUNCTION WILL REPLACE THE FIRST ONE WHEN FINISHED
-
-#    def generate_sepa_v2(self, cr, uid, ids, context=None):
-#        if not context:
-#            context = {}
-#
-#        active_ids = context.get("active_ids")
-#
-#        batch_osv = self.pool.get("account.voucher.sepa_batch")
-#        batch_line_osv = self.pool.get("account.voucher.sepa_batch.line")
-#        ir_attachement_osv = self.pool.get("ir.attachment")
-#        payment_mode_osv = self.pool.get("payment.mode")
-#        account_voucher_osv = self.pool.get("account.voucher")
-#        account_voucher_sepa_osv = self.pool.get("account.voucher.sepa")
-#
-#        account_voucher_sepa_br = account_voucher_sepa_osv.browse(
-#            cr, uid, ids, context=context
-#        )[0]
-#        if account_voucher_sepa_br.group_suppliers:
-#            items = self._group_by_suppliers(cr, uid, active_ids, context)
-#        else:
-#            items = account_voucher_osv.browse(
-#                cr, uid, active_ids, context=context
-#            )
-#        
-#        template_loader = TemplateLoader(
-#            [os.path.dirname(os.path.abspath(__file__))]
-#        )
-#        tpl = template_loader.load(TEMPLATE)
-#
-#        now = datetime.datetime.now()
-#        now_str = now.strftime("%Y%m%d%H%M%S")
-#        for voucher in items:
-
-#TODO
-    def onchange_voucher_ids(self, cr, uid, ids, voucher_ids, context=None):
-        result = {'value': {'batch_valid': False}}
-        return result
 
     def generate_sepa(self, cr, uid, ids, context=None):
         if not context:
             context = {}
+        
+        #Get data from wizard and save voucher ids
+        data = self.read(cr, uid, ids, [], context=context)[0]
+        if not data['voucher_ids']:
+            return {'type': 'ir.actions.act_window_close'}
+        voucher_ids = data['voucher_ids']
 
-        data = self.read(cr, uid, ids, context=context)[0]
-        print data
-
-        active_ids = context.get("active_ids")
+        batch_osv = self.pool.get("account.voucher.sepa_batch")
         account_voucher_osv = self.pool.get("account.voucher")
-        items = account_voucher_osv.read(cr, uid, active_ids, context=context)
-
         ir_attachment_osv = self.pool.get("ir.attachment")
         payment_mode_osv = self.pool.get("payment.mode")
 
+        list_voucher = account_voucher_osv.browse(cr, uid, voucher_ids, context=context)
+
+        # Loading sepa template
         template_loader = TemplateLoader(
             [os.path.dirname(os.path.abspath(__file__))])
         tpl = template_loader.load(TEMPLATE)
@@ -159,19 +48,35 @@ class account_voucher_sepa(osv.TransientModel):
         now = datetime.datetime.now()
         now_str = now.strftime("%Y%m%d%H%M%S")
 
-        #We sort to group faster the voucher by partner_id
-        #items = sorted(items, key=lambda x: [x['partner_id'][0], x['journal_id'][0]])
-        items = self._group_by_suppliers(items)
-
-        return
-
-        for voucher in items:
+        total_amount = 0.0
+        list_bank = []
+        list_lines = []
+    
+        # Verifying that : vouchers are posted
+        #                  sepa not already generated
+        #                  creditor bank exists
+        #                  debtor bank exists
+        for voucher in list_voucher:
             if voucher.state != 'posted':
                 raise osv.except_osv(
                     _("State error"),
                     _("The voucher must be posted"
-                      " before generating SEPA file"))
-
+                      " before generating SEPA file")
+                )
+            if voucher.batch_id:
+                raise osv.except_osv(
+                    _("Integrity error"),
+                    _("This voucher is already attached to a batch.")
+                )
+            total_amount += voucher.amount
+            
+            if not voucher.partner_bank_id:
+                raise osv.except_osv(
+                    _("Bank error"),
+                    _("Please set a bank account on the partner %s." %
+                      voucher.partner_id.name)
+                )
+            list_lines.append(voucher.line_ids)
             payment_mode_ids = payment_mode_osv.search(
                 cr, uid,
                 [("journal", "=", voucher.journal_id.id)],
@@ -180,46 +85,111 @@ class account_voucher_sepa(osv.TransientModel):
                 cr, uid,
                 payment_mode_ids,
                 context=context)
-            # We get the bank account of the payment mode setted
             banks = [pm.bank_id for pm in payment_modes]
-
-            # if no payment mode setted, we get company bank account
+            
             if not len(banks):
-                if not voucher.company_id or not voucher.company_id.bank_ids:
-                    raise osv.except_osv(
-                        _("No bank account for your Company"),
-                        _("Your company should have a bank account."))
-                banks = [
-                    company_bank
-                    for company_bank in voucher.company_id.bank_ids
-                    if company_bank.journal_id.id == voucher.journal_id.id]
+                banks = [bank
+                         for bank in voucher.company_id.bank_ids
+                         if bank.journal_id.id==voucher.journal_id.id]
 
             if len(banks):
-                company_bank = banks[0]
+                bank = banks[0]
             else:
                 raise osv.except_osv(
                     _("No origin bank account found"),
                     _("Bank account for journal %s is not found" %
                       voucher.journal_id.name))
-            if not company_bank.bank_bic:
+            if not bank.bank_bic:
                 raise osv.except_osv(
                     _("Bank BIC"),
                     _("Please set the bank BIC for the bank %s" %
-                      company_bank.name))
+                      bank.name))
 
-            lines = voucher.line_ids
-            content = str(tpl.generate(bank=company_bank,
-                                       voucher=voucher,
-                                       lines=lines))
-            fname = "PAYMENT_%s_%s.xml" % (
-                voucher.partner_id.name.replace(" ", "_"), now_str)
-            att_values = dict(datas=base64.encodestring(content),
-                              datas_fname=fname,
-                              name=fname,
-                              res_id=voucher.id,
-                              res_model="account.voucher")
-            ir_attachment_osv.create(cr, uid, att_values, context=context)
-            # don't write for now (testing)
+        # Save the total amount of all vouchers selected
+        batch_vals = {
+            'amount': total_amount,
+            'creditor_bank_id': bank.id,
+        }
+
+        # Create the batch, associate all voucher with that batch
+        batch_id = batch_osv.create(cr, uid, batch_vals, context=context)
+        account_voucher_osv.write(
+            cr, uid,
+            voucher_ids,
+            {'batch_id': batch_id},
+            context=context
+        )
+
+        # Launch template to generate SEPA file
+        content = str(
+            tpl.generate(total_amount=total_amount,
+                         company_name=list_voucher[0].company_id.name,
+                         debtor_bank=bank,
+                         list_voucher=list_voucher)
+        )
+
+        # We get the auto-generated name of the batch created
+        batch_br = batch_osv.browse(cr, uid, [batch_id], context=context)[0]
+
+        fname = "PAYMENT_%s_%s.xml" % (
+            batch_br.name.replace(" ", "_"), now_str)
+
+        att_values = dict(datas=base64.encodestring(content),
+                            datas_fname=fname,
+                            name=fname,
+                            res_id = batch_id,
+                            res_model = "account.voucher.sepa_batch")
+
+        ir_attachment_osv.create(cr, uid, att_values, context=context)
+        context['active_id'] = batch_id
+        context['active_model'] = 'account.voucher.sepa_batch'
+        del context['active_ids']
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_id': batch_id,
+            'res_model': 'account.voucher.sepa_batch',
+            'name': 'Batch',
+            'context': context,
+        }
+
+    def default_get(self, cr, uid, fields_list=None, context=None):
+        if not 'active_ids' in context:
+            return {}
+        vals = {}
+        voucher_lines = [(6, 0, context['active_ids'])]
+        vals['voucher_ids'] = voucher_lines
+        return vals
+
+    def fields_view_get(self, cr, uid,
+                        view_id=None, view_type='form',
+                        context=None, toolbar=False, submenu=False):
+        res = super(account_voucher_sepa, self).fields_view_get(
+            cr, uid, view_id=view_id,
+            view_type=view_type,
+            context=context,
+            toolbar=toolbar,
+            submenu=submenu
+        )
+
+        if not context or not 'active_ids' in context:
+            return res
+
+        domain = '[("id", "in", ' + str(context["active_ids"]) + ')]'
+        doc = etree.XML(res['arch'])
+        nodes = doc.xpath("//field[@name='voucher_ids']")
+
+        for node in nodes:
+            node.set('domain', domain)
+        res['arch'] = etree.tostring(doc)
+        
+
+        return res
+
+    def onchange_voucher_ids(self, cr, uid, ids, voucher_ids, context=None):
+        result = {'value': {'batch_valid': False}}
+        return result
 
 
 class account_voucher(osv.Model):
@@ -260,16 +230,16 @@ class account_voucher(osv.Model):
             _get_sepa_valid,
             type="boolean",
             method=True,
-            string="Valid for SEPA payments"
+            string=_("Valid for SEPA payments")
         ),
         "partner_bank_id": fields.many2one(
             "res.partner.bank",
-            "Patner Bank",
+            _("Patner Bank"),
             domain="[('partner_id', '=', partner_id)]"
         ),
         "batch_id": fields.many2one(
             "account.voucher.sepa_batch",
-            "Sepa Batch"
+            _("Sepa Batch")
         ),
     }
 
