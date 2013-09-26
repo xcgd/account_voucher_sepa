@@ -25,6 +25,11 @@
             <field name="model">account.voucher.sepa</field>
             <field name="arch" type="xml">
                 <form string="Generate SEPA" version="7.0">
+                    <group cols="4" colspan="2">
+                        <field name="execution_date" />
+                        <label string="" colspan="2" />
+                        <field name="wording" colspan="2"/>
+                    </group>
                     <field name="voucher_ids">
                         <tree string="Lines" version="7.0" editable="bottom" onchange="onchange_voucher_ids(voucher_ids)">
                             <field readonly="1" name="partner_id" />

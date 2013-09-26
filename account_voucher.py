@@ -4,6 +4,7 @@ from genshi.template import TemplateLoader
 import os
 import datetime
 import base64
+import time
 import openerp.addons.decimal_precision as dp
 from lxml import etree
 
@@ -21,6 +22,8 @@ class account_voucher_sepa(osv.TransientModel):
             'sepa_id',
             _('Lines'),
         ),
+        'wording': fields.char('Wording', size=128, required=True),
+        'execution_date': fields.date('Execution Date', required=True),
     }
 
     def generate_sepa(self, cr, uid, ids, context=None):
@@ -120,19 +123,21 @@ class account_voucher_sepa(osv.TransientModel):
             context=context
         )
 
+        # We get the auto-generated name of the batch created
+        batch_br = batch_osv.browse(cr, uid, [batch_id], context=context)[0]
+
         # Launch template to generate SEPA file
         content = str(
             tpl.generate(total_amount=total_amount,
                          company_name=list_voucher[0].company_id.name,
                          debtor_bank=bank,
-                         list_voucher=list_voucher)
+                         list_voucher=list_voucher,
+                         batch_name=batch_br.name,
+                         )
         )
 
-        # We get the auto-generated name of the batch created
-        batch_br = batch_osv.browse(cr, uid, [batch_id], context=context)[0]
-
-        fname = "PAYMENT_%s_%s.xml" % (
-            batch_br.name.replace(" ", "_"), now_str)
+        fname = "PAYMENT%s%s.xml" % (
+            batch_br.name.replace(" ", ""), now_str)
 
         att_values = dict(datas=base64.encodestring(content),
                             datas_fname=fname,
