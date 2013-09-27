@@ -43,7 +43,7 @@
             <ChrgBr>SLEV</ChrgBr>
             <CdtTrfTxInf py:for="voucher in list_voucher">
                 <PmtId>
-                    <EndToEndId py:content="batch_name"></EndToEndId>
+                    <EndToEndId>${batch.wording} - ${batch.name}</EndToEndId>
                 </PmtId>
                 <Amt>
                     <InstdAmt Ccy="${voucher.currency_id.name}" py:content="voucher.amount"></InstdAmt>

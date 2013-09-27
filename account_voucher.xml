@@ -47,7 +47,7 @@
         </record>
 
         <!-- a simple action that pops a new wizard up for payment selection -->
-        <record id="action_generate_sepa" model="ir.actions.act_window">
+        <!--record id="action_generate_sepa" model="ir.actions.act_window">
             <field name="name">Generate Sepa</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.voucher.sepa</field>
@@ -56,15 +56,30 @@
             <field name="view_id" ref="view_account_voucher_sepa"/>
             <field name="context">{'record_id':active_id}</field>
             <field name="target">new</field>
+        </record-->
+
+        <record id="action_generate_sepa" model="ir.actions.server">
+            <field name="name">Generate Sepa</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_account_voucher" />
+            <field name="state">code</field>
+            <field name="code">
+action = object.launch_wizard_sepa()
+            </field>
         </record>
-        <!-- contextual menu for account.move.line to make them as good to pay -->
         <record id="value_contextual_action_payment_selection" model="ir.values">
+            <field name="name">Generate Sepa</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.server,%d' % action_generate_sepa" />
+            <field name="model">account.voucher</field>
+        </record>
+        <!--record id="value_contextual_action_payment_selection" model="ir.values">
             <field name="model_id" ref="model_account_voucher" />
             <field name="name">Generate Sepa</field>
             <field name="key2">client_action_multi</field>
             <field name="value" eval="'ir.actions.act_window,' + str(ref('action_generate_sepa'))" />
             <field name="key">action</field>
             <field name="model">account.voucher</field>
-        </record>
+        </record-->
     </data>
 </openerp>

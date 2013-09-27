@@ -55,30 +55,7 @@ class account_voucher_sepa(osv.TransientModel):
         list_bank = []
         list_lines = []
     
-        # Verifying that : vouchers are posted
-        #                  sepa not already generated
-        #                  creditor bank exists
-        #                  debtor bank exists
         for voucher in list_voucher:
-            if voucher.state != 'posted':
-                raise osv.except_osv(
-                    _("State error"),
-                    _("The voucher must be posted"
-                      " before generating SEPA file")
-                )
-            if voucher.batch_id:
-                raise osv.except_osv(
-                    _("Integrity error"),
-                    _("This voucher is already attached to a batch.")
-                )
-            total_amount += voucher.amount
-            
-            if not voucher.partner_bank_id:
-                raise osv.except_osv(
-                    _("Bank error"),
-                    _("Please set a bank account on the partner %s." %
-                      voucher.partner_id.name)
-                )
             list_lines.append(voucher.line_ids)
             payment_mode_ids = payment_mode_osv.search(
                 cr, uid,
@@ -112,6 +89,7 @@ class account_voucher_sepa(osv.TransientModel):
         batch_vals = {
             'amount': total_amount,
             'creditor_bank_id': bank.id,
+            'wording': data['wording'],
         }
 
         # Create the batch, associate all voucher with that batch
@@ -132,7 +110,7 @@ class account_voucher_sepa(osv.TransientModel):
                          company_name=list_voucher[0].company_id.name,
                          debtor_bank=bank,
                          list_voucher=list_voucher,
-                         batch_name=batch_br.name,
+                         batch=batch_br,
                          )
         )
 
@@ -220,6 +198,49 @@ class account_voucher(osv.Model):
                 res['value']['partner_bank_id'] = bank_id[0]
 
         return res
+
+    def launch_wizard_sepa(self, cr, uid, ids, context=None):
+        this_brs = self.browse(cr, uid, ids, context=context)
+        for this_br in this_brs:
+            if this_br.state != 'posted':
+                raise osv.except_osv(
+                    _("State error"),
+                    _("The voucher %s must be posted"
+                      " before generating SEPA file" %
+                      this_br.number)
+                )
+            if this_br.batch_id:
+                raise osv.except_osv(
+                    _("Integrity error"),
+                    _("The voucher %s is already attached to a batch." %
+                      this_br.number)
+                )
+            if not this_br.partner_bank_id:
+                raise osv.except_osv(
+                    _("Bank error"),
+                    _("Please set a bank account on the partner %s." %
+                      this_br.partner_id.name)
+                )
+
+        ir_ui_view_osv = self.pool.get('ir.ui.view')
+        view_id = ir_ui_view_osv.search(
+            cr, uid,
+            [('name', '=', 'view.account.voucher.sepa')],
+            context=context
+        )
+
+        context['record_id'] = ids
+
+        return {
+            'name': 'Generate SEPA',
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.voucher.sepa',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'context': context,
+            'target': 'new',
+        }
 
     def _get_sepa_valid(self, cr, uid, ids, fields, arg, context):
         voucher_brs = self.browse(cr, uid, ids, context=context)
