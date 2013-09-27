@@ -39,7 +39,7 @@
                         </tree>
                     </field>
                     <footer>
-                        <button string="Generate SEPA" name="generate_sepa" type="object" class="oe_highlight"/>
+                        <button string="Generate SEPA" name="prepare_sepa" type="object" class="oe_highlight"/>
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
                 </form>

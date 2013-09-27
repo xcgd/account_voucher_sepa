@@ -23,7 +23,7 @@
                     <Cd>SEPA</Cd>
                 </SvcLvl>
             </PmtTpInf>
-            <ReqdExctnDt py:content="time.strftime('%Y-%m-%d')"></ReqdExctnDt>
+            <ReqdExctnDt py:content="date"></ReqdExctnDt>
             <Dbtr>
                 <Nm py:content="company_name[:70]"></Nm>
             </Dbtr>
