@@ -13,16 +13,19 @@
                         <field name="wording" />
                     </group>
                     <field name="voucher_ids" readonly="1">
-                        <tree string="Lines" version="7.0" editable="bottom" onchange="onchange_voucher_ids(voucher_ids)">
+                        <tree string="Lines" version="7.0" editable="bottom"
+                            onchange="onchange_voucher_ids(voucher_ids)">
                             <field readonly="1" name="partner_id" />
                             <field readonly="1" name="amount" />
-                            <field required="1" name="partner_bank_id" placeholder="No bank account found. Cannot generate file"/>
+                            <field required="1" name="partner_bank_id"
+                                placeholder="No bank account found. Cannot generate file" />
                             <field name="state" invisible="True" />
                         </tree>
                     </field>
                     <footer>
-                        <button string="Regenerate SEPA" name="regenerate_sepa" type="object" class="oe_highlight"/>
-                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        <button string="Regenerate SEPA" name="regenerate_sepa"
+                            type="object" class="oe_highlight" />
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </footer>
                 </form>
             </field>
@@ -89,12 +92,24 @@ action = object.launch_wizard_regenerate_sepa()
             <field name="model">account.voucher.sepa_batch</field>
         </record>
 
-        <menuitem
-            action="action_sepa_batch_view"
-            id="menu_action_sepa_batch_view"
-            parent="account_payment.menu_main_payment"
-            groups="account.group_account_user"
-        />
+        <record id="action_sepa_remittance" model="ir.actions.server">
+            <field name="name">Remittance Letter</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_account_voucher_sepa_batch" />
+            <field name="state">code</field>
+            <field name="code">
+action = object.sepa_remittance_letters()
+            </field>
+        </record>
+        <record id="value_contextual_action_sepa_remittance" model="ir.values">
+            <field name="name">Remittance Letter</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.server,%d' % action_sepa_remittance" />
+            <field name="model">account.voucher.sepa_batch</field>
+        </record>
+
+        <menuitem action="action_sepa_batch_view" id="menu_action_sepa_batch_view"
+            parent="account_payment.menu_main_payment" groups="account.group_account_user" />
     </data>
 </openerp>
 

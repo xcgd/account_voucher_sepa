@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from lxml import etree
@@ -16,7 +18,7 @@ class account_voucher_sepa_batch(osv.Model):
         'wording': fields.char("Wording", size=128),
         'execution_date': fields.date('Execution Date'),
     }
-    
+
     _sql_constraints = [
         ('unique_name',
         'unique(name)',
@@ -56,6 +58,77 @@ class account_voucher_sepa_batch(osv.Model):
             'context': context,
             'target': 'new',
         }
+
+    def sepa_remittance_letters(self, cr, uid, ids, context=None):
+        sepas = self.browse(cr, uid, ids, context=context)
+        vouchers = []
+
+        for sepa in sepas:
+            vouchers.extend(sepa.line_ids)
+
+        emails = {}  # email -> voucher list
+        for voucher in vouchers:
+            if voucher.partner_id.email:
+                if voucher.partner_id.email not in emails:
+                    emails[voucher.partner_id.email] = []
+                emails[voucher.partner_id.email].append(voucher)
+
+        # TODO don't hardcode / use an email template
+        email_from = 'billing@numergy.com'
+        subject = 'Avis de règlement'
+        message = 'Cher fournisseur, veuillez prendre connaissance en pièce jointe du détail du règlement effectué sur votre compte bancaire.'
+
+        for email, vouchers in emails.iteritems():
+            attachments = [self._get_attachment(cr, uid, voucher, context)
+                           for voucher in vouchers]
+            self.send_email(cr, uid, [vouchers[0].id], subject, message,
+                            email_from, email, attachments, 'account.voucher',
+                            context=context)
+
+    def _get_attachment(self, cr, uid, voucher, context):
+        att_osv = self.pool.get('ir.attachment')
+        att_id = att_osv.search(
+            cr, uid,
+            [('res_id', '=', voucher.id), ('name', '=like', 'AR-%')],
+            context=context
+        )
+
+        if not att_id:
+            raise osv.except_osv('Error', 'No Remittance Letter found for '
+                                 'the specified vouchers; please generate '
+                                 'them then re-run this.')
+            # TODO generate remittance letter
+
+        return att_id[0]
+
+    # TODO move elsewhere
+    def send_email(self, cr, uid, ids, subject, message, email_from, email_to,
+                   attachments, model, context=None):
+        print 'sending email from %s to %s, msg=%s, attachments=%s' % (
+            email_from, email_to, subject, str(attachments))
+        mail_server_obj = self.pool.get('ir.mail_server')
+        mail_message_obj = self.pool.get('mail.message')
+        mail_mail_obj = self.pool.get('mail.mail')
+        for id in ids:
+            mail_message_id = mail_message_obj.create(cr, uid, {
+                'attachment_ids': [(6, 0, attachments)],  # TODO more atts
+                'body': message,
+                'email_from': email_from,
+                'model': model,
+                'res_id': id,
+                'subject': subject,
+            }, context=context)
+            mail_server_ids = mail_server_obj.search(cr, uid, [], context=context)
+            mail_mail_id = mail_mail_obj.create(cr, uid, {
+                'body_html': message,
+                'email_from': email_from,
+                'email_to': email_to,
+                'mail_message_id': mail_message_id,
+                'mail_server_id': mail_server_ids and mail_server_ids[0],
+                'state': 'outgoing',
+            }, context=context)
+            if mail_mail_id:
+                mail_mail_obj.send(cr, uid, [mail_mail_id], context=context)
 
 
 class account_voucher_sepa_regeneration(osv.TransientModel):
