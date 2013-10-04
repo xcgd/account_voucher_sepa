@@ -161,7 +161,7 @@ class account_voucher_sepa(osv.TransientModel):
 
         now_str = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
-        self.generate_sepa(cr, uid, ids, batch_id, list_voucher, now_str, context=context)
+        self.generate_sepa(cr, uid, batch_id, list_voucher, now_str, context=context)
 
         context['active_id'] = batch_id
         context['active_model'] = 'account.voucher.sepa_batch'
