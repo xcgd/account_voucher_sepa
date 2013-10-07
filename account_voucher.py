@@ -241,8 +241,7 @@ class account_voucher(osv.Model):
                 raise osv.except_osv(
                     _("State error"),
                     _("The voucher %s must be posted"
-                      " before generating SEPA file" %
-                      this_br.number)
+                      " before generating SEPA file")
                 )
             if this_br.batch_id:
                 raise osv.except_osv(
