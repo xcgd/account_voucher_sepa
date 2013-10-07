@@ -32,6 +32,7 @@
     "depends": [
         'base',
         'account_voucher',
+        'account_streamline',
         'base_iban'
     ],
 
