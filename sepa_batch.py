@@ -63,21 +63,11 @@ class account_voucher_sepa_batch(osv.Model):
         ''' Send one email for each selected voucher; the email template
         should generate attachments automagically. '''
 
-        # Grab the email template.
-        email_template_obj = self.pool.get('email.template')
-        template_ids = email_template_obj.search(cr, uid,
-            [('report_name', '=', 'RemittanceLetter')], context=context)
-        if not template_ids:
-            raise osv.osv_except('Error', 'No email template found which'
-                                 'generates RemittanceLetter reports')
-
-        # Send 1 email per voucher. force_send=True to send instantly rather
-        # than scheduling for later delivery.
+        voucher_obj = self.pool.get('account.voucher')
         sepas = self.browse(cr, uid, ids, context=context)
         for sepa in sepas:
-            for voucher in sepa.line_ids:
-                email_template_obj.send_mail(cr, uid, template_ids[0],
-                    voucher.id, force_send=True, context=context)
+            voucher_obj.email_remittance_letters(cr, uid, sepa.line_ids,
+                                                 context=context)
 
 
 class account_voucher_sepa_regeneration(osv.TransientModel):
