@@ -66,8 +66,8 @@ class account_voucher_sepa_batch(osv.Model):
         voucher_obj = self.pool.get('account.voucher')
         sepas = self.browse(cr, uid, ids, context=context)
         for sepa in sepas:
-            voucher_obj.email_remittance_letters(cr, uid, sepa.line_ids,
-                                                 context=context)
+            voucher_obj.email_remittance_letters(cr, uid,
+                [voucher.id for voucher in sepa.line_ids], context=context)
 
 
 class account_voucher_sepa_regeneration(osv.TransientModel):
