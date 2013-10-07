@@ -92,8 +92,9 @@ action = object.launch_wizard_regenerate_sepa()
             <field name="model">account.voucher.sepa_batch</field>
         </record>
 
+        <!-- Contextual action to send Remittance Letters by email. -->
         <record id="action_sepa_remittance" model="ir.actions.server">
-            <field name="name">Remittance Letter</field>
+            <field name="name">Email Remittance Letters</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_account_voucher_sepa_batch" />
             <field name="state">code</field>
@@ -102,7 +103,7 @@ action = object.sepa_remittance_letters()
             </field>
         </record>
         <record id="value_contextual_action_sepa_remittance" model="ir.values">
-            <field name="name">Remittance Letter</field>
+            <field name="name">Email Remittance Letters</field>
             <field name="key2">client_action_multi</field>
             <field name="value" eval="'ir.actions.server,%d' % action_sepa_remittance" />
             <field name="model">account.voucher.sepa_batch</field>

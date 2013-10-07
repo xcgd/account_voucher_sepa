@@ -66,10 +66,10 @@ class account_voucher_sepa_batch(osv.Model):
         # Grab the email template.
         email_template_obj = self.pool.get('email.template')
         template_ids = email_template_obj.search(cr, uid,
-            [('report_name', '=', 'PaymentNotice')], context=context)
+            [('report_name', '=', 'RemittanceLetter')], context=context)
         if not template_ids:
             raise osv.osv_except('Error', 'No email template found which'
-                                 'generates PaymentNotice reports')
+                                 'generates RemittanceLetter reports')
 
         # Send 1 email per voucher. force_send=True to send instantly rather
         # than scheduling for later delivery.
