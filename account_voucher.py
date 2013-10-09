@@ -13,6 +13,7 @@ TEMPLATE = "sepa_tpl.xml"
 
 class account_voucher_sepa(osv.TransientModel):
     _name = "account.voucher.sepa"
+
     _columns = {
         'group_suppliers': fields.boolean(_("Group suppliers")),
         'voucher_ids': fields.many2many(
@@ -31,7 +32,7 @@ class account_voucher_sepa(osv.TransientModel):
 
         batch_osv = self.pool.get("account.voucher.sepa_batch")
         batch_br = batch_osv.browse(cr, uid, [batch_id], context=context)[0]
-    
+
         tpl = self.__load_sepa_template()
 
         # Launch template to generate SEPA file
@@ -51,8 +52,8 @@ class account_voucher_sepa(osv.TransientModel):
         att_values = dict(datas=base64.encodestring(content),
                             datas_fname=fname,
                             name=fname,
-                            res_id = batch_id,
-                            res_model = "account.voucher.sepa_batch")
+                            res_id=batch_id,
+                            res_model="account.voucher.sepa_batch")
 
         ir_attachment_osv = self.pool.get("ir.attachment")
         ir_attachment_osv.create(cr, uid, att_values, context=context)
@@ -74,7 +75,7 @@ class account_voucher_sepa(osv.TransientModel):
             raise osv.except_osv(_('Template Syntax Error'), e)
 
     def __get_bank_id(self, cr, uid, ids, voucher, context=None):
-        #Search with payment modes
+        # Search with payment modes
         payment_mode_osv = self.pool.get("payment.mode")
         payment_mode_ids = payment_mode_osv.search(
             cr, uid,
@@ -88,7 +89,7 @@ class account_voucher_sepa(osv.TransientModel):
         )
         banks = [pm.bank_id for pm in payment_modes]
 
-        #Search in company
+        # Search in company
         if len(banks):
             return banks[0]
 
@@ -96,7 +97,7 @@ class account_voucher_sepa(osv.TransientModel):
                  for bank in voucher.company_id.bank_ids
                  if bank.journal_id.id == voucher.journal_id.id]
 
-        #No banks found
+        # No banks found
         if not len(banks):
             raise osv.except_osv(
                 _("No origin bank account found"),
@@ -114,7 +115,7 @@ class account_voucher_sepa(osv.TransientModel):
     def prepare_sepa(self, cr, uid, ids, context=None):
         if not context:
             context = {}
-        
+
         test, data = self.__get_data_from_wizard(cr, uid, ids, context=context)
         if not test:
             return {'type': 'ir.actions.act_window_close'}
@@ -131,12 +132,12 @@ class account_voucher_sepa(osv.TransientModel):
         # Calcul the total amount of all selected vouchers
 
         total_amount = 0.0
-    
+
         for voucher in list_voucher:
             total_amount += voucher.amount
 
         # Get the creditor bank
-    
+
         bank = self.__get_bank_id(
             cr, uid, ids,
             list_voucher[0],
@@ -205,7 +206,7 @@ class account_voucher_sepa(osv.TransientModel):
         for node in nodes:
             node.set('domain', domain)
         res['arch'] = etree.tostring(doc)
-        
+
 
         return res
 
@@ -214,7 +215,7 @@ class account_voucher(osv.Model):
     _name = "account.voucher"
     _inherit = "account.voucher"
 
-    #This method add a default value to partner_bank_id
+    # This method add a default value to partner_bank_id
     def onchange_partner_id(self, cr, uid, ids,
                             partner_id, journal_id,
                             amount, currency_id, ttype,
@@ -276,6 +277,28 @@ class account_voucher(osv.Model):
             'target': 'new',
         }
 
+    def _get_rem_letter_bot(self, cr, uid, ids, field_name, arg, context):
+        ''' Override the remittance_letter_bottom function field set by
+        account_streamline to add SEPA information. '''
+
+        res = super(account_voucher, self)._get_rem_letter_bot(cr, uid, ids,
+            field_name, arg, context)
+
+        for id in res:
+            voucher = self.browse(cr, uid, [id], context=context)[0]
+            if voucher.batch_id:
+                res[id] = res[id] + '''
+                <h2 class="remittance_letter_bottom">
+                    %s<br/>
+                    %s<br/>
+                    %s
+                </h2>
+                ''' % (_('Sepa:'),
+                       voucher.batch_id.wording,
+                       voucher.batch_id.execution_date)
+
+        return res
+
     def _get_sepa_valid(self, cr, uid, ids, fields, arg, context):
         voucher_brs = self.browse(cr, uid, ids, context=context)
         res = {}
@@ -283,9 +306,12 @@ class account_voucher(osv.Model):
             res[voucher_br.id] = bool(voucher_br.partner_bank_id)
         return res
 
-    #This field allow us to force the user to select only one account to pay
-    # instead of always choose the first bank account of the partner
     _columns = {
+        'remittance_letter_bottom': fields.function(_get_rem_letter_bot,
+                                            type='text',
+                                            method=True),
+        # This field allows us to force the user to select only one account to
+        # pay instead of always choosing the first bank account of the partner
         "sepa_valid": fields.function(
             _get_sepa_valid,
             type="boolean",
