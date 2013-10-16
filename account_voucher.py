@@ -4,8 +4,6 @@ from genshi.template import TemplateLoader, TemplateNotFound, TemplateSyntaxErro
 import os
 import datetime
 import base64
-import time
-import openerp.addons.decimal_precision as dp
 from lxml import etree
 
 TEMPLATE = "sepa_tpl.xml"
@@ -235,8 +233,24 @@ class account_voucher(osv.Model):
 
         return res
 
+    def validate_selected(self, cr, uid, ids, context=None):
+        if not 'active_ids' in context:
+            raise osv.except_osv(
+                _("Integrity Error"),
+                _("You must select one voucher to generate SEPA file.")
+            )
+        this_brs = self.browse(cr, uid, context['active_ids'], context=context)
+        for this_br in this_brs:
+            this_br._workflow_signal('proforma_voucher')
+        return {}
+
     def launch_wizard_sepa(self, cr, uid, ids, context=None):
-        this_brs = self.browse(cr, uid, ids, context=context)
+        if not 'active_ids' in context:
+            raise osv.except_osv(
+                _("Integrity Error"),
+                _("You must select one voucher to generate SEPA file.")
+            )
+        this_brs = self.browse(cr, uid, context['active_ids'], context=context)
         for this_br in this_brs:
             if this_br.state != 'posted':
                 raise osv.except_osv(
