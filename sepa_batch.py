@@ -2,7 +2,7 @@
 
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
-from lxml import etree
+
 
 class account_voucher_sepa_batch(osv.Model):
     _name = "account.voucher.sepa_batch"
@@ -121,8 +121,6 @@ class account_voucher_sepa_regeneration(osv.TransientModel):
         self.__delete_attachement(cr, uid, active_id, context=context)
 
         this_br = self.browse(cr, uid, ids[0], context=context)
-
-        voucher_osv = self.pool.get('account.voucher')
 
         vals = {
             'wording': this_br.wording,
