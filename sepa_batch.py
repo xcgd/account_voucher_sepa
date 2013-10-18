@@ -8,7 +8,7 @@ class account_voucher_sepa_batch(osv.Model):
     _name = "account.voucher.sepa_batch"
     _columns = {
         'name': fields.char("Name", size=256),
-        'amount': fields.integer("Total"),
+        'amount': fields.float("Total"),
         'creditor_bank_id': fields.many2one(
             "res.partner.bank",
             "Creditor bank",

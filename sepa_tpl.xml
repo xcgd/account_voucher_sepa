@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <?python
   import time
+  import fpformat
 ?>
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03" xmlns:py="http://genshi.edgewall.org/">
     <CstmrCdtTrfInitn>
@@ -8,7 +9,7 @@
             <MsgId py:content="time.strftime('%Y%m%d%H%M%S')"></MsgId>
             <CreDtTm py:content="time.strftime('%Y-%m-%dT%H:%M:%S')"></CreDtTm>
             <NbOfTxs py:content="len(list_voucher)"></NbOfTxs>
-            <CtrlSum py:content="total_amount"></CtrlSum>
+            <CtrlSum py:content="fpformat.fix(total_amount, 2)"></CtrlSum>
             <InitgPty>
                 <Nm py:content="company_name[:70]"></Nm>
             </InitgPty>
@@ -17,7 +18,7 @@
             <PmtInfId py:content="list_voucher[0].number"></PmtInfId>
             <PmtMtd>TRF</PmtMtd>
             <NbOfTxs py:content="len(list_voucher)"></NbOfTxs>
-            <CtrlSum py:content="total_amount"></CtrlSum>
+            <CtrlSum py:content="fpformat.fix(total_amount, 2)"></CtrlSum>
             <PmtTpInf>
                 <SvcLvl>
                     <Cd>SEPA</Cd>
@@ -46,7 +47,7 @@
                     <EndToEndId>${batch.wording} - ${batch.name}</EndToEndId>
                 </PmtId>
                 <Amt>
-                    <InstdAmt Ccy="${voucher.currency_id.name}" py:content="voucher.amount"></InstdAmt>
+                    <InstdAmt Ccy="${voucher.currency_id.name}" py:content="fpformat.fix(voucher.amount, 2)"></InstdAmt>
                 </Amt>
                 <CdtrAgt>
                     <FinInstnId>
