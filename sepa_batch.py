@@ -59,15 +59,36 @@ class account_voucher_sepa_batch(osv.Model):
             'target': 'new',
         }
 
-    def sepa_remittance_letters(self, cr, uid, ids, context=None):
-        ''' Send one email for each selected voucher; the email template
-        should generate attachments automagically. '''
+    def sepa_email_remittance_letters(self, cr, uid, ids, context=None):
+        ''' Launch the Remittance Letter email wizard for the vouchers in
+        selected SEPA batches. '''
 
-        voucher_obj = self.pool.get('account.voucher')
-        sepas = self.browse(cr, uid, ids, context=context)
+        # Store voucher ids in the context.
+        if 'active_ids' not in context:
+            raise osv.except_osv(
+                _('Error'),
+                _('No item selected.')
+            )
+        sepas = self.browse(cr, uid, context['active_ids'], context=context)
+        context['active_ids'] = []
         for sepa in sepas:
-            voucher_obj.email_remittance_letters(cr, uid,
-                [voucher.id for voucher in sepa.line_ids], context=context)
+            context['active_ids'].extend(
+                [voucher.id for voucher in sepa.line_ids])
+
+        view_obj = self.pool.get('ir.ui.view')
+        view_id = view_obj.search(cr, uid,
+            [('name', '=', 'email.remittance')])
+
+        return {
+            'context': context,
+            'name': _('Email Remittance Letters'),
+            'res_model': 'email.remittance',
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+            'view_id': view_id,
+            'view_mode': 'form',
+            'view_type': 'form',
+        }
 
 
 class account_voucher_sepa_regeneration(osv.TransientModel):
