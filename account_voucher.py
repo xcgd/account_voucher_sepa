@@ -21,7 +21,7 @@ class account_voucher_sepa(osv.TransientModel):
             'sepa_id',
             _('Lines'),
         ),
-        'wording': fields.char('Wording', size=128, required=True),
+        'wording': fields.char('Wording', size=20, required=True),
         'execution_date': fields.date('Execution Date', required=True),
     }
 

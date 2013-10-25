@@ -15,7 +15,7 @@ class account_voucher_sepa_batch(osv.Model):
             readonly=True,
         ),
         'line_ids': fields.one2many("account.voucher", "batch_id", "Lines"),
-        'wording': fields.char("Wording", size=128),
+        'wording': fields.char("Wording", size=20),
         'execution_date': fields.date('Execution Date'),
     }
 
