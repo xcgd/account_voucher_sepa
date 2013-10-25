@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <?python
+  from datetime import datetime
   import time
   import fpformat
 ?>
@@ -24,7 +25,7 @@
                     <Cd>SEPA</Cd>
                 </SvcLvl>
             </PmtTpInf>
-            <ReqdExctnDt py:content="date"></ReqdExctnDt>
+            <ReqdExctnDt py:content="datetime.strptime(date, '%Y%m%d%H%M%S').date().isoformat()"></ReqdExctnDt>
             <Dbtr>
                 <Nm py:content="company_name[:70]"></Nm>
             </Dbtr>
