@@ -25,7 +25,7 @@
                     <Cd>SEPA</Cd>
                 </SvcLvl>
             </PmtTpInf>
-            <ReqdExctnDt py:content="datetime.strptime(date, '%Y%m%d%H%M%S').date().isoformat()"></ReqdExctnDt>
+            <ReqdExctnDt py:content="datetime.strptime(date, '%Y-%m-%d').date().isoformat()"></ReqdExctnDt>
             <Dbtr>
                 <Nm py:content="company_name[:70]"></Nm>
             </Dbtr>
