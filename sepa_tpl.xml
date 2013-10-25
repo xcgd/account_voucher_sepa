@@ -65,15 +65,6 @@
                 </CdtrAcct>
                 <RmtInf>
                     <Ustrd py:content="voucher.number"></Ustrd>
-                    <Strd>
-                        <CdtrRefInf>
-                            <Tp>
-                                <CdOrPrtry>
-                                    <Cd>SCOR</Cd>
-                                </CdOrPrtry>
-                            </Tp>
-                        </CdtrRefInf>
-                    </Strd>
                 </RmtInf>
             </CdtTrfTxInf>
         </PmtInf>
