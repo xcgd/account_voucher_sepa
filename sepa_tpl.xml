@@ -9,43 +9,43 @@
         <GrpHdr>
             <MsgId py:content="time.strftime('%Y%m%d%H%M%S')"></MsgId>
             <CreDtTm py:content="time.strftime('%Y-%m-%dT%H:%M:%S')"></CreDtTm>
-            <NbOfTxs py:content="len(list_voucher)"></NbOfTxs>
-            <CtrlSum py:content="fpformat.fix(total_amount, 2)"></CtrlSum>
+            <NbOfTxs py:content="len(data['list_voucher'])"></NbOfTxs>
+            <CtrlSum py:content="fpformat.fix(data['total_amount'], 2)"></CtrlSum>
             <InitgPty>
-                <Nm py:content="company_name[:70]"></Nm>
+                <Nm py:content="data['company_name'][:70]"></Nm>
             </InitgPty>
         </GrpHdr>
         <PmtInf>
-            <PmtInfId py:content="list_voucher[0].number"></PmtInfId>
+            <PmtInfId py:content="data['list_voucher'][0].number"></PmtInfId>
             <PmtMtd>TRF</PmtMtd>
-            <NbOfTxs py:content="len(list_voucher)"></NbOfTxs>
-            <CtrlSum py:content="fpformat.fix(total_amount, 2)"></CtrlSum>
+            <NbOfTxs py:content="len(data['list_voucher'])"></NbOfTxs>
+            <CtrlSum py:content="fpformat.fix(data['total_amount'], 2)"></CtrlSum>
             <PmtTpInf>
                 <SvcLvl>
                     <Cd>SEPA</Cd>
                 </SvcLvl>
             </PmtTpInf>
-            <ReqdExctnDt py:content="datetime.strptime(date, '%Y-%m-%d').date().isoformat()"></ReqdExctnDt>
+            <ReqdExctnDt py:content="datetime.strptime(data['date'], '%Y-%m-%d').date().isoformat()"></ReqdExctnDt>
             <Dbtr>
-                <Nm py:content="company_name[:70]"></Nm>
+                <Nm py:content="data['company_name'][:70]"></Nm>
             </Dbtr>
             <DbtrAcct>
                 <Id>
-                    <IBAN py:content="(debtor_bank.iban or debtor_bank.acc_number).replace(' ', '').upper()"></IBAN>
+                    <IBAN py:content="(data['debtor_bank'].iban or data['debtor_bank'].acc_number).replace(' ', '').upper()"></IBAN>
                 </Id>
             </DbtrAcct>
             <DbtrAgt>
                 <FinInstnId>
-                    <BIC py:content="debtor_bank.bank_bic.replace(' ', '').upper()"></BIC>
+                    <BIC py:content="data['debtor_bank'].bank_bic.replace(' ', '').upper()"></BIC>
                 </FinInstnId>
             </DbtrAgt>
             <UltmtDbtr>
-                <Nm py:content="company_name[:70]"></Nm>
+                <Nm py:content="data['company_name'][:70]"></Nm>
             </UltmtDbtr>
             <ChrgBr>SLEV</ChrgBr>
-            <CdtTrfTxInf py:for="voucher in list_voucher">
+            <CdtTrfTxInf py:for="voucher in data['list_voucher']">
                 <PmtId>
-                    <EndToEndId>${batch.wording} - ${batch.name}</EndToEndId>
+                    <EndToEndId>${data['batch'].wording} - ${data['batch'].name}</EndToEndId>
                 </PmtId>
                 <Amt>
                     <InstdAmt Ccy="${voucher.currency_id.name}" py:content="fpformat.fix(voucher.amount, 2)"></InstdAmt>

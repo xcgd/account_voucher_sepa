@@ -6,7 +6,7 @@ import datetime
 import base64
 from lxml import etree
 
-TEMPLATE = "sepa_tpl.xml"
+#TEMPLATE = "sepa_tpl.xml"
 
 
 class account_voucher_sepa(osv.TransientModel):
@@ -25,36 +25,61 @@ class account_voucher_sepa(osv.TransientModel):
         'execution_date': fields.date('Execution Date', required=True),
     }
 
-    def generate_sepa(self, cr, uid, batch_id, list_voucher, date, context=None):
-        # We get the auto-generated name of the batch created
+
+    def generate_sepa(self, cr, uid, batch_id,
+                      list_voucher, date, context=None):
+        #New version using account_credit_transfer
 
         batch_osv = self.pool.get("account.voucher.sepa_batch")
         batch_br = batch_osv.browse(cr, uid, [batch_id], context=context)[0]
 
-        tpl = self.__load_sepa_template()
+        data = {
+            'total_amount': batch_br.amount,
+            'company_name': list_voucher[0].company_id.name,
+            'debtor_bank': batch_br.creditor_bank_id,
+            'list_voucher': list_voucher,
+            'batch': batch_br,
+            'date': date,
+        }
 
-        # Launch template to generate SEPA file
-        content = str(
-            tpl.generate(total_amount=batch_br.amount,
-                         company_name=list_voucher[0].company_id.name,
-                         debtor_bank=batch_br.creditor_bank_id,
-                         list_voucher=list_voucher,
-                         batch=batch_br,
-                         date=date,
-                         )
+        ct_config_osv = self.pool.get("account_credit_transfer.config")
+        ct_config_osv.generate_credit_transfer_file(
+            cr, uid, data, context=context
         )
 
-        fname = "PAYMENT%s%s.xml" % (
-            batch_br.name.replace(" ", ""), date)
 
-        att_values = dict(datas=base64.encodestring(content),
-                            datas_fname=fname,
-                            name=fname,
-                            res_id=batch_id,
-                            res_model="account.voucher.sepa_batch")
-
-        ir_attachment_osv = self.pool.get("ir.attachment")
-        ir_attachment_osv.create(cr, uid, att_values, context=context)
+#    def generate_sepa(self, cr, uid, batch_id, list_voucher, date, context=None):
+#        # We get the auto-generated name of the batch created
+#
+#        batch_osv = self.pool.get("account.voucher.sepa_batch")
+#        batch_br = batch_osv.browse(cr, uid, [batch_id], context=context)[0]
+#
+#        tpl = self.__load_sepa_template()
+#
+#        # Launch template to generate SEPA file
+#        content = str(
+#            tpl.generate(total_amount=batch_br.amount,
+#                         company_name=list_voucher[0].company_id.name,
+#                         debtor_bank=batch_br.creditor_bank_id,
+#                         list_voucher=list_voucher,
+#                         batch=batch_br,
+#                         date=date,
+#                         )
+#        )
+#
+#        print content
+#
+#        fname = "PAYMENT%s%s.xml" % (
+#            batch_br.name.replace(" ", ""), date)
+#
+#        att_values = dict(datas=base64.encodestring(content),
+#                            datas_fname=fname,
+#                            name=fname,
+#                            res_id=batch_id,
+#                            res_model="account.voucher.sepa_batch")
+#
+#        ir_attachment_osv = self.pool.get("ir.attachment")
+#        ir_attachment_osv.create(cr, uid, att_values, context=context)
 
     def __get_data_from_wizard(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, [], context=context)[0]
