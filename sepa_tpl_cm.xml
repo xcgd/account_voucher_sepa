@@ -59,10 +59,15 @@
                         <IBAN py:content="(voucher.partner_bank_id.iban or voucher.partner_bank_id.acc_number).replace(' ', '').upper()"></IBAN>
                     </Id>
                 </CdtrAcct>
+                <RgltryRptg>
+                    <RgltryDtls>
+                        <Cd>150</Cd>
+                    </RgltryDtls>
+                </RgltryRptg>
                 <RmtInf>
                     <Ustrd py:content="voucher.number"></Ustrd>
                 </RmtInf>
             </CdtTrfTxInf>
         </PmtInf>
-    </CstmrCdtTrfInitn>
+    </pain.001.001.02>
 </Document>
