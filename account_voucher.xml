@@ -14,7 +14,7 @@
                     <attribute name="invisible">True</attribute>
                 </xpath>
                 <xpath expr="//field[@name='analytic_id']" position="after">
-                    <field name="partner_bank_id" required="True"/>
+                    <field name="partner_bank_id" />
                 </xpath>
             </field>
         </record>

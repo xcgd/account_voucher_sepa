@@ -276,26 +276,45 @@ class account_voucher(osv.Model):
                 _("You must select one voucher to generate SEPA file.")
             )
         this_brs = self.browse(cr, uid, context['active_ids'], context=context)
+        err = ""
+        err_post_ids = []
+        err_att_ids = []
+        err_acc_ids = []
         for this_br in this_brs:
             if this_br.state != 'posted':
-                raise osv.except_osv(
-                    _("State error"),
-                    _("The voucher %s must be posted"
-                      " before generating SEPA file")
-                )
+                if not this_br.number in err_post_ids:
+                    err_post_ids.append(this_br.number)
             if this_br.batch_id:
-                raise osv.except_osv(
-                    _("Integrity error"),
-                    _("The voucher %s is already attached to a batch." %
-                      this_br.number)
-                )
-            if not this_br.partner_bank_id:
-                raise osv.except_osv(
-                    _("Bank error"),
-                    _("Please set a bank account on the partner %s." %
-                      this_br.partner_id.name)
-                )
+                if not this_br.number in err_att_ids:
+                    err_att_ids.append(this_br.number)
+            if not this_br.partner_id.bank_ids:
+                if not this_br.partner_id.name in err_acc_ids:
+                    err_acc_ids.append(this_br.partner_id.name)
 
+        def stringify(l):
+            return [str(x) for x in l]
+
+        if err_post_ids:
+            err += _(
+                u"The voucher %s must be posted "
+                u"before generating SEPA file\n\n" %
+                u", ".join(stringify(err_post_ids))
+            )
+        if err_att_ids:
+            err += _(
+                u"The voucher %s is already attached to a batch.\n\n" %
+                u", ".join(stringify(err_att_ids))
+            )
+        if err_acc_ids:
+            err += _(
+                u"Please set a bank account on the partner %s.\n\n" %
+                u", ".join(stringify(err_acc_ids))
+            )
+        if err:
+            raise osv.except_osv(
+                _(u"Error"),
+                err
+            )
         ir_ui_view_osv = self.pool.get('ir.ui.view')
         view_id = ir_ui_view_osv.search(
             cr, uid,
