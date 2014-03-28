@@ -1,12 +1,7 @@
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
-from genshi.template import TemplateLoader, TemplateNotFound, TemplateSyntaxError
-import os
 import datetime
-import base64
 from lxml import etree
-
-#TEMPLATE = "sepa_tpl.xml"
 
 
 class account_voucher_sepa(osv.TransientModel):
@@ -24,7 +19,6 @@ class account_voucher_sepa(osv.TransientModel):
         'wording': fields.char('Wording', size=20, required=True),
         'execution_date': fields.date('Execution Date', required=True),
     }
-
 
     def generate_sepa(self, cr, uid, batch_id,
                       list_voucher, date, context=None):
@@ -47,55 +41,11 @@ class account_voucher_sepa(osv.TransientModel):
             cr, uid, data, context=context
         )
 
-
-#    def generate_sepa(self, cr, uid, batch_id, list_voucher, date, context=None):
-#        # We get the auto-generated name of the batch created
-#
-#        batch_osv = self.pool.get("account.voucher.sepa_batch")
-#        batch_br = batch_osv.browse(cr, uid, [batch_id], context=context)[0]
-#
-#        tpl = self.__load_sepa_template()
-#
-#        # Launch template to generate SEPA file
-#        content = str(
-#            tpl.generate(total_amount=batch_br.amount,
-#                         company_name=list_voucher[0].company_id.name,
-#                         debtor_bank=batch_br.creditor_bank_id,
-#                         list_voucher=list_voucher,
-#                         batch=batch_br,
-#                         date=date,
-#                         )
-#        )
-#
-#        print content
-#
-#        fname = "PAYMENT%s%s.xml" % (
-#            batch_br.name.replace(" ", ""), date)
-#
-#        att_values = dict(datas=base64.encodestring(content),
-#                            datas_fname=fname,
-#                            name=fname,
-#                            res_id=batch_id,
-#                            res_model="account.voucher.sepa_batch")
-#
-#        ir_attachment_osv = self.pool.get("ir.attachment")
-#        ir_attachment_osv.create(cr, uid, att_values, context=context)
-
     def __get_data_from_wizard(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, [], context=context)[0]
         if not data['voucher_ids']:
             return False, False
         return True, data
-
-    def __load_sepa_template(self):
-        template_loader = TemplateLoader(
-            [os.path.dirname(os.path.abspath(__file__))])
-        try:
-            return template_loader.load(TEMPLATE)
-        except TemplateNotFound as e:
-            raise osv.except_osv(_('Template Not Found'), e)
-        except TemplateSyntaxError as e:
-            raise osv.except_osv(_('Template Syntax Error'), e)
 
     def __get_bank_id(self, cr, uid, ids, voucher, context=None):
         # Search with payment modes
@@ -185,7 +135,9 @@ class account_voucher_sepa(osv.TransientModel):
 
         now_str = datetime.datetime.now().strftime("%Y-%m-%d")
 
-        self.generate_sepa(cr, uid, batch_id, list_voucher, now_str, context=context)
+        self.generate_sepa(
+            cr, uid, batch_id, list_voucher, now_str, context=context
+        )
 
         context['active_id'] = batch_id
         context['active_model'] = 'account.voucher.sepa_batch'
@@ -229,7 +181,6 @@ class account_voucher_sepa(osv.TransientModel):
         for node in nodes:
             node.set('domain', domain)
         res['arch'] = etree.tostring(doc)
-
 
         return res
 
@@ -339,8 +290,9 @@ class account_voucher(osv.Model):
         ''' Override the remittance_letter_bottom function field set by
         account_streamline to add SEPA information. '''
 
-        res = super(account_voucher, self)._get_rem_letter_bot(cr, uid, ids,
-            field_name, arg, context)
+        res = super(account_voucher, self)._get_rem_letter_bot(
+            cr, uid, ids, field_name, arg, context
+        )
 
         for id in res:
             voucher = self.browse(cr, uid, [id], context=context)[0]
@@ -365,9 +317,9 @@ class account_voucher(osv.Model):
         return res
 
     _columns = {
-        'remittance_letter_bottom': fields.function(_get_rem_letter_bot,
-                                            type='text',
-                                            method=True),
+        'remittance_letter_bottom': fields.function(
+            _get_rem_letter_bot, type='text', method=True
+        ),
         # This field allows us to force the user to select only one account to
         # pay instead of always choosing the first bank account of the partner
         "sepa_valid": fields.function(
@@ -386,4 +338,3 @@ class account_voucher(osv.Model):
             _("Sepa Batch")
         ),
     }
-
