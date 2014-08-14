@@ -106,7 +106,7 @@ class account_voucher_sepa_regeneration(osv.TransientModel):
     }
 
     def default_get(self, cr, uid, fields_list=None, context=None):
-        if not 'active_ids' in context:
+        if 'active_ids' not in context:
             return {}
         voucher_osv = self.pool.get('account.voucher')
         voucher_ids = voucher_osv.search(
