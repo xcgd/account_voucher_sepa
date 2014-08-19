@@ -287,18 +287,36 @@ class account_voucher(osv.Model):
             'target': 'new',
         }
 
-    def _get_rem_letter_bot(self, cr, uid, ids, field_name, arg, context):
-        ''' Override the remittance_letter_bottom function field set by
-        account_streamline to add SEPA information. '''
+    def _get_iban(self, cr, uid, ids, field_name, arg, context=None):
+        """Override the iban function field set by account_streamline to add
+        bank information.
+        """
 
-        res = super(account_voucher, self)._get_rem_letter_bot(
-            cr, uid, ids, field_name, arg, context
+        ret = super(account_voucher, self)._get_rem_letter_bot(
+            cr, uid, ids, field_name, arg, context=context
         )
 
-        for id in res:
-            voucher = self.browse(cr, uid, [id], context=context)[0]
+        for voucher_id in ret:
+            voucher = self.browse(cr, uid, [voucher_id], context=context)[0]
+            bank = voucher.partner_bank_id
+            if bank:
+                ret[id] = ret[id] + bank.acc_number
+
+        return ret
+
+    def _get_rem_letter_bot(self, cr, uid, ids, field_name, arg, context=None):
+        """Override the remittance_letter_bottom function field set by
+        account_streamline to add SEPA information.
+        """
+
+        ret = super(account_voucher, self)._get_rem_letter_bot(
+            cr, uid, ids, field_name, arg, context=context
+        )
+
+        for voucher_id in ret:
+            voucher = self.browse(cr, uid, [voucher_id], context=context)[0]
             if voucher.batch_id:
-                res[id] = res[id] + '''
+                ret[id] = ret[id] + '''
                 <h2 class="remittance_letter_bottom">
                     %s<br/>
                     %s<br/>
@@ -308,7 +326,7 @@ class account_voucher(osv.Model):
                        voucher.batch_id.wording,
                        voucher.batch_id.execution_date)
 
-        return res
+        return ret
 
     def _get_sepa_valid(self, cr, uid, ids, fields, arg, context):
         voucher_brs = self.browse(cr, uid, ids, context=context)
@@ -318,9 +336,17 @@ class account_voucher(osv.Model):
         return res
 
     _columns = {
-        'remittance_letter_bottom': fields.function(
-            _get_rem_letter_bot, type='text', method=True
+        'iban': fields.function(
+            _get_iban,
+            method=True,
+            type='char',
         ),
+        'remittance_letter_bottom': fields.function(
+            _get_rem_letter_bot,
+            method=True,
+            type='text',
+        ),
+
         # This field allows us to force the user to select only one account to
         # pay instead of always choosing the first bank account of the partner
         "sepa_valid": fields.function(
