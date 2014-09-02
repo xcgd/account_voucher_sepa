@@ -353,15 +353,15 @@ class account_voucher(osv.Model):
             _get_sepa_valid,
             type="boolean",
             method=True,
-            string=_("Valid for SEPA payments")
+            string="Valid for SEPA payments"
         ),
         "partner_bank_id": fields.many2one(
             "res.partner.bank",
-            _("Patner Bank"),
+            "Partner Bank",
             domain="[('partner_id', '=', partner_id)]"
         ),
         "batch_id": fields.many2one(
             "account.voucher.sepa_batch",
-            _("Sepa Batch")
+            "Sepa Batch"
         ),
     }
