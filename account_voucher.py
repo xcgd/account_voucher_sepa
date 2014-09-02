@@ -154,7 +154,7 @@ class account_voucher_sepa(osv.TransientModel):
         }
 
     def default_get(self, cr, uid, fields_list=None, context=None):
-        if not 'active_ids' in context:
+        if 'active_ids' not in context:
             return {}
         vals = {}
         voucher_lines = [(6, 0, context['active_ids'])]
@@ -172,7 +172,7 @@ class account_voucher_sepa(osv.TransientModel):
             submenu=submenu
         )
 
-        if not context or not 'active_ids' in context:
+        if not context or 'active_ids' not in context:
             return res
 
         domain = '[("id", "in", ' + str(context["active_ids"]) + ')]'
@@ -211,7 +211,7 @@ class account_voucher(osv.Model):
         return res
 
     def validate_selected(self, cr, uid, ids, context=None):
-        if not 'active_ids' in context:
+        if 'active_ids' not in context:
             raise osv.except_osv(
                 _("Integrity Error"),
                 _("You must select one voucher to generate SEPA file.")
@@ -222,7 +222,7 @@ class account_voucher(osv.Model):
         return {}
 
     def launch_wizard_sepa(self, cr, uid, ids, context=None):
-        if not 'active_ids' in context:
+        if 'active_ids' not in context:
             raise osv.except_osv(
                 _("Integrity Error"),
                 _("You must select one voucher to generate SEPA file.")
@@ -234,13 +234,13 @@ class account_voucher(osv.Model):
         err_acc_ids = []
         for this_br in this_brs:
             if this_br.state != 'posted':
-                if not this_br.number in err_post_ids:
+                if this_br.number not in err_post_ids:
                     err_post_ids.append(this_br.number)
             if this_br.batch_id:
-                if not this_br.number in err_att_ids:
+                if this_br.number not in err_att_ids:
                     err_att_ids.append(this_br.number)
             if not this_br.partner_id.bank_ids:
-                if not this_br.partner_id.name in err_acc_ids:
+                if this_br.partner_id.name not in err_acc_ids:
                     err_acc_ids.append(this_br.partner_id.name)
 
         def stringify(l):
