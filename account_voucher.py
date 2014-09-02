@@ -22,7 +22,7 @@ class account_voucher_sepa(osv.TransientModel):
 
     def generate_sepa(self, cr, uid, batch_id,
                       list_voucher, date, context=None):
-        #New version using account_credit_transfer
+        # New version using account_credit_transfer
 
         batch_osv = self.pool.get("account.voucher.sepa_batch")
         batch_br = batch_osv.browse(cr, uid, [batch_id], context=context)[0]
