@@ -20,9 +20,10 @@ class account_voucher_sepa_batch(osv.Model):
     }
 
     _sql_constraints = [
-        ('unique_name',
-        'unique(name)',
-        'The name must be unique.')
+        (
+            'unique_name',
+            'unique(name)',
+            'The name must be unique.')
     ]
 
     def create(self, cr, uid, vals, context=None):
@@ -76,7 +77,8 @@ class account_voucher_sepa_batch(osv.Model):
                 [voucher.id for voucher in sepa.line_ids])
 
         view_obj = self.pool.get('ir.ui.view')
-        view_id = view_obj.search(cr, uid,
+        view_id = view_obj.search(
+            cr, uid,
             [('name', '=', 'email.remittance')])
 
         return {
