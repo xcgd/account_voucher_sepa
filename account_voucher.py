@@ -2,6 +2,7 @@ from openerp.osv import osv, fields
 from openerp.tools.translate import _
 import datetime
 from lxml import etree
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 class account_voucher_sepa(osv.TransientModel):
@@ -313,9 +314,23 @@ class account_voucher(osv.Model):
             cr, uid, ids, field_name, arg, context=context
         )
 
+        # Grab the date format for the context 'lang'
+        pool_lang = self.pool['res.lang']
+        lang = context and context.get('lang', 'en_US') or 'en_US'
+        lang_ids = pool_lang.search(cr, uid, [('code', '=', lang)])
+        lang_obj = pool_lang.browse(cr, uid, lang_ids[0])
+        date_format = lang_obj.date_format
+
         for voucher_id in ret:
             voucher = self.browse(cr, uid, [voucher_id], context=context)[0]
             if voucher.batch_id:
+                # Transform into a datetime object
+                date = datetime.datetime.strptime(
+                    voucher.batch_id.execution_date,
+                    DEFAULT_SERVER_DATE_FORMAT)
+                # Reform datetime correctly (lang dependent)
+                pretty_date = datetime.datetime.strftime(
+                    date, date_format)
                 ret[id] = ret[id] + '''
                 <h2 class="remittance_letter_bottom">
                     %s<br/>
@@ -324,7 +339,7 @@ class account_voucher(osv.Model):
                 </h2>
                 ''' % (_('Sepa:'),
                        voucher.batch_id.wording,
-                       voucher.batch_id.execution_date)
+                       pretty_date)
 
         return ret
 
