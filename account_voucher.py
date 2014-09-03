@@ -25,7 +25,7 @@ class account_voucher_sepa(osv.TransientModel):
                       list_voucher, date, context=None):
         # New version using account_credit_transfer
 
-        batch_osv = self.pool.get("account.voucher.sepa_batch")
+        batch_osv = self.pool['account.voucher.sepa_batch']
         batch_br = batch_osv.browse(cr, uid, [batch_id], context=context)[0]
 
         data = {
@@ -37,7 +37,7 @@ class account_voucher_sepa(osv.TransientModel):
             'date': date,
         }
 
-        ct_config_osv = self.pool.get("account_credit_transfer.config")
+        ct_config_osv = self.pool['account_credit_transfer.config']
         ct_config_osv.generate_credit_transfer_file(
             cr, uid, data, context=context
         )
@@ -50,7 +50,7 @@ class account_voucher_sepa(osv.TransientModel):
 
     def __get_bank_id(self, cr, uid, ids, voucher, context=None):
         # Search with payment modes
-        payment_mode_osv = self.pool.get("payment.mode")
+        payment_mode_osv = self.pool['payment.mode']
         payment_mode_ids = payment_mode_osv.search(
             cr, uid,
             [("journal", "=", voucher.journal_id.id)],
@@ -96,8 +96,8 @@ class account_voucher_sepa(osv.TransientModel):
 
         voucher_ids = data['voucher_ids']
 
-        batch_osv = self.pool.get("account.voucher.sepa_batch")
-        account_voucher_osv = self.pool.get("account.voucher")
+        batch_osv = self.pool['account.voucher.sepa_batch']
+        account_voucher_osv = self.pool['account.voucher']
 
         list_voucher = account_voucher_osv.browse(
             cr, uid, voucher_ids, context=context
@@ -202,7 +202,7 @@ class account_voucher(osv.Model):
         )
 
         if not ttype == 'sale' and not ttype == 'purchase':
-            bank_osv = self.pool.get("res.partner.bank")
+            bank_osv = self.pool['res.partner.bank']
             bank_id = bank_osv.search(
                 cr, uid, [('partner_id', '=', partner_id)], context=context
             )
