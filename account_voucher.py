@@ -267,7 +267,7 @@ class account_voucher(osv.Model):
                 _(u"Error"),
                 err
             )
-        ir_ui_view_osv = self.pool.get('ir.ui.view')
+        ir_ui_view_osv = self.pool['ir.ui.view']
         view_id = ir_ui_view_osv.search(
             cr, uid,
             [('name', '=', 'view.account.voucher.sepa')],
