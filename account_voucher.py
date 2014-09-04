@@ -293,15 +293,16 @@ class account_voucher(osv.Model):
         bank information.
         """
 
-        ret = super(account_voucher, self)._get_rem_letter_bot(
+        ret = super(account_voucher, self)._get_iban(
             cr, uid, ids, field_name, arg, context=context
         )
 
+        # FIXME avoid using browse in for
         for voucher_id in ret:
             voucher = self.browse(cr, uid, [voucher_id], context=context)[0]
             bank = voucher.partner_bank_id
             if bank:
-                ret[id] = ret[id] + bank.acc_number
+                ret[voucher_id] = ret[voucher_id] + bank.acc_number
 
         return ret
 
@@ -331,7 +332,7 @@ class account_voucher(osv.Model):
                 # Reform datetime correctly (lang dependent)
                 pretty_date = datetime.datetime.strftime(
                     date, date_format)
-                ret[id] = ret[id] + '''
+                ret[voucher_id] = ret[voucher_id] + '''
                 <h2 class="remittance_letter_bottom">
                     %s<br/>
                     %s<br/>
