@@ -207,6 +207,9 @@ class account_voucher(osv.Model):
                 cr, uid, [('partner_id', '=', partner_id)], context=context
             )
             if bank_id:
+                # Apparently not always present (TKT/2014/00507)
+                if 'value' not in res:
+                    res['value'] = {}
                 res['value']['partner_bank_id'] = bank_id[0]
 
         return res
