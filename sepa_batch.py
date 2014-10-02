@@ -28,7 +28,7 @@ class account_voucher_sepa_batch(osv.Model):
     ]
 
     def create(self, cr, uid, vals, context=None):
-        vals['name'] = self.pool.get('ir.sequence').get(
+        vals['name'] = self.pool['ir.sequence'].get(
             cr, uid, 'account.voucher.sepa_batch'
         )
         return super(account_voucher_sepa_batch, self).create(
@@ -41,7 +41,7 @@ class account_voucher_sepa_batch(osv.Model):
                     _('Error'),
                     _('Please select only one Batch.')
                 )
-        ir_ui_view_osv = self.pool.get('ir.ui.view')
+        ir_ui_view_osv = self.pool['ir.ui.view']
         view_id = ir_ui_view_osv.search(
             cr, uid,
             [('name', '=', 'view.account.voucher.sepa_regeneration')],
@@ -77,7 +77,7 @@ class account_voucher_sepa_batch(osv.Model):
             context['active_ids'].extend(
                 [voucher.id for voucher in sepa.line_ids])
 
-        view_obj = self.pool.get('ir.ui.view')
+        view_obj = self.pool['ir.ui.view']
         view_id = view_obj.search(
             cr, uid,
             [('name', '=', 'email.remittance')])
@@ -111,13 +111,13 @@ class account_voucher_sepa_regeneration(osv.TransientModel):
     def default_get(self, cr, uid, fields_list=None, context=None):
         if 'active_ids' not in context:
             return {}
-        voucher_osv = self.pool.get('account.voucher')
+        voucher_osv = self.pool['account.voucher']
         voucher_ids = voucher_osv.search(
             cr, uid,
             [('batch_id', '=', context['active_ids'][0])],
             context=context
         )
-        batch_osv = self.pool.get('account.voucher.sepa_batch')
+        batch_osv = self.pool['account.voucher.sepa_batch']
         batch_br = batch_osv.browse(
             cr, uid,
             context['active_ids'][0],
@@ -130,7 +130,7 @@ class account_voucher_sepa_regeneration(osv.TransientModel):
         }
 
     def __delete_attachement(self, cr, uid, _id, context=None):
-        att_osv = self.pool.get('ir.attachment')
+        att_osv = self.pool['ir.attachment']
         att_id = att_osv.search(
             cr, uid,
             [('res_id', '=', _id)],
@@ -151,10 +151,10 @@ class account_voucher_sepa_regeneration(osv.TransientModel):
             'execution_date': this_br.execution_date,
         }
 
-        batch_osv = self.pool.get('account.voucher.sepa_batch')
+        batch_osv = self.pool['account.voucher.sepa_batch']
         batch_osv.write(cr, uid, active_id, vals, context=context)
 
-        sepa_osv = self.pool.get('account.voucher.sepa')
+        sepa_osv = self.pool['account.voucher.sepa']
         sepa_osv.generate_sepa(
             cr, uid, active_id, this_br.voucher_ids,
             this_br.execution_date, context=context
