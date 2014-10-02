@@ -103,7 +103,7 @@ class account_voucher_sepa(osv.TransientModel):
             cr, uid, voucher_ids, context=context
         )
 
-        # Calcul the total amount of all selected vouchers
+        # Compute the total amount of all selected vouchers
 
         total_amount = 0.0
 
