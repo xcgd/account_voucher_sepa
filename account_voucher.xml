@@ -44,12 +44,11 @@
                         <label string="" colspan="2" />
                         <field name="wording" colspan="2"/>
                     </group>
-                    <field name="voucher_ids">
+                    <field name="voucher_wizard_ids">
                         <tree string="Lines" version="7.0" editable="bottom" onchange="onchange_voucher_ids(voucher_ids)">
                             <field readonly="1" name="partner_id" />
                             <field readonly="1" name="amount" />
                             <field required="1" name="partner_bank_id" placeholder="No bank account found. Cannot generate file"/>
-                            <field name="state" invisible="True" />
                         </tree>
                     </field>
                     <footer>

@@ -43,7 +43,7 @@
                 <Nm py:content="data['company_name'][:70]"></Nm>
             </UltmtDbtr>
             <ChrgBr>SLEV</ChrgBr>
-            <CdtTrfTxInf py:for="voucher in data['list_voucher']">
+            <CdtTrfTxInf py:for="i, voucher in enumerate(data['list_voucher'])">
                 <PmtId>
                     <EndToEndId>${data['batch'].wording} - ${data['batch'].name}</EndToEndId>
                 </PmtId>
@@ -52,7 +52,7 @@
                 </Amt>
                 <CdtrAgt>
                     <FinInstnId>
-                        <BIC py:content="voucher.partner_bank_id.bank_bic.replace(' ','').upper()"></BIC>
+                        <BIC py:content="data['list_voucher_wizard'][i].partner_bank_id.bank_bic.replace(' ','').upper()"></BIC>
                     </FinInstnId>
                 </CdtrAgt>
                 <Cdtr>
@@ -60,7 +60,7 @@
                 </Cdtr>
                 <CdtrAcct>
                     <Id>
-                        <IBAN py:content="(voucher.partner_bank_id.iban or voucher.partner_bank_id.acc_number).replace(' ', '').upper()"></IBAN>
+                        <IBAN py:content="(data['list_voucher_wizard'][i].partner_bank_id.iban or data['list_voucher_wizard'][i].partner_bank_id.acc_number).replace(' ', '').upper()"></IBAN>
                     </Id>
                 </CdtrAcct>
                 <RmtInf>

@@ -3,17 +3,34 @@ from openerp.tools.translate import _
 import datetime
 from lxml import etree
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+import openerp.addons.decimal_precision as dp
 
+
+class account_voucher_wizard(osv.TransientModel):
+    _name = "account.voucher.wizard"
+
+    _columns = {
+        'partner_id': fields.many2one('res.partner', u"Partner"),
+        'amount': fields.float(
+            u"Total",
+            digits_compute=dp.get_precision('Account')
+        ),
+        'partner_bank_id': fields.many2one(
+            'res.partner.bank',
+            u"Partner Bank",
+            domain='[("partner_id", "=", partner_id)]'
+        ),
+        'sepa_id': fields.many2one('account.voucher.sepa'),
+        'voucher_id': fields.many2one('account.voucher'),
+    }
 
 class account_voucher_sepa(osv.TransientModel):
     _name = "account.voucher.sepa"
 
     _columns = {
         'group_suppliers': fields.boolean(_("Group suppliers")),
-        'voucher_ids': fields.many2many(
-            "account.voucher",
-            'account_voucher_rel_',
-            'voucher_id',
+        'voucher_wizard_ids': fields.one2many(
+            "account.voucher.wizard",
             'sepa_id',
             _('Lines'),
         ),
@@ -22,7 +39,7 @@ class account_voucher_sepa(osv.TransientModel):
     }
 
     def generate_sepa(self, cr, uid, batch_id,
-                      list_voucher, date, context=None):
+                      list_voucher_wizard, list_voucher, date, context=None):
         # New version using account_credit_transfer
 
         batch_osv = self.pool['account.voucher.sepa_batch']
@@ -33,6 +50,7 @@ class account_voucher_sepa(osv.TransientModel):
             'company_name': list_voucher[0].company_id.name,
             'debtor_bank': batch_br.creditor_bank_id,
             'list_voucher': list_voucher,
+            'list_voucher_wizard': list_voucher_wizard,
             'batch': batch_br,
             'date': date,
         }
@@ -44,7 +62,7 @@ class account_voucher_sepa(osv.TransientModel):
 
     def __get_data_from_wizard(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, [], context=context)[0]
-        if not data['voucher_ids']:
+        if not data['voucher_wizard_ids']:
             return False, False
         return True, data
 
@@ -94,21 +112,25 @@ class account_voucher_sepa(osv.TransientModel):
         if not test:
             return {'type': 'ir.actions.act_window_close'}
 
-        voucher_ids = data['voucher_ids']
+        voucher_wizard_ids = data['voucher_wizard_ids']
 
         batch_osv = self.pool['account.voucher.sepa_batch']
-        account_voucher_osv = self.pool['account.voucher']
+        account_voucher_wizard_osv = self.pool['account.voucher.wizard']
 
-        list_voucher = account_voucher_osv.browse(
-            cr, uid, voucher_ids, context=context
+        list_voucher_wizard = account_voucher_wizard_osv.browse(
+            cr, uid, voucher_wizard_ids, context=context
         )
 
         # Compute the total amount of all selected vouchers
 
         total_amount = 0.0
 
-        for voucher in list_voucher:
+        for voucher in list_voucher_wizard:
             total_amount += voucher.amount
+
+        voucher_osv = self.pool['account.voucher']
+        voucher_ids = [v.voucher_id.id for v in list_voucher_wizard]
+        list_voucher = voucher_osv.browse(cr, uid, voucher_ids, context=context)
 
         # Get the creditor bank
 
@@ -127,7 +149,7 @@ class account_voucher_sepa(osv.TransientModel):
 
         # Create the batch, associate all voucher with that batch
         batch_id = batch_osv.create(cr, uid, batch_vals, context=context)
-        account_voucher_osv.write(
+        voucher_osv.write(
             cr, uid,
             voucher_ids,
             {'batch_id': batch_id},
@@ -135,7 +157,11 @@ class account_voucher_sepa(osv.TransientModel):
         )
 
         self.generate_sepa(
-            cr, uid, batch_id, list_voucher, data['execution_date'],
+            cr, uid,
+            batch_id,
+            list_voucher_wizard,
+            list_voucher,
+            data['execution_date'],
             context=context
         )
 
@@ -156,8 +182,20 @@ class account_voucher_sepa(osv.TransientModel):
         if 'active_ids' not in context:
             return {}
         vals = {}
-        voucher_lines = [(6, 0, context['active_ids'])]
-        vals['voucher_ids'] = voucher_lines
+        voucher_obj = self.pool['account.voucher']
+        vouchers = voucher_obj.read(
+            cr, uid,
+            context['active_ids'],
+            ['partner_id', 'amount', 'partner_bank_id'],
+            context=context
+        )
+        for v in vouchers:
+            v['voucher_id'] = v.pop('id')
+            v['partner_id'] = v['partner_id'][0]
+            if v['partner_bank_id']:
+                v['partner_bank_id'] = v['partner_bank_id'][0]
+
+        vals['voucher_wizard_ids'] = [(0, 0, v) for v in vouchers]
         return vals
 
     def fields_view_get(self, cr, uid,
