@@ -429,3 +429,15 @@ class account_voucher(osv.Model):
             "Sepa Batch"
         ),
     }
+    
+    def cancel_voucher(self, cr, uid, ids, context=None):
+        data = self.read(cr, uid, ids, ['batch_id'], context=context)
+        for d in data:
+            if d['batch_id']:
+                raise osv.except_osv(
+                    _(u"Error"),
+                    _(u"You can't cancel a voucher attached to a batch.")
+                )
+        return super(account_voucher, self).cancel_voucher(
+            cr, uid, ids, context=context
+        )
