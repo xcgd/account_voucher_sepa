@@ -1,0 +1,46 @@
+account_voucher_sepa 1.6
+
+Production release
+
+account_voucher_sepa 1.5.3
+
+- [l10n] Update French translation
+
+account_voucher_sepa 1.5.2
+
+- Override cancel_voucher so we check if a batch is attached to the voucher, in which case canceling is prohibited.
+- [l10n] Update French translation.
+- Remove the possibility to generate sepa from receipt voucher
+- [Fix]ing the partner bank not readed from the wizard
+
+account_voucher_sepa 1.5.1
+
+- TKT/2014/00507 [fix] error message (KeyError value at line 210)
+
+account_voucher_sepa 1.5
+
+Production release
+
+account_voucher_sepa 1.4.7
+
+- Changed constraint on name to be unique by company (to allow multi company sequences).
+
+account_voucher_sepa 1.4.6
+
+- [Fix]ed variable name and super calling.
+
+account_voucher_sepa 1.4.5
+
+- TKT/2014/00286 [fix] Use lang to format date in remittance letter.
+
+account_voucher_sepa 1.4.4
+
+- Fill the IBAN of remittance letters.
+
+account_voucher_sepa 1.4.2
+
+- TKT/2014/00224 [Fix] bug when generating and the current date was used instead of execution date.
+
+account_voucher_sepa 1.4
+
+
