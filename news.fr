@@ -1,0 +1,47 @@
+account_voucher_sepa 1.6
+
+Production release
+
+account_voucher_sepa 1.5.3
+
+- [l10n] Mise à jour des traductions en Francais.
+
+account_voucher_sepa 1.5.2
+
+
+- Override cancel_voucher afin que nous vérifions si un lot est fixé à la pièce justificative , dans ce cas, l'annulation est interdite.
+- [l10n] Mise à jour des traductions en Francais.
+- Retirer la possibilité de générer des sepa des receipt voucher.
+- [Fix] Fixer les partenaires banques non lus à partir de l'assistant.
+
+account_voucher_sepa 1.5.1
+
+- TKT/2014/00507 [fix] Correction du message (KeyError value at line 210)
+
+account_voucher_sepa 1.5
+
+Production release
+
+account_voucher_sepa 1.4.7
+
+- Changement de la contrainte sur le nom pour être unique par entreprise ( pour permettre les séquences en multi compagnies).
+
+account_voucher_sepa 1.4.6
+
+- [Fix]Correction de noms de variables et d'appel au super.
+
+account_voucher_sepa 1.4.5
+
+- TKT/2014/00286 [fix] Utilisation de la fonction lang pour formater la date dans le rapport Avis de règlement.
+
+account_voucher_sepa 1.4.4
+
+- Remplir l'IBAN des Avis de règlements.
+
+account_voucher_sepa 1.4.2
+
+- Correction du bug lors de la génération et de la date du jour qui a été utilisé à la place de la date d'exécution 
+
+account_voucher_sepa 1.4
+
+
