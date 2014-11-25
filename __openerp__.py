@@ -21,7 +21,7 @@
 
 {
     "name": "Account Voucher SEPA",
-    "version": "1.5.4",
+    "version": "1.6",
     "author": "XCG Consulting",
     "website": "http://www.openerp-experts.com",
     "category": 'Accounting',
