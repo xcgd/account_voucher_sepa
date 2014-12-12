@@ -24,6 +24,7 @@ class account_voucher_wizard(osv.TransientModel):
         'voucher_id': fields.many2one('account.voucher'),
     }
 
+
 class account_voucher_sepa(osv.TransientModel):
     _name = "account.voucher.sepa"
 
@@ -130,7 +131,9 @@ class account_voucher_sepa(osv.TransientModel):
 
         voucher_osv = self.pool['account.voucher']
         voucher_ids = [v.voucher_id.id for v in list_voucher_wizard]
-        list_voucher = voucher_osv.browse(cr, uid, voucher_ids, context=context)
+        list_voucher = voucher_osv.browse(
+            cr, uid, voucher_ids, context=context
+        )
 
         # Get the creditor bank
 
@@ -429,7 +432,7 @@ class account_voucher(osv.Model):
             "Sepa Batch"
         ),
     }
-    
+
     def cancel_voucher(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, ['batch_id'], context=context)
         for d in data:
