@@ -54,7 +54,7 @@ class account_voucher_sepa(osv.TransientModel):
         'voucher_wizard_ids': fields.one2many(
             "account.voucher.wizard",
             'sepa_id',
-            _('Lines'),
+            "Lines",
         ),
         'wording': fields.char('Wording', size=20, required=True),
         'execution_date': fields.date('Execution Date', required=True),
