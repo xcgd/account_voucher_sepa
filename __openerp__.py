@@ -24,7 +24,7 @@
     "version": "1.6",
     "author": "XCG Consulting",
     "website": "http://www.openerp-experts.com",
-    "category": 'Accounting',
+    'category' : 'Accounting & Finance',
     "description": """Account Voucher Payment SEPA Plugin for Open ERP.
     Currently only supports pain.001.001.03 with outbound bank transfer.
     """,
