@@ -36,7 +36,11 @@ class account_voucher_sepa_batch(osv.Model):
         'line_ids': fields.one2many("account.voucher", "batch_id", "Lines"),
         'wording': fields.char("Wording", size=20),
         'execution_date': fields.date('Execution Date'),
-        'company_id': fields.many2one('res.company', "Company"),
+        'company_id': fields.many2one('res.company', "Company", select=1),
+    }
+
+    _defaults = {
+        'company_id': lambda s,cr,uid,c: s.pool['res.company']._company_default_get(cr, uid, 'account.voucher.sepa_batch', context=c),
     }
 
     _sql_constraints = [

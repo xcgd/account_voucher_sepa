@@ -1,3 +1,8 @@
+account_voucher_sepa 1.6.1
+
+- Added standard multi-company rule on SEPA Batch
+- Created Script to update the company of SEPA Batch (it was not set correctly before)
+
 account_voucher_sepa 1.6
 
 Production release
