@@ -1,0 +1,7 @@
+# Insert in French translation
+
+#. module: account_voucher
+#: view:account.statement.from.invoice.lines:0
+#: view:account.voucher:0
+msgid "Cancel"
+msgstr "Annuler"

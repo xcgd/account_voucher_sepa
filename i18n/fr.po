@@ -338,3 +338,10 @@ msgstr "Total"
 
 #~ msgid "The name must be unique."
 #~ msgstr "Le nom doît être unique."
+
+
+#. module: account_voucher
+#: view:account.statement.from.invoice.lines:0
+#: view:account.voucher:0
+msgid "Cancel"
+msgstr "Annuler"
