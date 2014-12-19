@@ -3,8 +3,10 @@
 
 ### Account Voucher Payment SEPA Plugin for Odoo/OpenERP ###
 
-
 * Create a bank account according to the single euro payments area (SEPA) with Odoo/OpenERP.
+
+* You can find a sample settings implementation at :
+* http://www.xcg-consulting.fr/blog/le-parametrage-sepa-sur-odoo/
 
 ### Main Improvments ###
 
