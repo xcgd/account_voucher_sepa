@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013 XCG Consulting (www.odoo.consulting)
+#    Copyright (C) 2013-2014 XCG Consulting (http://odoo.consulting/)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,9 +21,9 @@
 
 {
     "name": "Account Voucher SEPA",
-    "version": "1.6.2",
+    "version": "1.7",
     "author": "XCG Consulting",
-    "website": "www.odoo.consulting",
+    "website": "http://odoo.consulting/",
     'category' : 'Accounting & Finance',
     "description": """Account Voucher Payment SEPA Plugin for Open ERP.
     Currently only supports pain.001.001.03 with outbound bank transfer.

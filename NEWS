@@ -1,3 +1,11 @@
+account_voucher_sepa 1.7
+
+Production release
+
+account_voucher_sepa 1.6.2
+
+- [l10n] French translation updated
+
 account_voucher_sepa 1.6.1
 
 - Added standard multi-company rule on SEPA Batch
