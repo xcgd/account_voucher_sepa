@@ -120,37 +120,51 @@ class account_voucher_sepa_batch(osv.Model):
 class account_voucher_sepa_regeneration(osv.TransientModel):
     _name = 'account.voucher.sepa_regeneration'
     _columns = {
-        'voucher_ids': fields.many2many(
-            "account.voucher",
-            'account_voucher_reg_rel_',
-            'voucher_id',
-            'sepa_id',
-            _('Lines'),
+        'voucher_wizard_ids': fields.one2many(
+            'account.voucher.wizard',
+            'sepa_regeneration_id',
+            "Lines",
         ),
         'wording': fields.char('Wording', size=128, required=True),
         'execution_date': fields.date('Execution Date', required=True),
     }
 
+    def __get_data_from_wizard(self, cr, uid, ids, context=None):
+        data = self.read(cr, uid, ids, [], context=context)[0]
+        if not data['voucher_wizard_ids']:
+            return False, False
+        return True, data
+
     def default_get(self, cr, uid, fields_list=None, context=None):
         if 'active_ids' not in context:
             return {}
+
+        vals = {}
         voucher_osv = self.pool['account.voucher']
-        voucher_ids = voucher_osv.search(
-            cr, uid,
-            [('batch_id', '=', context['active_ids'][0])],
-            context=context
-        )
         batch_osv = self.pool['account.voucher.sepa_batch']
         batch_br = batch_osv.browse(
             cr, uid,
             context['active_ids'][0],
             context=context
         )
-        return {
-            'wording': batch_br.wording,
-            'execution_date': batch_br.execution_date,
-            'voucher_ids': [(6, 0, voucher_ids)],
-        }
+        voucher_ids = [v.id for v in batch_br.line_ids]
+        vouchers = voucher_osv.read(
+            cr, uid, voucher_ids,
+            ['partner_id', 'amount', 'partner_bank_id'],
+            context=context,
+        )
+
+        for v in vouchers:
+            v['voucher_id'] = v.pop('id')
+            v['partner_id'] = v['partner_id'][0]
+            if v['partner_bank_id']:
+                v['partner_bank_id'] = v['partner_bank_id'][0]
+
+        vals['voucher_wizard_ids'] = [(0, 0, v) for v in vouchers]
+        vals['wording'] = batch_br.wording
+        vals['execution_date'] = batch_br.execution_date
+
+        return vals
 
     def __delete_attachement(self, cr, uid, _id, context=None):
         att_osv = self.pool['ir.attachment']
@@ -165,13 +179,29 @@ class account_voucher_sepa_regeneration(osv.TransientModel):
     def regenerate_sepa(self, cr, uid, ids, context=None):
         active_id = context['active_ids'][0]
 
+        test, data = self.__get_data_from_wizard(cr, uid, ids, context=context)
+        if not test:
+            return {'type': 'ir.actions.act_window_close'}
+
+        voucher_wizard_ids = data['voucher_wizard_ids']
+
+        account_voucher_wizard_osv = self.pool['account.voucher.wizard']
+
+        list_voucher_wizard = account_voucher_wizard_osv.browse(
+            cr, uid, voucher_wizard_ids, context=context
+        )
+
+        voucher_osv = self.pool['account.voucher']
+        voucher_ids = [v.voucher_id.id for v in list_voucher_wizard]
+        list_voucher = voucher_osv.browse(
+            cr, uid, voucher_ids, context=context
+        )
+
         self.__delete_attachement(cr, uid, active_id, context=context)
 
-        this_br = self.browse(cr, uid, ids[0], context=context)
-
         vals = {
-            'wording': this_br.wording,
-            'execution_date': this_br.execution_date,
+            'wording': data['wording'],
+            'execution_date': data['execution_date'],
         }
 
         batch_osv = self.pool['account.voucher.sepa_batch']
@@ -179,8 +209,8 @@ class account_voucher_sepa_regeneration(osv.TransientModel):
 
         sepa_osv = self.pool['account.voucher.sepa']
         sepa_osv.generate_sepa(
-            cr, uid, active_id, this_br.voucher_ids,
-            this_br.execution_date, context=context
+            cr, uid, active_id, list_voucher_wizard, list_voucher,
+            data['execution_date'], context=context
         )
 
         context['active_id'] = active_id
