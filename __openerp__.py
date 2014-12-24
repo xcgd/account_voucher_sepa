@@ -21,7 +21,7 @@
 
 {
     "name": "Account Voucher SEPA",
-    "version": "1.7",
+    "version": "1.7.1",
     "author": "XCG Consulting",
     "website": "http://odoo.consulting/",
     'category' : 'Accounting & Finance',

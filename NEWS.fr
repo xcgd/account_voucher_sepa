@@ -1,3 +1,20 @@
+account_voucher_sepa 1.7.1
+
+- TKT/2014/01114 [fix] Correction d'un bug lors de la regénération d'un lot SEPA
+
+account_voucher_sepa 1.7
+
+Production release
+
+account_voucher_sepa 1.6.2
+
+- [l10n] Mise à jour des traductions en Francais.
+
+account_voucher_sepa 1.6.1
+
+- Ajout des règles de multi-société sur les lots SEPA
+- Création d'un script pour mettre à jour la société des lots SEPA (Elle n'était pas renseignée correctement avant)
+
 account_voucher_sepa 1.6
 
 Production release
