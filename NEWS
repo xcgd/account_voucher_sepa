@@ -1,3 +1,7 @@
+account_voucher_sepa 1.7.2
+
+- Require account_iban instead of base_iban.
+
 account_voucher_sepa 1.7.1
 
 - TKT/2014/01114 [fix]ed regeneration of the SEPA from a batch
