@@ -34,8 +34,8 @@
         'account_credit_transfer',
         'account_voucher',
         'account_streamline',
+        'account_iban',
         'analytic_structure',
-        'base_iban',
         'document',
     ],
 
