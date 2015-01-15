@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-2014 XCG Consulting (http://odoo.consulting/)
+#    Copyright (C) 2013-2015 XCG Consulting (http://odoo.consulting/)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,7 +21,7 @@
 
 {
     "name": "Account Voucher SEPA",
-    "version": "1.7.2",
+    "version": "1.8",
     "author": "XCG Consulting",
     "website": "http://odoo.consulting/",
     'category' : 'Accounting & Finance',

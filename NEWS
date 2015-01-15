@@ -1,3 +1,7 @@
+account_voucher_sepa 1.8
+
+Production release
+
 account_voucher_sepa 1.7.2
 
 - Require account_iban instead of base_iban.
