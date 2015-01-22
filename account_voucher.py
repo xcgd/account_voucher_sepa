@@ -297,10 +297,19 @@ class account_voucher(osv.Model):
         err_post_ids = []
         err_att_ids = []
         err_acc_ids = []
-        err_pay_ids = []
+        err_wrong_type_ids = []
+        err_amount_ids = []
         for this_br in this_brs:
-            if this_br.type != 'payment':
-                err_pay_ids.append(this_br.number)
+            if this_br.type not in ('payment', 'receivable'):
+                err_wrong_type_ids.append(this_br.number)
+            # Allow payment but only with debit value
+            if this_br.type == 'payment':
+                if not this_br.amount >= 0:
+                    err_amount_ids.append(this_br.number)
+            # Allow receivable but only with credit value
+            if this_br.type == 'receivable':
+                if not this_br.amount <= 0:
+                    err_amount_ids.append(this_br.number)
             if this_br.state != 'posted':
                 if this_br.number not in err_post_ids:
                     err_post_ids.append(this_br.number)
@@ -314,31 +323,34 @@ class account_voucher(osv.Model):
         def stringify(l):
             return [str(x) for x in l]
 
-        if err_pay_ids:
+        # XXX I don't think there is a language where the separator for list
+        # would be dependent on the sentence so using _(', ') should be fine
+        if err_wrong_type_ids:
             err += _(
-                u"The voucher %s is not of type 'payment'\n\n" %
-                u", ".join(stringify(err_pay_ids))
-            )
+                "The voucher %s is not of type 'payment' nor 'receivable'.\n\n"
+            ) % _(", ").join(stringify(err_wrong_type_ids))
         else:
+            if err_amount_ids:
+                err += _(
+                    "The voucher %s has an incorrect amount considering its"
+                    " type.\n\n"
+                ) % _(", ").join(stringify(err_amount_ids))
             if err_post_ids:
                 err += _(
-                    u"The voucher %s must be posted "
-                    u"before generating SEPA file\n\n" %
-                    u", ".join(stringify(err_post_ids))
-                )
+                    "The voucher %s must be posted before generating SEPA file"
+                    "\n\n"
+                ) % _(", ").join(stringify(err_post_ids))
             if err_att_ids:
                 err += _(
-                    u"The voucher %s is already attached to a batch.\n\n" %
-                    u", ".join(stringify(err_att_ids))
-                )
+                    "The voucher %s is already attached to a batch.\n\n"
+                ) % _(", ").join(stringify(err_att_ids))
             if err_acc_ids:
                 err += _(
-                    u"Please set a bank account on the partner %s.\n\n" %
-                    u", ".join(stringify(err_acc_ids))
-                )
+                    "Please set a bank account on the partner %s.\n\n"
+                ) % _(", ").join(stringify(err_acc_ids))
         if err:
             raise osv.except_osv(
-                _(u"Error"),
+                _(u"Invalid Voucher(s)"),
                 err
             )
         ir_ui_view_osv = self.pool['ir.ui.view']
