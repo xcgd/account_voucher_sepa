@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-2014 XCG Consulting
+#    Copyright (C) 2013-2015 XCG Consulting
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -211,7 +211,7 @@ class account_voucher_sepa(osv.TransientModel):
         vouchers = voucher_obj.read(
             cr, uid,
             context['active_ids'],
-            ['partner_id', 'amount', 'partner_bank_id'],
+            ['partner_id', 'amount', 'partner_bank_id', 'type'],
             context=context
         )
         for v in vouchers:
@@ -219,6 +219,10 @@ class account_voucher_sepa(osv.TransientModel):
             v['partner_id'] = v['partner_id'][0]
             if v['partner_bank_id']:
                 v['partner_bank_id'] = v['partner_bank_id'][0]
+            # receipt refund need to be positive when paid
+            if v['type'] == 'receipt':
+                v['amount'] = -v['amount']
+            # TODO remove type from dic
 
         vals['voucher_wizard_ids'] = [(0, 0, v) for v in vouchers]
         return vals
@@ -300,14 +304,14 @@ class account_voucher(osv.Model):
         err_wrong_type_ids = []
         err_amount_ids = []
         for this_br in this_brs:
-            if this_br.type not in ('payment', 'receivable'):
+            if this_br.type not in ('payment', 'receipt'):
                 err_wrong_type_ids.append(this_br.number)
             # Allow payment but only with debit value
             if this_br.type == 'payment':
                 if not this_br.amount >= 0:
                     err_amount_ids.append(this_br.number)
-            # Allow receivable but only with credit value
-            if this_br.type == 'receivable':
+            # Allow receipt but only with credit value
+            if this_br.type == 'receipt':
                 if not this_br.amount <= 0:
                     err_amount_ids.append(this_br.number)
             if this_br.state != 'posted':
@@ -327,7 +331,7 @@ class account_voucher(osv.Model):
         # would be dependent on the sentence so using _(', ') should be fine
         if err_wrong_type_ids:
             err += _(
-                "The voucher %s is not of type 'payment' nor 'receivable'.\n\n"
+                "The voucher %s is not of type 'payment' nor 'receipt'.\n\n"
             ) % _(", ").join(stringify(err_wrong_type_ids))
         else:
             if err_amount_ids:

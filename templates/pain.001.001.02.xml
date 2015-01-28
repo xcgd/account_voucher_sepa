@@ -44,7 +44,12 @@
                     <EndToEndId>${data['batch'].wording} - ${data['batch'].name}</EndToEndId>
                 </PmtId>
                 <Amt>
+                    <py:if test="voucher.type == 'payment'">
                     <InstdAmt Ccy="${voucher.currency_id.name}" py:content="fpformat.fix(voucher.amount, 2)"></InstdAmt>
+                    </py:if>
+                    <py:if test="voucher.type == 'receipt'">
+                    <InstdAmt Ccy="${voucher.currency_id.name}" py:content="fpformat.fix(-voucher.amount, 2)"></InstdAmt>
+                    </py:if>
                 </Amt>
                 <CdtrAgt>
                     <FinInstnId>
