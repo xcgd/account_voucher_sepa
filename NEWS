@@ -1,7 +1,8 @@
 account_voucher_sepa 1.9
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-- [TKT/2014/00429] Allow sepa on negative receivable voucher, and restrict to positive payment voucher
+- [TKT/2014/00429] Allow sepa on negative amount receipt voucher, and restrict to positive amount payment voucher
+- [CONFIGURATION] Recharge SEPA parsers
 
 account_voucher_sepa 1.8
 
