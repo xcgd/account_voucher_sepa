@@ -3,6 +3,7 @@ account_voucher_sepa 1.9
 
 - [TKT/2014/00429] Allow sepa on negative amount receipt voucher, and restrict to positive amount payment voucher
 - [CONFIGURATION] Recharge SEPA parsers
+- [TKT/2014/00429] Add partner_bank_id in view field for receipt voucher, also on low priority view, also show credit/debit line in low priority view
 
 account_voucher_sepa 1.8
 
