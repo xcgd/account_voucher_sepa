@@ -174,7 +174,7 @@ msgstr "account.voucher.sepa_batch"
 #: field:account.voucher,partner_bank_id:0
 #: field:account.voucher.wizard,partner_bank_id:0
 msgid "Partner Bank"
-msgstr "Banque Fournisseur"
+msgstr "Banque du tiers"
 
 #. module: account_voucher_sepa
 #: field:account.voucher.sepa_batch,name:0
