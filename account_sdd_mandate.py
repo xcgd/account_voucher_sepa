@@ -55,11 +55,9 @@ class account_sdd_mandate(osv.Model):
             help='Number of times this mandate has been used'
         ),
         'sequence_type': fields.selection(
-            [('first', 'FRST'),
-             ('recurring', 'RCUR'),
-             ('final', 'FNAL'),
-             ('one_off', 'OOFF')],
-            string='Creditor Name',
+            [('one_off', 'One Off'),
+             ('recurring', 'Recurring')],
+            string='Sequence Type',
         ),
         'date_of_signature': fields.date(
             string='Date of Signature',
