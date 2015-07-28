@@ -71,5 +71,15 @@ class account_sdd_mandate(osv.Model):
             'res.partner',
             string='Ultimate Debtor',
             help='Can be the same as the Creditor',
+        ),
+        'amends_mandate': fields.boolean(
+            string='Amends another mandate',
+            help='Means that this mandate replace another if ticked'
+        ),
+        'original_mandate': fields.many2one(
+            'account.sdd.mandate',
+            string='Original Mandate',
+            help='Must be specified if the mandate is the'
+                 'amendment of another',
         )
     }
