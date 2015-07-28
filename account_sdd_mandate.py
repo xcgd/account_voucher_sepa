@@ -23,7 +23,7 @@ from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
 
-class account_sdd_mandate:
+class account_sdd_mandate(osv.Model):
     """
     Represents the mandate document used to generate SDD SEPA payments
     """
