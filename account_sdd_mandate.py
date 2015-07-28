@@ -28,6 +28,16 @@ class account_sdd_mandate(osv.Model):
     Represents the mandate document used to generate SDD SEPA payments
     """
 
+    def write(self, cr, uid, vals, context=None):
+        if(not vals['ultimate_debtor']):
+            vals['ultimate_debtor'] = vals['debtor']
+
+        if(not vals['ultimate_creditor']):
+            vals['ultimate_creditor'] = vals['ultimate_creditor']
+
+        return super(account_sdd_mandate, self).write(self, cr, uid, vals,
+                                                      context)
+
     _name = 'account.sdd.mandate'
     _columns = {
         'identification': fields.char(
