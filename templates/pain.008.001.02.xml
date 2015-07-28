@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<?python
+  from datetime import datetime
+  import time
+  import fpformat
+?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.008.001.02" xmlns:py="http://genshi.edgewall.org/">
+    <CstmrCdtTrfInitn>
+        <!-- Header -->
+        <GrpHdr>
+            <MsgId py:content="time.strftime('%Y%m%d%H%M%S')"></MsgId>
+            <CreDtTm py:content="time.strftime('%Y-%m-%dT%H:%M:%S')"></CreDtTm>
+            <NbOfTxs py:content="len(data['list_voucher'])"></NbOfTxs>
+            <CtrlSum py:content="fpformat.fix(data['total_amount'], 2)"></CtrlSum>
+            <InitgPty>
+                <Nm py:content="data['company_name'][:70]"></Nm>
+            </InitgPty>
+        </GrpHdr>
+        <!-- Payment Group -->
+        <PmtInf>
+            <PmtInfId py:content="data['list_voucher'][0].number"></PmtInfId>
+            <PmtMtd>DD</PmtMtd>
+            <BtchBookg></BtchBookg> <!-- TODO -->
+            <NbOfTxs py:content="len(data['list_voucher'])"></NbOfTxs>
+            <CtrlSum py:content="fpformat.fix(data['total_amount'], 2)"></CtrlSum>
+            <PmtTpInf>
+                <SvcLvl>
+                    <Cd>SEPA</Cd>
+                </SvcLvl>
+                <LclInstrm>
+                    <Cd></Cd> <!-- TODO Either CORE or B2B -->
+                </LclInstrm>
+                <SeqTp></SeqTp> <!-- TODO One of FSRT, RCUR, FNAL, OOF -->
+            </PmtTpInf>
+            <CtgyPurp>
+                <Cd></Cd> <!-- TODO value taken from a list of purpose code list -->
+            </CtgyPurp>
+            <ReqdExctnDt py:content="datetime.strptime(data['date'], '%Y-%m-%d').date().isoformat()"></ReqdExctnDt>
+            <Cdtr>
+                <Nm></Nm> <!-- TODO debitor name -->
+            </Cdtr>
+            <CdtrAcct>
+                <Id>
+                    <IBAN></IBAN> <!-- TODO creditor IBAN -->
+                </Id>
+                <Ccy></Ccy> <!-- Currency -->
+            </CdtrAcct>
+            <CdtrAgt>
+                <FinInstnId>
+                    <BIC></BIC> <!-- TODO creditor bank -->
+                </FinInstnId>
+            </CdtrAgt>
+            <UltmtCdr>
+                <Nm></Nm> <!-- TODO creditor name -->
+                <Id>
+                    <OrgId></OrgId> <!-- TODO either BIC or BEI -->
+                </Id>
+            </UltmtCdr>
+            <ChrgBr>SLEV</ChrgBr> <!-- TODO optional element, figure out when to specify  -->
+            <CdtrSchmeId>
+                <Id>
+                    <PrvtId>
+                        <Other>
+                            <Id></Id> <!-- 2.27 TODO SEPA creditor Id -->
+                            <SchmeNm>
+                                <Prtry>SEPA</Prtry>
+                            </SchmeNm>
+                        </Other>
+                    </PrvtId>
+                </Id>
+            </CdtrSchmeId>
+            <!-- Transactions -->
+            <DrctDbtTxInf>
+                <PmtId>
+                    <InstrId></InstrId> <!-- 2.30 TODO assigned by instructing party -->
+                    <EndToEndId></EndToEndId> <!-- 2.31 TODO assigned by initiating party -->
+                </PmtId>
+                <InstdAmt></InstdAmt> <!-- 2.44 TODO amount -->
+                <DrcDbtTx> <!-- 2.46 mandate stuff -->
+                    <MndtRItdInf>
+                        <MndtId></MndtId> <!-- 2.48 TODO Identifier -->
+                        <DtOfSgntr></DtOfSgntr> <!-- 2.49 TODO signature -->
+                        <AmdmntInd></AmdmntInd> <!-- 2.50 TODO true/false -->
+                        <AmdmntInfDtls>
+                            <OrgnMndtId></OrgnMndtId> <!-- 2.52 TODO previous mandate, specify if there is a change -->
+                            <OrgnCdtrSchmeId> <!-- 2.53 Data pertaining to the previous mandate -->
+                                <Nm></Nm> <!-- 2.53 TODO previous creditor name -->
+                                <Id>
+                                    <PrvtId>
+                                        <Othr>
+                                            <Id></Id> <!-- 2.53 TODO SEPA creditor id -->
+                                            <SchmeNm>
+                                                <Prtry>SEPA</Prtry>
+                                            </SchmeNm>
+                                        </Othr>
+                                    </PrvtId>
+                                </Id>
+                            </OrgnCdtrSchmeId> <!-- 2.58 required if creditor bank has changed -->
+                            <OrgnlDbtrAgt>
+                                <FinInstnId>
+                                    <Othr>
+                                        <Id>SMNDA</Id> <!-- 2.58 TODO indicates that the bank has changed -->
+                                    </Othr>
+                                </FinInstnId>
+                            </OrgnlDbtrAgt>
+                        </AmdmntInfDtls>
+                    </MndtRItdInf>
+                </DrcDbtTx>
+                <UltmtCdr>
+                    <Nm></Nm> <!-- 2.69 TODO creditor reference party "créancier d'origine" -->
+                    <Id>
+                        <OrgId></OrgId> <!-- 2.69 TODO BIR/BEI??? -->
+                    </Id>
+                </UltmtCdr>
+                <DbtAgt>
+                    <FinInstnId>
+                        <BIC></BIC> <!-- 2.70 TODO debtor's bank -->
+                    </FinInstnId>
+                </DbtAgt>
+                <Dbtr>
+                    <Nm></Nm> <!-- 2.72 TODO debtor name -->
+                    <Id>
+                        <OrgId></OrgId> <!-- 2.72 TODO BIC/BEI -->
+                    </Id>
+                </Dbtr>
+                <DbtAcct>
+                    <Id>
+                        <IBAN></IBAN> <!-- -2.73 TODO debtor account -->
+                    </Id>
+                </DbtAcct>
+                <UltmtDbtr>
+                    <Nm></Nm> <!-- 2.74 TODO  -->
+                    <Id>
+                        <OrgId></OrgId> <!-- 2.74 TODO BIC/BEI -->
+                    </Id>
+                </UltmtDbtr>
+                <Purp>
+                    <Cd></Cd> <!-- 2.77 TODO from list of purpose codes -->
+                </Purp>
+                <RgltryRptg> <!-- Single occurence see section 2.11 -->
+                    <Dtls>
+                        <Cd></Cd> <!-- 2.79 TODO -->
+                    </Dtls>
+                </RgltryRptg>
+                <RmtInf>
+                    <Ustrd></Ustrd> <!-- 2.89 TODO reason for payment -->
+                    <Strd>
+                        <CdtrRefInf>
+                            <Tp>
+                                <CdOrPrtry>SCOR</CdOrPrtry>
+                            </Tp>
+                        </CdtrRefInf>
+                        <Ref></Ref> <!-- 2.116 TODO reference defined by creditor -->
+                    </Strd>
+                </RmtInf>
+            </DrctDbtTxInf>
+        </PmtInf>
+    </CstmrCdtTrfInitn>
+</Document>
