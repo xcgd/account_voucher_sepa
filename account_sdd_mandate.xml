@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_account_sdd_mandate_form" model="ir.ui.view">
+            <field name="name">view.account.sdd.mandate.form</field>
+            <field name="model">account.sdd.mandate</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group col="2">
+                        <group>
+	                        <field name="identification"/>
+	                        <field name="sequence_type"/>
+	                        <field name="count"/>
+                        </group>
+                        <group>
+	                        <field name="date_of_signature"/>
+	                        <field name="amends_mandate"/>
+	                        <field name="original_mandate"/>
+                        </group>
+                    </group>
+                    <group col="2">
+                        <group>
+                            Creditor Information
+	                        <field name="creditor"/>
+	                        <field name="ultimate_creditor"/>
+                        </group>
+                        <group>
+                            Debtor Information
+	                        <field name="debtor"/>
+	                        <field name="ultimate_debtor"/>
+	                        <field name="debtor_account"/>
+	                        <field name="debtor_agent"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>
