@@ -35,5 +35,15 @@
                 </form>
             </field>
         </record>
+
+        <record id="action_acccount_sdd_mandate_view" model="ir.actions.act_window">
+            <field name="name">Mandate</field>
+            <field name="res_model">account.sdd.mandate</field>
+            <field name="view_type">tree</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="action_acccount_sdd_mandate_view" id="menu_action_sepa_batch_view"
+            parent="account_payment.menu_main_payment" groups="account.group_account_user" />
     </data>
 </openerp>
