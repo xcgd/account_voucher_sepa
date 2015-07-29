@@ -41,6 +41,7 @@
 
     "data": [
         'account_voucher.xml',
+        'account_sdd_mandate.xml',
         'sepa_batch.xml',
         'data/batch_sequence.xml',
         'security/ir.model.access.csv',
