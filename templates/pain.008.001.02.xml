@@ -28,26 +28,26 @@
                     <Cd>SEPA</Cd>
                 </SvcLvl>
                 <LclInstrm>
-                    <Cd></Cd> <!-- TODO Either CORE or B2B -->
+                    <Cd>CORE</Cd> <!-- TODO Either CORE or B2B -->
                 </LclInstrm>
                 <SeqTp></SeqTp> <!-- TODO One of FSRT, RCUR, FNAL, OOF -->
             </PmtTpInf>
-            <CtgyPurp>
-                <Cd></Cd> <!-- TODO value taken from a list of purpose code list -->
-            </CtgyPurp>
+            <!--CtgyPurp-->
+                <!--Cd></Cd--> <!-- TODO value taken from a list of purpose code list -->
+            <!--/CtgyPurp-->
             <ReqdExctnDt py:content="datetime.strptime(data['date'], '%Y-%m-%d').date().isoformat()"></ReqdExctnDt>
             <Cdtr>
-                <Nm></Nm> <!-- TODO debitor name -->
+                <Nm py:content="data['company_name'][:70]"></Nm>
             </Cdtr>
             <CdtrAcct>
                 <Id>
-                    <IBAN></IBAN> <!-- TODO creditor IBAN -->
+                    <IBAN py:content="(data['debtor_bank'].iban or data['debtor_bank'].acc_number).replace(' ', '').upper()"></IBAN>
                 </Id>
                 <Ccy></Ccy> <!-- Currency -->
             </CdtrAcct>
             <CdtrAgt>
                 <FinInstnId>
-                    <BIC></BIC> <!-- TODO creditor bank -->
+                    <BIC py:content="data['debtor_bank'].bank_bic.replace(' ', '').upper()"></BIC>
                 </FinInstnId>
             </CdtrAgt>
             <UltmtCdr>
@@ -70,36 +70,41 @@
                 </Id>
             </CdtrSchmeId>
             <!-- Transactions -->
-            <DrctDbtTxInf>
+            <DrctDbtTxInf py:for="i, voucher in enumerate(data['list_voucher'])">
                 <PmtId>
                     <InstrId></InstrId> <!-- 2.30 TODO assigned by instructing party -->
                     <EndToEndId></EndToEndId> <!-- 2.31 TODO assigned by initiating party -->
                 </PmtId>
-                <InstdAmt></InstdAmt> <!-- 2.44 TODO amount -->
+                <InstdAmt Ccy="${voucher.currency_id.name} py:content="fpformat.fix(voucher.amount, 2)""></InstdAmt> <!-- 2.44 TODO amount -->
                 <DrcDbtTx> <!-- 2.46 mandate stuff -->
                     <MndtRItdInf>
-                        <MndtId></MndtId> <!-- 2.48 TODO Identifier -->
-                        <DtOfSgntr></DtOfSgntr> <!-- 2.49 TODO signature -->
-                        <AmdmntInd></AmdmntInd> <!-- 2.50 TODO true/false -->
-                        <AmdmntInfDtls>
-                            <OrgnMndtId></OrgnMndtId> <!-- 2.52 TODO previous mandate, specify if there is a change -->
-                            <OrgnCdtrSchmeId> <!-- 2.53 Data pertaining to the previous mandate -->
-                                <Nm></Nm> <!-- 2.53 TODO previous creditor name -->
+                        <MndtId py:content="data['mandate'].identifier"></MndtId> <!-- 2.48 TODO Identifier -->
+                        <DtOfSgntr py:content="data['mandate'].date_of_signature"></DtOfSgntr> <!-- 2.49 TODO signature -->
+                        <AmdmntInd py:content="data['mandate'].amends_mandate"></AmdmntInd> <!-- 2.50 TODO true/false -->
+                        <AmdmntInfDtls py:if="data['mandate'].amends_mandate">
+                            <OrgnMndtId py:content="data['mandate'].original_mandate.amends_mandate"></OrgnMndtId>
+                            <OrgnCdtrSchmeId py:if="data['mandate'].creditor != data['mandate'].original_mandate.creditor">
+                                <Nm py:content="data['mandate'].original_mandate.creditor.name"></Nm>
                                 <Id>
                                     <PrvtId>
                                         <Othr>
-                                            <Id></Id> <!-- 2.53 TODO SEPA creditor id -->
+                                            <Id py:content="data['mandate'].original_mandate.identifier"></Id> <!-- 2.53 TODO SEPA creditor id -->
                                             <SchmeNm>
                                                 <Prtry>SEPA</Prtry>
                                             </SchmeNm>
                                         </Othr>
                                     </PrvtId>
                                 </Id>
-                            </OrgnCdtrSchmeId> <!-- 2.58 required if creditor bank has changed -->
-                            <OrgnlDbtrAgt>
+                            </OrgnCdtrSchmeId>
+                            <OrgnlDbtrAccnt py:content="data['mandate'].property_account_payable != data['mandate'].original_mandate.property_account_payable">
+	                            <Id>
+		                            <IBAN py:content="data['mandate'].original_mandate.property_account_payable"></IBAN>
+		                        </Id>
+                            </OrgnlDbtrAccnt>
+                            <OrgnlDbtrAgt py:if="data['mandate'].creditor_agent != data['mandate'].original_mandate.creditor_agent">
                                 <FinInstnId>
                                     <Othr>
-                                        <Id>SMNDA</Id> <!-- 2.58 TODO indicates that the bank has changed -->
+                                        <Id>SMNDA</Id>
                                     </Othr>
                                 </FinInstnId>
                             </OrgnlDbtrAgt>
