@@ -27,6 +27,7 @@ class account_sdd_mandate(osv.Model):
     """
     Represents the mandate document used to generate SDD SEPA payments
     """
+    _name = 'account.sdd.mandate'
 
     def write(self, cr, uid, vals, context=None):
         if(not vals['ultimate_debtor']):
@@ -38,7 +39,32 @@ class account_sdd_mandate(osv.Model):
         return super(account_sdd_mandate, self).write(self, cr, uid, vals,
                                                       context)
 
-    _name = 'account.sdd.mandate'
+    def get_sequence_type(self, cr, uid, id, number, context=None):
+        """
+        Returns the 'sequence type' of the SDD SEPA mandate.
+        This value depends on the number of times this mandate was
+        used in the context of a 'payment information' block.
+
+        :param number: integer greater or equal to one,
+                       increment this value for each batch
+        :return: string, one of 'OOFF', 'RCUR', 'FRST', 'FNAL'
+        """
+        mandate_obj = self.pool['account.sdd.mandate']
+        mandate_id = self.browse(cr, uid, id, context)
+
+        if mandate_obj.sequence_type == 'recurring':
+            count = mandate_obj.count + number
+            if mandate_id.count == 0:
+                seq_type = 'RCUR'
+            elif mandate_id.count and count < mandate_id.count:
+                seq_type = 'RCUR'
+            else:
+                seq_type = 'FNAL'
+        else:
+            seq_type = 'OOFF'
+
+        return seq_type
+
     _columns = {
         'identification': fields.char(
             string='Mandate Identification',
