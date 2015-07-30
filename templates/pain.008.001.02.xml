@@ -5,6 +5,10 @@
   import fpformat
 ?>
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.008.001.02" xmlns:py="http://genshi.edgewall.org/">
+    <?python
+        mandate = data['mandate']
+        original_mandatae = data['mandate'].orginal_mandate
+    ?>
     <CstmrCdtTrfInitn>
         <!-- Header -->
         <GrpHdr>
@@ -78,17 +82,17 @@
                 <InstdAmt Ccy="${voucher.currency_id.name} py:content="fpformat.fix(voucher.amount, 2)""></InstdAmt> <!-- 2.44 TODO amount -->
                 <DrcDbtTx> <!-- 2.46 mandate stuff -->
                     <MndtRItdInf>
-                        <MndtId py:content="data['mandate'].identifier"></MndtId> <!-- 2.48 TODO Identifier -->
-                        <DtOfSgntr py:content="data['mandate'].date_of_signature"></DtOfSgntr> <!-- 2.49 TODO signature -->
-                        <AmdmntInd py:content="data['mandate'].amends_mandate"></AmdmntInd> <!-- 2.50 TODO true/false -->
-                        <AmdmntInfDtls py:if="data['mandate'].amends_mandate">
-                            <OrgnMndtId py:content="data['mandate'].original_mandate.amends_mandate"></OrgnMndtId>
-                            <OrgnCdtrSchmeId py:if="data['mandate'].creditor != data['mandate'].original_mandate.creditor">
-                                <Nm py:content="data['mandate'].original_mandate.creditor.name"></Nm>
+                        <MndtId py:content="mandate.identifier"></MndtId> <!-- 2.48 TODO Identifier -->
+                        <DtOfSgntr py:content="mandate.date_of_signature"></DtOfSgntr> <!-- 2.49 TODO signature -->
+                        <AmdmntInd py:content="mandate.amends_mandate"></AmdmntInd> <!-- 2.50 TODO true/false -->
+                        <AmdmntInfDtls py:if="mandate.amends_mandate">
+                            <OrgnMndtId py:content="original_mandate.amends_mandate"></OrgnMndtId>
+                            <OrgnCdtrSchmeId py:if="mandate.creditor != original_mandate.creditor">
+                                <Nm py:content="original_mandate.creditor.name"></Nm>
                                 <Id>
                                     <PrvtId>
                                         <Othr>
-                                            <Id py:content="data['mandate'].original_mandate.identifier"></Id> <!-- 2.53 TODO SEPA creditor id -->
+                                            <Id py:content="original_mandate.identifier"></Id> <!-- 2.53 TODO SEPA creditor id -->
                                             <SchmeNm>
                                                 <Prtry>SEPA</Prtry>
                                             </SchmeNm>
@@ -96,12 +100,12 @@
                                     </PrvtId>
                                 </Id>
                             </OrgnCdtrSchmeId>
-                            <OrgnlDbtrAccnt py:content="data['mandate'].property_account_payable != data['mandate'].original_mandate.property_account_payable">
+                            <OrgnlDbtrAccnt py:content="mandate.property_account_payable != original_mandate.property_account_payable">
 	                            <Id>
-		                            <IBAN py:content="data['mandate'].original_mandate.property_account_payable"></IBAN>
+		                            <IBAN py:content="original_mandate.property_account_payable"></IBAN>
 		                        </Id>
                             </OrgnlDbtrAccnt>
-                            <OrgnlDbtrAgt py:if="data['mandate'].creditor_agent != data['mandate'].original_mandate.creditor_agent">
+                            <OrgnlDbtrAgt py:if="mandate.creditor_agent != original_mandate.creditor_agent">
                                 <FinInstnId>
                                     <Othr>
                                         <Id>SMNDA</Id>
