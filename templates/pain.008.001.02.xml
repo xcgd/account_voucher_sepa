@@ -45,13 +45,13 @@
             </Cdtr>
             <CdtrAcct>
                 <Id>
-                    <IBAN py:content="(data['debtor_bank'].iban or data['debtor_bank'].acc_number).replace(' ', '').upper()"></IBAN>
+                    <IBAN py:content="(data['creditor_bank'].iban or data['creditor_bank'].acc_number).replace(' ', '').upper()"></IBAN>
                 </Id>
                 <Ccy></Ccy> <!-- Currency -->
             </CdtrAcct>
             <CdtrAgt>
                 <FinInstnId>
-                    <BIC py:content="data['debtor_bank'].bank_bic.replace(' ', '').upper()"></BIC>
+                    <BIC py:content="data['creditor_bank'].bank_bic.replace(' ', '').upper()"></BIC>
                 </FinInstnId>
             </CdtrAgt>
             <UltmtCdr>
