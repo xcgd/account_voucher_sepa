@@ -172,8 +172,7 @@
                     </Dtls>
                 </RgltryRptg>
                 <RmtInf>
-                    <!-- 2.89 TODO reason for payment -->
-                    <Ustrd></Ustrd>
+                    <!-- 2.89 reason for payment -->
                     <Strd>
                         <CdtrRefInf>
                             <Tp>
