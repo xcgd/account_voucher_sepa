@@ -177,7 +177,9 @@
                     <Strd>
                         <CdtrRefInf>
                             <Tp>
-                                <CdOrPrtry>SCOR</CdOrPrtry>
+                                <CdOrPrtry>
+                                    <Cd>SCOR</Cd><
+                                </CdOrPrtry>
                             </Tp>
                         </CdtrRefInf>
                         <!-- 2.116 TODO reference defined by creditor -->
