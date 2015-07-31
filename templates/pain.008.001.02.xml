@@ -116,50 +116,64 @@
                     </MndtRItdInf>
                 </DrcDbtTx>
                 <UltmtCdr>
-                    <Nm></Nm> <!-- 2.69 TODO creditor reference party "créancier d'origine" -->
+                    <Nm py:content="data['ultimate_creditor'].name"></Nm> <!-- 2.69 creditor reference party -->
                     <Id>
-                        <OrgId></OrgId> <!-- 2.69 TODO BIR/BEI??? -->
+                        <!-- 2.69 TODO BIR/BEI??? -->
+                        <OrgId></OrgId>
                     </Id>
                 </UltmtCdr>
                 <DbtAgt>
                     <FinInstnId>
-                        <BIC></BIC> <!-- 2.70 TODO debtor's bank -->
+                        <!-- 2.70 TODO debtor's bank -->
+                        <BIC></BIC>
                     </FinInstnId>
                 </DbtAgt>
                 <Dbtr>
-                    <Nm></Nm> <!-- 2.72 TODO debtor name -->
+                    <!-- 2.72 TODO debtor name -->
+                    <Nm></Nm>
                     <Id>
-                        <OrgId></OrgId> <!-- 2.72 TODO BIC/BEI -->
+                        <!-- 2.72 TODO BIC/BEI -->
+                        <OrgId></OrgId>
                     </Id>
                 </Dbtr>
                 <DbtAcct>
                     <Id>
-                        <IBAN></IBAN> <!-- -2.73 TODO debtor account -->
+                        <!-- -2.73 debtor account -->
+                        <IBAN py:content="debtor_account.iban"></IBAN>
                     </Id>
                 </DbtAcct>
                 <UltmtDbtr>
-                    <Nm></Nm> <!-- 2.74 TODO  -->
+                    <!-- 2.74 TODO  -->
+                    <Nm></Nm>
                     <Id>
-                        <OrgId></OrgId> <!-- 2.74 TODO BIC/BEI -->
+                        <OrgId>
+                            <!-- 2.74 BIC/BEI -->
+                            <BIC py:content="utltimate_debtor.code"></BIC>
+                        </OrgId>
                     </Id>
                 </UltmtDbtr>
                 <Purp>
-                    <Cd></Cd> <!-- 2.77 TODO from list of purpose codes -->
+                    <!-- 2.77 TODO from list of purpose codes -->
+                    <Cd></Cd>
                 </Purp>
-                <RgltryRptg> <!-- Single occurence see section 2.11 -->
+                <!-- Single occurence see section 2.11 -->
+                <RgltryRptg>
                     <Dtls>
-                        <Cd></Cd> <!-- 2.79 TODO -->
+                        <!-- 2.79 TODO -->
+                        <Cd></Cd>
                     </Dtls>
                 </RgltryRptg>
                 <RmtInf>
-                    <Ustrd></Ustrd> <!-- 2.89 TODO reason for payment -->
+                    <!-- 2.89 TODO reason for payment -->
+                    <Ustrd></Ustrd>
                     <Strd>
                         <CdtrRefInf>
                             <Tp>
                                 <CdOrPrtry>SCOR</CdOrPrtry>
                             </Tp>
                         </CdtrRefInf>
-                        <Ref></Ref> <!-- 2.116 TODO reference defined by creditor -->
+                        <!-- 2.116 TODO reference defined by creditor -->
+                        <Ref></Ref>
                     </Strd>
                 </RmtInf>
             </DrctDbtTxInf>
