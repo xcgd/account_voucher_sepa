@@ -7,7 +7,7 @@
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.008.001.02" xmlns:py="http://genshi.edgewall.org/">
     <?python
         mandate = data['mandate']
-        original_mandatae = data['mandate'].orginal_mandate
+        original_mandate = data['mandate'].orginal_mandate
     ?>
     <CstmrCdtTrfInitn>
         <!-- Header -->
