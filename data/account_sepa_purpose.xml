@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="account_sepa_purpose_intc_code" model="account.sepa.purpose">
+            <field name="name">IntraCompanyPayment</field>
+            <field name="code">INTC</field>
+        </record>
+
+        <record id="account_sepa_purpose_cort_code" model="account.sepa.purpose">
+            <field name="name">TradeSettlementPayment</field>
+            <field name="code">CORT</field>
+        </record>
+
+        <record id="account_sepa_purpose_sala_code" model="account.sepa.purpose">
+            <field name="name">SalaryPayment</field>
+            <field name="code">SALA</field>
+        </record>
+
+        <record id="account_sepa_purpose_trea_code" model="account.sepa.purpose">
+            <field name="name">TreasuryPayment</field>
+            <field name="code">TREA</field>
+        </record>
+
+        <record id="account_sepa_purpose_cash_code" model="account.sepa.purpose">
+            <field name="name">CashManagementTransfer</field>
+            <field name="code">CASH</field>
+        </record>
+
+        <record id="account_sepa_purpose_divi_code" model="account.sepa.purpose">
+            <field name="name">Dividend</field>
+            <field name="code">DIVI</field>
+        </record>
+
+        <record id="account_sepa_purpose_govt_code" model="account.sepa.purpose">
+            <field name="name">GovernmentPayment</field>
+            <field name="code">GOVT</field>
+        </record>
+
+        <record id="account_sepa_purpose_inte_code" model="account.sepa.purpose">
+            <field name="name">Interest</field>
+            <field name="code">INTE</field>
+        </record>
+
+        <record id="account_sepa_purpose_loan_code" model="account.sepa.purpose">
+            <field name="name">Loan</field>
+            <field name="code">LOAN</field>
+        </record>
+
+        <record id="account_sepa_purpose_pens_code" model="account.sepa.purpose">
+            <field name="name">PensionPayment</field>
+            <field name="code">PENS</field>
+        </record>
+
+        <record id="account_sepa_purpose_secu_code" model="account.sepa.purpose">
+            <field name="name">Securities</field>
+            <field name="code">SECU</field>
+        </record>
+
+        <record id="account_sepa_purpose_ssbe_code" model="account.sepa.purpose">
+            <field name="name">SocialSecurityBenefit</field>
+            <field name="code">SSBE</field>
+        </record>
+
+        <record id="account_sepa_purpose_taxs_code" model="account.sepa.purpose">
+            <field name="name">TaxPayment</field>
+            <field name="code">TAXS</field>
+        </record>
+
+        <record id="account_sepa_purpose_vatx_code" model="account.sepa.purpose">
+            <field name="name">ValueAddedTaxPayment</field>
+            <field name="code">VATX</field>
+        </record>
+
+        <record id="account_sepa_purpose_supp_code" model="account.sepa.purpose">
+            <field name="name">SupplierPayment</field>
+            <field name="code">SUPP</field>
+        </record>
+
+        <record id="account_sepa_purpose_hedg_code" model="account.sepa.purpose">
+            <field name="name">Hedging</field>
+            <field name="code">HEDG</field>
+        </record>
+
+        <record id="account_sepa_purpose_trad_code" model="account.sepa.purpose">
+            <field name="name">Trade</field>
+            <field name="code">TRAD</field>
+        </record>
+
+        <record id="account_sepa_purpose_whld_code" model="account.sepa.purpose">
+            <field name="name">WithHolding</field>
+            <field name="code">WHLD</field>
+        </record>
+
+    </data>
+</openerp>
