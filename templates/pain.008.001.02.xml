@@ -119,7 +119,15 @@
                     <Nm py:content="data['ultimate_creditor'].name"></Nm> <!-- 2.69 creditor reference party -->
                     <Id>
                         <!-- 2.69 TODO BIR/BEI??? -->
-                        <OrgId></OrgId>
+                        <OrgId>
+                            <Other>
+                                <!-- TODO find SIRET code in res.company -->
+                                <Id></Id>
+                                <SchmeNm>
+                                    <Prtry>SIRET</Prtry>
+                                </SchmeNm>
+                            </Other>
+                        </OrgId>
                     </Id>
                 </UltmtCdr>
                 <DbtAgt>
