@@ -36,6 +36,23 @@
             </field>
         </record>
 
+        <record id="view_account_sdd_mandate_tree" model="ir.ui.view">
+            <field name="name">view.account.sdd.mandate.tree</field>
+            <field name="model">account.sdd.mandate</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="identification"/>
+                    <field name="sequence_type"/>
+                    <field name="count"/>
+                    <field name="date_of_signature"/>
+                    <field name="creditor"/>
+                    <field name="debtor"/>
+                    <field name="debtor_account"/>
+                    <field name="amends_mandate"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="action_acccount_sdd_mandate_view" model="ir.actions.act_window">
             <field name="name">Mandate</field>
             <field name="res_model">account.sdd.mandate</field>
