@@ -60,7 +60,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="action_acccount_sdd_mandate_view" id="menu_action_sepa_batch_view" name="Mandate"
+        <menuitem action="action_acccount_sdd_mandate_view" id="menu_sdd_mandate_view" name="Mandate"
             parent="account_payment.menu_main_payment" groups="account.group_account_user" />
     </data>
 </openerp>
