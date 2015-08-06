@@ -61,6 +61,41 @@ class account_voucher_sepa(osv.TransientModel):
         'execution_date': fields.date('Execution Date', required=True),
     }
 
+    def generate_credit_transfer_file(self, cr, uid, data, context=None):
+        """
+        Looks for the appropriate parser for data['debtor_bank'] then
+        create an ir.attachment record with the XML document created
+        by said parser.
+
+        :param data: dictionary of values to be passed on the parser
+        """
+        # Not sure what this does
+        voucher_wizards = data['list_voucher_wizard']
+        if not all(vw.partner_bank_id.acc_number for vw in voucher_wizards):
+            raise osv.except_osv(
+                _(u"Error"),
+                _(u"Cannot create SEPA batch: no IBAN number.")
+            )
+
+        parser_osv = self.pool.get("account_credit_transfer.parser")
+        parsers = parser_osv.browse(
+            cr, uid,
+            [data['debtor_bank'].bank.transfer_parser],
+            context=context
+        )
+
+        if not parsers:
+            raise osv.except_osv(
+                _('No parser was found for this bank for transfer operation')
+            )
+
+        # There should be at most one element in 'parsers'
+        parser = parsers[0]
+
+        att_values = parser.compute(parser.template, data)
+        ir_attachment_osv = self.pool.get('ir.attachment')
+        ir_attachment_osv.create(cr, uid, att_values, context=context)
+
     def generate_sepa(self, cr, uid, batch_id,
                       list_voucher_wizard, list_voucher, date, context=None):
         # New version using account_credit_transfer
@@ -78,8 +113,7 @@ class account_voucher_sepa(osv.TransientModel):
             'date': date,
         }
 
-        ct_config_osv = self.pool['account_credit_transfer.config']
-        ct_config_osv.generate_credit_transfer_file(
+        self.generate_credit_transfer_file(
             cr, uid, data, context=context
         )
 
