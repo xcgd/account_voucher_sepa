@@ -364,6 +364,7 @@ class account_voucher(osv.Model):
             context=context
         )
 
+        context = context.copy()
         context['record_id'] = ids
 
         return {
