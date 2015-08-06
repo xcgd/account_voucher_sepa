@@ -27,8 +27,8 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 import openerp.addons.decimal_precision as dp
 
 
-class res_bank:
-    _name = "res.bank"
+class res_bank(osv.Model):
+    _inherit = "res.bank"
 
     _columns = {
         'direct_debit_parser': fields.many2one(
