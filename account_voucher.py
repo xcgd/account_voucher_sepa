@@ -79,7 +79,7 @@ class account_voucher_sepa(osv.TransientModel):
     def generate_credit_transfer_file(self, cr, uid, data, context=None):
         """
         Looks for the appropriate parser for data['debtor_bank'] then
-        create an ir.attachment record with the XML document created
+        creates an ir.attachment record with the XML document created
         by said parser.
 
         :param data: dictionary of values to be passed on the parser
