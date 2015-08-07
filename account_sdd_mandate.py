@@ -66,6 +66,9 @@ class account_sdd_mandate(osv.Model):
         return seq_type
 
     _columns = {
+        'active': fields.boolean(
+            string='Active',
+        ),
         'identification': fields.char(
             string='Mandate Identification',
             size=128,
@@ -118,4 +121,8 @@ class account_sdd_mandate(osv.Model):
             help='Must be specified if the mandate is the'
                  'amendment of another',
         )
+    }
+
+    _defaults = {
+        'active': True,
     }
