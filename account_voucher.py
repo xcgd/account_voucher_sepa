@@ -308,6 +308,16 @@ class account_voucher(osv.Model):
     _name = "account.voucher"
     _inherit = "account.voucher"
 
+    _columns = {
+        'mandate_id': fields.many2one(
+            'account.sdd.mandate',
+            string='Mandate',
+            help='Optional, specify if you want to use a particular mandate'
+                 'for this voucher',
+            domain="[('creditor', '=', 'partner_id')]",
+        )
+    }
+
     # This method add a default value to partner_bank_id
     def onchange_partner_id(self, cr, uid, ids,
                             partner_id, journal_id,
