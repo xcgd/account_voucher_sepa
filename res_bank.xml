@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_res_bank_with_parser_form" model="ir.ui.view">
+            <field name="name">view.res.bank.with.parser.form</field>
+            <field name="model">res.bank</field>
+            <field name="inherit_id" ref="base.view_res_bank_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group[position()=2]" position="inside">
+                    <group string="Parsers">
+                        <field name="direct_debit_parser" />
+                        <field name="transfer_parser" />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
