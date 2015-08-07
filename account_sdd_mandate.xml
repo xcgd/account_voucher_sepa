@@ -22,13 +22,11 @@
                         </group>
                     </group>
                     <group col="2">
-                        <group>
-                            Creditor Information
+                        <group string="Creditor Information">
 	                        <field name="creditor"/>
 	                        <field name="ultimate_creditor"/>
                         </group>
-                        <group>
-                            Debtor Information
+                        <group string="Debtor Information">
 	                        <field name="debtor"/>
 	                        <field name="ultimate_debtor"/>
 	                        <field name="debtor_account"/>
