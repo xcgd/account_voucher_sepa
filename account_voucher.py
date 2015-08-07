@@ -343,17 +343,33 @@ class account_voucher(osv.Model):
         err_acc_ids = []
         err_wrong_type_ids = []
         err_amount_ids = []
+        type_of_operation = None
         for this_br in this_brs:
             if this_br.type not in ('payment', 'receipt'):
                 err_wrong_type_ids.append(this_br.number)
             # Allow payment but only with debit value
+            # What should we do when amount == 0
             if this_br.type == 'payment':
                 if not this_br.amount >= 0:
+                    if not type_of_operation:
+                        type_of_operation = 'direct_debit'
+                    elif type_of_operation == 'transfer':
+                        err_amount_ids.append(this_br.number)
+                elif type_of_operation == 'direct_debit':
                     err_amount_ids.append(this_br.number)
+                else:
+                    type_of_operation = 'transfer'
             # Allow receipt but only with credit value
             if this_br.type == 'receipt':
                 if not this_br.amount <= 0:
+                    if not type_of_operation:
+                        type_of_operation = 'direct_debit'
+                    elif type_of_operation == 'transfer':
+                        err_amount_ids.append(this_br.number)
+                elif type_of_operation == 'direct_debit':
                     err_amount_ids.append(this_br.number)
+                else:
+                    type_of_operation = 'transfer'
             if this_br.state != 'posted':
                 if this_br.number not in err_post_ids:
                     err_post_ids.append(this_br.number)
@@ -406,6 +422,7 @@ class account_voucher(osv.Model):
 
         context = context.copy()
         context['record_id'] = ids
+        context['operation'] = type_of_operation
 
         return {
             'name': 'Generate SEPA',
