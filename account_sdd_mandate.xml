@@ -6,6 +6,9 @@
             <field name="model">account.sdd.mandate</field>
             <field name="arch" type="xml">
                 <form>
+                    <group>
+                        <field name="active"/>
+                    </group>
                     <group col="2">
                         <group>
 	                        <field name="identification"/>
