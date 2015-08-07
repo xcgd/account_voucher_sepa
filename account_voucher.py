@@ -176,6 +176,21 @@ class account_voucher_sepa(osv.TransientModel):
                   bank.name))
         return bank
 
+    def _check_voucher_wizards(self, cr, uid, list_voucher_wizard,
+                               context=None):
+        """
+        Makes sure that mandates are specified.
+        Raises an exception if some mandates are missing.
+
+        :param list_voucher_wizard: list of 'account.voucher.wizard' records
+        """
+        for voucher in list_voucher_wizard:
+            if not voucher.mandate_id and voucher.operation != 'direct_debit':
+                raise osv.except_osv(
+                    _("Validation Error"),
+                    _("Vouchers must be associated to a mandate.")
+                )
+
     def prepare_sepa(self, cr, uid, ids, context=None):
         if not context:
             context = {}
@@ -192,6 +207,8 @@ class account_voucher_sepa(osv.TransientModel):
         list_voucher_wizard = account_voucher_wizard_osv.browse(
             cr, uid, voucher_wizard_ids, context=context
         )
+
+        self._check_voucher_wizards(cr, uid, list_voucher_wizard, context)
 
         # Compute the total amount of all selected vouchers
 
