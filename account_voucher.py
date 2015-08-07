@@ -51,6 +51,12 @@ class account_voucher_sepa(osv.TransientModel):
     _name = "account.voucher.sepa"
 
     _columns = {
+        'operation': fields.selection(
+            [('direct_debit', 'Direct Debit'),
+             ('transfer', 'Transfer')],
+            string='Type of operation',
+            help='Either Direct Debit or Transfer',
+        ),
         'group_suppliers': fields.boolean(_("Group suppliers")),
         'voucher_wizard_ids': fields.one2many(
             "account.voucher.wizard",
