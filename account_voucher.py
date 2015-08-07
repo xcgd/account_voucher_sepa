@@ -330,6 +330,7 @@ class account_voucher(osv.Model):
             this_br._workflow_signal('proforma_voucher')
         return {}
 
+    # TODO Needs refactoring
     def launch_wizard_sepa(self, cr, uid, ids, context=None):
         if 'active_ids' not in context:
             raise osv.except_osv(
