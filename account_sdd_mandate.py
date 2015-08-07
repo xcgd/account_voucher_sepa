@@ -73,19 +73,19 @@ class account_sdd_mandate(osv.Model):
             string='Mandate Identification',
             size=128,
         ),
-        'debtor': fields.many2one(
+        'debtor_id': fields.many2one(
             'res.partner',
             string='Debtor',
         ),
-        'debtor_account': fields.many2one(
+        'debtor_account_id': fields.many2one(
             'account.account',
             string='Debtor Account',
         ),
-        'debtor_agent': fields.many2one(
+        'debtor_agent_id': fields.many2one(
             'res.partner',
             string='Financial Institution',
         ),
-        'creditor': fields.many2one(
+        'creditor_id': fields.many2one(
             'res.partner',
             string='Creditor Name',
         ),
@@ -101,12 +101,12 @@ class account_sdd_mandate(osv.Model):
         'date_of_signature': fields.date(
             string='Date of Signature',
         ),
-        'ultimate_debtor': fields.many2one(
+        'ultimate_debtor_id': fields.many2one(
             'res.partner',
             string='Ultimate Debtor',
             help='Can be the same as the Debtor',
         ),
-        'ultimate_creditor': fields.many2one(
+        'ultimate_creditor_id': fields.many2one(
             'res.partner',
             string='Ultimate Debtor',
             help='Can be the same as the Creditor',
@@ -115,7 +115,7 @@ class account_sdd_mandate(osv.Model):
             string='Amends another mandate',
             help='Means that this mandate replace another if ticked'
         ),
-        'original_mandate': fields.many2one(
+        'original_mandate_id': fields.many2one(
             'account.sdd.mandate',
             string='Original Mandate',
             help='Must be specified if the mandate is the'
