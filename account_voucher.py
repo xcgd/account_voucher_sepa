@@ -264,6 +264,8 @@ class account_voucher_sepa(osv.TransientModel):
                 v['amount'] = -v['amount']
             # TODO remove type from dic
 
+        vals['operation'] = (context.get('operation', 'transfer')
+                             if context else 'transfer')
         vals['voucher_wizard_ids'] = [(0, 0, v) for v in vouchers]
         return vals
 
