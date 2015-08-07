@@ -263,9 +263,12 @@ class account_voucher_sepa(osv.TransientModel):
             ['partner_id', 'amount', 'partner_bank_id', 'type'],
             context=context
         )
+        vals['operation'] = (context.get('operation', 'transfer')
+                             if context else 'transfer')
         for v in vouchers:
             v['voucher_id'] = v.pop('id')
             v['partner_id'] = v['partner_id'][0]
+            v['operation'] = vals['operation']
             if v['partner_bank_id']:
                 v['partner_bank_id'] = v['partner_bank_id'][0]
             # receipt refund need to be positive when paid
@@ -273,8 +276,6 @@ class account_voucher_sepa(osv.TransientModel):
                 v['amount'] = -v['amount']
             # TODO remove type from dic
 
-        vals['operation'] = (context.get('operation', 'transfer')
-                             if context else 'transfer')
         vals['voucher_wizard_ids'] = [(0, 0, v) for v in vouchers]
         return vals
 
