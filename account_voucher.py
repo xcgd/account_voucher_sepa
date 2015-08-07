@@ -31,6 +31,10 @@ class account_voucher_wizard(osv.TransientModel):
     _name = "account.voucher.wizard"
 
     _columns = {
+        'operation': fields.selection(
+            [('direct_debit', 'Direct Debit'),
+             ('transfer', 'Transfer')],
+        ),
         'partner_id': fields.many2one('res.partner', u"Partner"),
         'amount': fields.float(
             u"Total",
