@@ -114,7 +114,7 @@ class account_voucher_sepa(osv.TransientModel):
         # There should be at most one element in 'parsers'
         parser = parser_osv.get_parser(cr, uid, parsers[0], context=context)
 
-        att_values = parser.compute(parser.template, data)
+        att_values = parser.compute(parsers[0].template, data)
         ir_attachment_osv = self.pool.get('ir.attachment')
         ir_attachment_osv.create(cr, uid, att_values, context=context)
 
