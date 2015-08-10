@@ -33,7 +33,7 @@ class account_sdd_mandate(osv.Model):
         if(not vals['ultimate_debtor_id']):
             vals['ultimate_debtor'] = vals['debtor']
 
-        if(not vals['ultimate_creditor']):
+        if(not vals['ultimate_creditor_id']):
             vals['ultimate_creditor'] = vals['ultimate_creditor']
 
         return super(account_sdd_mandate, self).write(self, cr, uid, vals,
