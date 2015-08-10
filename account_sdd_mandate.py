@@ -29,8 +29,8 @@ class account_sdd_mandate(osv.Model):
     """
     _name = 'account.sdd.mandate'
 
-    def write(self, cr, uid, vals, context=None):
-        if(not vals['ultimate_debtor']):
+    def create(self, cr, uid, vals, context=None):
+        if(not vals['ultimate_debtor_id']):
             vals['ultimate_debtor'] = vals['debtor']
 
         if(not vals['ultimate_creditor']):
