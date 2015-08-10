@@ -91,7 +91,7 @@ class account_sdd_mandate(osv.Model):
             required=True,
         ),
         'debtor_account_id': fields.many2one(
-            'account.account',
+            'res.partner.bank',
             string='Debtor Account',
         ),
         'debtor_agent_id': fields.many2one(
