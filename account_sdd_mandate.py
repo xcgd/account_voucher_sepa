@@ -93,6 +93,7 @@ class account_sdd_mandate(osv.Model):
         'debtor_account_id': fields.many2one(
             'res.partner.bank',
             string='Debtor Account',
+            domain='[("partner_id", "=", ultimate_debtor_id)]',
         ),
         'debtor_agent_id': fields.many2one(
             'res.partner',
@@ -120,11 +121,21 @@ class account_sdd_mandate(osv.Model):
             'res.partner',
             string='Ultimate Debtor',
             help='Can be the same as the Debtor',
+            domain='''[
+                "|",
+                    ("id", "=", debtor_id),
+                    ("id", "child_of", "debtor_id")
+            ]''',
         ),
         'ultimate_creditor_id': fields.many2one(
             'res.partner',
             string='Ultimate Debtor',
             help='Can be the same as the Creditor',
+            domain='''[
+                "|",
+                    ("id", "=", creditor_id),
+                    ("id", "child_of", "creditor_id")
+            ]''',
         ),
         'amends_mandate': fields.boolean(
             string='Amends another mandate',
@@ -141,3 +152,19 @@ class account_sdd_mandate(osv.Model):
     _defaults = {
         'active': True,
     }
+
+    def _check_original_mandate(self, cr, uid, ids, context=None):
+        """
+        Makes sure that 'original_mandate_id' is filled in when
+        'ammends_mandate' is  checked
+        """
+        for record in self.browse(cr, uid, ids, context=context):
+            if record.amends_mandate and not record.original_mandate_id:
+                return False
+        return True
+
+    _constraints = [
+        (_check_original_mandate,
+         'Please specify mandate',
+         ['amends_mandate', 'original_mandate_id'])
+    ]
