@@ -92,10 +92,17 @@ class account_voucher_sepa(osv.TransientModel):
                 _(u"Cannot create SEPA batch: no IBAN number.")
             )
 
+        if data.get('operation', 'transfer') == 'transfer':
+            parser_choice = 'transfer_parser'
+        else:
+            parser_choice = 'direct_debit'
+
         parser_osv = self.pool.get("account_credit_transfer.parser")
+        print("parser: {}".format(getattr(data['debtor_bank'].bank, parser_choice).id))
+        parser_obj = getattr(data['debtor_bank'].bank, parser_choice)
         parsers = parser_osv.browse(
             cr, uid,
-            [data['debtor_bank'].bank.transfer_parser],
+            [parser_obj.id],
             context=context
         )
 
@@ -105,7 +112,7 @@ class account_voucher_sepa(osv.TransientModel):
             )
 
         # There should be at most one element in 'parsers'
-        parser = parsers[0]
+        parser = parser_osv.get_parser(cr, uid, parsers[0], context=context)
 
         att_values = parser.compute(parser.template, data)
         ir_attachment_osv = self.pool.get('ir.attachment')
