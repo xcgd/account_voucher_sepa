@@ -36,8 +36,19 @@ class account_sdd_mandate(osv.Model):
         if(not vals['ultimate_creditor_id']):
             vals['ultimate_creditor'] = vals['ultimate_creditor']
 
-        return super(account_sdd_mandate, self).write(self, cr, uid, vals,
-                                                      context)
+        res_partner_osv = self.pool['res.partner']
+        debtor = res_partner_osv.browse(cr, uid, [vals['ultimate_debtor_id']],
+                                        context=context)[0]
+
+        if not debtor.bank_ids:
+            raise osv.except_osv('Error', _(
+                'No bank accounts associated with {}').format(debtor)
+            )
+        vals['debtor_account_id'] = debtor.bank_ids[0].id
+        vals['debtor_agent_id'] = debtor.bank_ids[0].bank.id
+
+        return super(account_sdd_mandate, self).create(cr, uid, vals,
+                                                       context=context)
 
     def get_sequence_type(self, cr, uid, id, number, context=None):
         """
