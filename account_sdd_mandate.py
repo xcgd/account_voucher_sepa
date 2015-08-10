@@ -83,10 +83,12 @@ class account_sdd_mandate(osv.Model):
         'identification': fields.char(
             string='Mandate Identification',
             size=128,
+            required=True,
         ),
         'debtor_id': fields.many2one(
             'res.partner',
             string='Debtor',
+            required=True,
         ),
         'debtor_account_id': fields.many2one(
             'account.account',
@@ -99,6 +101,7 @@ class account_sdd_mandate(osv.Model):
         'creditor_id': fields.many2one(
             'res.partner',
             string='Creditor Name',
+            required=True,
         ),
         'count': fields.integer(
             string='Count',
@@ -111,6 +114,7 @@ class account_sdd_mandate(osv.Model):
         ),
         'date_of_signature': fields.date(
             string='Date of Signature',
+            required=True,
         ),
         'ultimate_debtor_id': fields.many2one(
             'res.partner',
