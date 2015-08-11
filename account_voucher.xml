@@ -87,9 +87,13 @@
                         <tree string="Lines" version="7.0" editable="bottom" onchange="onchange_voucher_ids(voucher_ids)">
                             <field readonly="1" name="partner_id" />
                             <field readonly="1" name="amount" />
-                            <field required="1" name="partner_bank_id" placeholder="No bank account found. Cannot generate file"/>
+                            <field required="1" name="partner_bank_id"
+                                   invisible="context.get('operation') != 'transfer'"
+                                   placeholder="No bank account found. Cannot generate file"/>
                             <field name="operation" invisible="1"/>
-                            <field name="mandate_id" attrs="{'required': [('operation','=', 'direct_debit')]}"/>
+                            <field name="mandate_id" 
+                                   invisible="context.get('operation') != 'direct_debit'"
+                                   attrs="{'required': [('operation','=', 'direct_debit')]}"/>
                         </tree>
                     </field>
                     <footer>
