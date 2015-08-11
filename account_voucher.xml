@@ -88,6 +88,7 @@
                             <field readonly="1" name="partner_id" />
                             <field readonly="1" name="amount" />
                             <field required="1" name="partner_bank_id" placeholder="No bank account found. Cannot generate file"/>
+                            <field name="operation" invisible="1"/>
                             <field name="mandate_id" attrs="{'required': [('operation','=', 'direct_debit')]}"/>
                         </tree>
                     </field>
