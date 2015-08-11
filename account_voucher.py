@@ -128,6 +128,7 @@ class account_voucher_sepa(osv.TransientModel):
         data = {
             'total_amount': batch_br.amount,
             'company_name': list_voucher[0].company_id.name,
+            'creditor_bank': list_voucher[0].company_id.partner_id.bank_ids[0],
             'debtor_bank': batch_br.creditor_bank_id,
             'list_voucher': list_voucher,
             'list_voucher_wizard': list_voucher_wizard,
