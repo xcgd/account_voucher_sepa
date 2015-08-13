@@ -30,7 +30,7 @@
                 <LclInstrm>
                     <Cd>CORE</Cd> <!-- TODO Either CORE or B2B -->
                 </LclInstrm>
-                <SeqTp py:content="'OOF'"></SeqTp> <!-- TODO One of FSRT, RCUR, FNAL, OOF -->
+                <SeqTp py:content="data['sequence_type']"></SeqTp> <!-- One of FSRT, RCUR, FNAL, OOF -->
             </PmtTpInf>
             <CtgyPurp py:if="False">
                 <Cd py:content="data['payment_purpose']"></Cd>
