@@ -128,7 +128,8 @@ class account_voucher_sepa(osv.TransientModel):
         ir_attachment_osv.create(cr, uid, att_values, context=context)
 
     def generate_sepa(self, cr, uid, batch_id,
-                      list_voucher_wizard, list_voucher, date, context=None):
+                      list_voucher_wizard, list_voucher, date, sequence_type,
+                      context=None):
         # New version using account_credit_transfer
 
         batch_osv = self.pool['account.voucher.sepa_batch']
@@ -143,6 +144,7 @@ class account_voucher_sepa(osv.TransientModel):
             'list_voucher_wizard': list_voucher_wizard,
             'batch': batch_br,
             'date': date,
+            'sequence_type': sequence_type,
         }
 
         self.generate_credit_transfer_file(
@@ -182,14 +184,14 @@ class account_voucher_sepa(osv.TransientModel):
         if not len(banks):
             raise osv.except_osv(
                 _("No origin bank account found"),
-                _("Bank account for journal %s is not found" %
+                _("Bank account for journal %s is not found" % 
                   voucher.journal_id.name))
 
         bank = banks[0]
         if not bank.bank_bic:
             raise osv.except_osv(
                 _("Bank BIC"),
-                _("Please set the bank BIC for the bank %s" %
+                _("Please set the bank BIC for the bank %s" % 
                   bank.name))
         return bank
 
@@ -270,6 +272,7 @@ class account_voucher_sepa(osv.TransientModel):
             list_voucher_wizard,
             list_voucher,
             data['execution_date'],
+            data['sequence_type'],
             context=context
         )
 
