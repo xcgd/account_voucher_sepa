@@ -79,6 +79,7 @@
                 <form string="Generate SEPA" version="7.0">
                     <group cols="4" colspan="2">
                         <field name="operation" readonly="1"/>
+                        <field name="sequence_type" />
                         <field name="execution_date" />
                         <label string="" colspan="2" />
                         <field name="wording" colspan="2"/>
