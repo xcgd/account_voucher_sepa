@@ -66,6 +66,15 @@ class account_voucher_sepa(osv.TransientModel):
             string='Type of operation',
             help='Either Direct Debit or Transfer',
         ),
+        'sequence_type': fields.selection(
+            [('first', 'First'),
+             ('recurring', 'Recurring')],
+            string='Sequence Type',
+            help=('The sequence type to use for the batch, the SEPA standard'
+                  'requires this information for SDD payments which is '
+                  'manifested in the SeqTyp tag as "FRST" or "RCUR"'),
+            required=True,
+        ),
         'group_suppliers': fields.boolean(_("Group suppliers")),
         'voucher_wizard_ids': fields.one2many(
             "account.voucher.wizard",
