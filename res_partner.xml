@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- This view adds the creditor identifier field -->
+        <record id="view_res_partner_creditor_id_form" model="ir.ui.view">
+            <field name="name">view.res.parnter.creditor.id.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//page[@name='accounting']/group[1]/group[3]" position="after">
+                    <group>
+                        <field name="sdd_creditor_indentifier" />
+                    </group>
+                </xpath><!--tree></tree-->
+            </data>
+            </field>
+        </record>
+        <!--delete model="ir.ui.view" id="view_res_partner_creditor_id_form"/-->
+    </data>
+</openerp>
