@@ -215,6 +215,16 @@ class account_voucher_sepa(osv.TransientModel):
                     _("Vouchers must be associated to a mandate.")
                 )
 
+    def _translate_sequence_type(self, cr, uid, sequence_type, context=None):
+        """
+        Translates the value of 'sequence_type' to something that is acceptable
+        for the SEPA SDD format.
+        """
+        return {
+            'recurring': 'RCUR',
+            'first': 'FRST',
+        }.get(sequence_type)
+
     def prepare_sepa(self, cr, uid, ids, context=None):
         if not context:
             context = {}
@@ -277,7 +287,8 @@ class account_voucher_sepa(osv.TransientModel):
             list_voucher_wizard,
             list_voucher,
             data['execution_date'],
-            data['sequence_type'],
+            self._translate_sequence_type(cr, uid, data['sequence_type'],
+                                          context),
             context=context
         )
 
