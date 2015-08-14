@@ -84,7 +84,7 @@
                     <MndtRltdInf>
                         <MndtId py:content="mandate.identification"></MndtId> <!-- 2.48 TODO Identifier -->
                         <DtOfSgntr py:content="mandate.date_of_signature"></DtOfSgntr> <!-- 2.49 TODO signature -->
-                        <AmdmntInd py:content="mandate.amends_mandate"></AmdmntInd> <!-- 2.50 TODO true/false -->
+                        <AmdmntInd py:content="repr(mandate.amends_mandate).lower()"></AmdmntInd> <!-- 2.50 TODO true/false -->
                         <AmdmntInfDtls py:if="mandate.amends_mandate">
                             <OrgnMndtId py:content="original_mandate.amends_mandate"></OrgnMndtId>
                             <OrgnCdtrSchmeId py:if="mandate.creditor != original_mandate.creditor">
