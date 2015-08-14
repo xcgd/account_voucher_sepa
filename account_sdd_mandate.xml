@@ -12,7 +12,7 @@
                     <group col="2">
                         <group>
 	                        <field name="identification"/>
-	                        <field name="sequence_type"/>
+	                        <field name="sequence_type" invisible="1"/>
 	                        <field name="count"/>
                         </group>
                         <group>
@@ -24,11 +24,11 @@
                     <group col="2">
                         <group string="Creditor Information">
 	                        <field name="creditor_id"/>
-	                        <field name="ultimate_creditor_id"/>
+	                        <field name="ultimate_creditor_id" invisible="1"/>
                         </group>
                         <group string="Debtor Information">
 	                        <field name="debtor_id"/>
-	                        <field name="ultimate_debtor_id"/>
+	                        <field name="ultimate_debtor_id" invisible="1"/>
 	                        <field name="debtor_account_id"/>
 	                        <field name="debtor_agent_id"/>
                         </group>
