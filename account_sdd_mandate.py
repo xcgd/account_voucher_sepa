@@ -108,6 +108,7 @@ class account_sdd_mandate(osv.Model):
             string='Count',
             help='Number of times this mandate has been used'
         ),
+        # TODO remove this field
         'sequence_type': fields.selection(
             [('one_off', 'One Off'),
              ('recurring', 'Recurring')],
