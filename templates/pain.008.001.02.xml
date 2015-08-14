@@ -61,7 +61,7 @@
                 <Id>
                     <PrvtId>
                         <Othr>
-                            <Id></Id> <!-- 2.27 TODO SEPA creditor Id -->
+                            <Id py:content="data['creditor_identifier']"></Id> <!-- 2.27 SEPA creditor Id -->
                             <SchmeNm>
                                 <Prtry>SEPA</Prtry>
                             </SchmeNm>
