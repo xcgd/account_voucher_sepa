@@ -77,7 +77,7 @@
                 ?>
                 <PmtId>
                     <InstrId py:if="False"></InstrId> <!-- 2.30 TODO assigned by instructing party -->
-                    <EndToEndId py:content="voucher.name"></EndToEndId> <!-- 2.31 TODO assigned by initiating party -->
+                    <EndToEndId py:content="voucher.number"></EndToEndId> <!-- 2.31 TODO assigned by initiating party -->
                 </PmtId>
                 <InstdAmt Ccy="${voucher.currency_id.name}" py:content="fpformat.fix(voucher.amount, 2)"></InstdAmt> <!-- 2.44 TODO amount -->
                 <DrctDbtTx> <!-- 2.46 mandate stuff -->
