@@ -318,6 +318,7 @@ class account_voucher_sepa(osv.TransientModel):
             ['partner_id', 'amount', 'partner_bank_id', 'type'],
             context=context
         )
+        our_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         vals['operation'] = (context.get('operation', 'transfer')
                              if context else 'transfer')
         for v in vouchers:
@@ -330,6 +331,16 @@ class account_voucher_sepa(osv.TransientModel):
             if v['type'] == 'receipt':
                 v['amount'] = -v['amount']
             # TODO remove type from dic
+            if context.get('operation') == 'direct_debit':
+                mandate_ids = self.pool['account.sdd.mandate'].search(
+                    cr, uid, [
+                        ('active', '=', True),
+                        ('debtor_id', '=', v['partner_id']),
+                        ('creditor_id', '=', our_user.partner_id.id)
+                    ], limit=1, context=context
+                )
+                if mandate_ids:
+                    v['mandate_id'] = mandate_ids[0]
 
         vals['voucher_wizard_ids'] = [(0, 0, v) for v in vouchers]
         return vals
