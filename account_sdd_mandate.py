@@ -93,7 +93,7 @@ class account_sdd_mandate(osv.Model):
         'debtor_account_id': fields.many2one(
             'res.partner.bank',
             string='Debtor Account',
-            domain='[("partner_id", "=", ultimate_debtor_id)]',
+            domain='[("partner_id", "=", debtor_id)]',
         ),
         'debtor_agent_id': fields.many2one(
             'res.bank',
