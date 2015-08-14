@@ -5,7 +5,7 @@
   import fpformat
 ?>
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.008.001.02" xmlns:py="http://genshi.edgewall.org/">
-    <CstmrCdtTrfInitn>
+    <CstmrDrctDbtInitn>
         <!-- Header -->
         <GrpHdr>
             <MsgId py:content="time.strftime('%Y%m%d%H%M%S')"></MsgId>
@@ -35,7 +35,7 @@
             <CtgyPurp py:if="False">
                 <Cd py:content="data['payment_purpose']"></Cd>
             </CtgyPurp>
-            <ReqdExctnDt py:content="datetime.strptime(data['date'], '%Y-%m-%d').date().isoformat()"></ReqdExctnDt>
+            <ReqdColltnDt py:content="datetime.strptime(data['date'], '%Y-%m-%d').date().isoformat()"></ReqdColltnDt>
             <Cdtr>
                 <Nm py:content="data['company_name'][:70]"></Nm>
             </Cdtr>
@@ -60,12 +60,12 @@
             <CdtrSchmeId>
                 <Id>
                     <PrvtId>
-                        <Other>
+                        <Othr>
                             <Id></Id> <!-- 2.27 TODO SEPA creditor Id -->
                             <SchmeNm>
                                 <Prtry>SEPA</Prtry>
                             </SchmeNm>
-                        </Other>
+                        </Othr>
                     </PrvtId>
                 </Id>
             </CdtrSchmeId>
@@ -80,8 +80,8 @@
                     <EndToEndId py:content="voucher.name"></EndToEndId> <!-- 2.31 TODO assigned by initiating party -->
                 </PmtId>
                 <InstdAmt Ccy="${voucher.currency_id.name}" py:content="fpformat.fix(voucher.amount, 2)"></InstdAmt> <!-- 2.44 TODO amount -->
-                <DrcDbtTx> <!-- 2.46 mandate stuff -->
-                    <MndtRItdInf>
+                <DrctDbtTx> <!-- 2.46 mandate stuff -->
+                    <MndtRltdInf>
                         <MndtId py:content="mandate.identification"></MndtId> <!-- 2.48 TODO Identifier -->
                         <DtOfSgntr py:content="mandate.date_of_signature"></DtOfSgntr> <!-- 2.49 TODO signature -->
                         <AmdmntInd py:content="mandate.amends_mandate"></AmdmntInd> <!-- 2.50 TODO true/false -->
@@ -113,29 +113,29 @@
                                 </FinInstnId>
                             </OrgnlDbtrAgt>
                         </AmdmntInfDtls>
-                    </MndtRItdInf>
-                </DrcDbtTx>
+                    </MndtRltdInf>
+                </DrctDbtTx>
                 <UltmtCdr py:if="False">
                     <Nm py:content="mandate.ultimate_creditor_id.name"></Nm> <!-- 2.69 creditor reference party -->
                     <Id>
                         <!-- 2.69 TODO BIR/BEI??? -->
                         <OrgId>
-                            <Other>
+                            <Othr>
                                 <!-- TODO find SIRET code in res.company -->
                                 <Id py:content="mandate.ultimate_creditor_id.siret"></Id>
                                 <SchmeNm>
                                     <Prtry>SIRET</Prtry>
                                 </SchmeNm>
-                            </Other>
+                            </Othr>
                         </OrgId>
                     </Id>
                 </UltmtCdr>
-                <DbtAgt>
+                <DbtrAgt>
                     <FinInstnId>
                         <!-- 2.70 TODO debtor's bank -->
                         <BIC py:content="mandate.debtor_agent_id.bic"></BIC>
                     </FinInstnId>
-                </DbtAgt>
+                </DbtrAgt>
                 <Dbtr>
                     <!-- 2.72 TODO debtor name -->
                     <Nm py:content="mandate.debtor_id.name"></Nm>
@@ -144,12 +144,12 @@
                         <OrgId></OrgId>
                     </Id>
                 </Dbtr>
-                <DbtAcct>
+                <DbtrAcct>
                     <Id>
                         <!-- -2.73 debtor account -->
                         <IBAN py:content="mandate.debtor_account_id.iban"></IBAN>
                     </Id>
-                </DbtAcct>
+                </DbtrAcct>
                 <UltmtDbtr py:if="False">
                     <!-- 2.74 TODO  -->
                     <Nm py:content="mandate.ultimate_creditor_id.name"></Nm>
@@ -177,5 +177,5 @@
                 </RmtInf>
             </DrctDbtTxInf>
         </PmtInf>
-    </CstmrCdtTrfInitn>
+    </CstmrDrctDbtInitn>
 </Document>
