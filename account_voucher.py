@@ -180,6 +180,11 @@ class account_voucher_sepa(osv.TransientModel):
                  for bank in voucher.company_id.bank_ids
                  if bank.journal_id.id == voucher.journal_id.id]
 
+        # For client vouchers
+        banks += [bank
+                  for bank in voucher.partner_id.bank_ids
+                  if bank.journal_id.id == voucher.journal_id.id]
+
         # No banks found
         if not len(banks):
             raise osv.except_osv(
