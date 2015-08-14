@@ -6,33 +6,38 @@
             <field name="model">account.sdd.mandate</field>
             <field name="arch" type="xml">
                 <form>
-                    <group>
-                        <field name="active"/>
-                    </group>
-                    <group col="2">
+                    <sheet>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
                         <group>
-	                        <field name="identification"/>
-	                        <field name="sequence_type" invisible="1"/>
-	                        <field name="count"/>
+                            <field name="active"/>
                         </group>
-                        <group>
-	                        <field name="date_of_signature"/>
-	                        <field name="amends_mandate"/>
-	                        <field name="original_mandate_id"/>
+                        <group col="2">
+                            <group>
+                                <field name="identification"/>
+                                <field name="sequence_type" invisible="1"/>
+                                <field name="count"/>
+                            </group>
+                            <group>
+                                <field name="date_of_signature"/>
+                                <field name="amends_mandate"/>
+                                <field name="original_mandate_id"/>
+                            </group>
                         </group>
-                    </group>
-                    <group col="2">
-                        <group string="Creditor Information">
-	                        <field name="creditor_id"/>
-	                        <field name="ultimate_creditor_id" invisible="1"/>
+                        <group col="2">
+                            <group string="Creditor Information">
+                                <field name="creditor_id"/>
+                                <field name="ultimate_creditor_id" invisible="1"/>
+                            </group>
+                            <group string="Debtor Information">
+                                <field name="debtor_id"/>
+                                <field name="ultimate_debtor_id" invisible="1"/>
+                                <field name="debtor_account_id"/>
+                                <field name="debtor_agent_id"/>
+                            </group>
                         </group>
-                        <group string="Debtor Information">
-	                        <field name="debtor_id"/>
-	                        <field name="ultimate_debtor_id" invisible="1"/>
-	                        <field name="debtor_account_id"/>
-	                        <field name="debtor_agent_id"/>
-                        </group>
-                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>
