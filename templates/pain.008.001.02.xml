@@ -147,7 +147,7 @@
                 <DbtrAcct>
                     <Id>
                         <!--! -2.73 debtor account -->
-                        <IBAN py:content="mandate.debtor_account_id.iban"></IBAN>
+                        <IBAN py:content="mandate.debtor_account_id.iban.replace(' ', '').upper()"></IBAN>
                     </Id>
                 </DbtrAcct>
                 <UltmtDbtr py:if="False">
