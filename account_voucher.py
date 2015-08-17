@@ -128,8 +128,8 @@ class account_voucher_sepa(osv.TransientModel):
         ir_attachment_osv.create(cr, uid, att_values, context=context)
 
     def generate_sepa(self, cr, uid, batch_id,
-                      list_voucher_wizard, list_voucher, date, sequence_type,
-                      context=None):
+                      list_voucher_wizard, list_voucher, date, operation,
+                      sequence_type, context=None):
         # New version using account_credit_transfer
 
         batch_osv = self.pool['account.voucher.sepa_batch']
