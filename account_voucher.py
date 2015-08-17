@@ -104,26 +104,22 @@ class account_voucher_sepa(osv.TransientModel):
         if data.get('operation', 'transfer') == 'transfer':
             parser_choice = 'transfer_parser'
         else:
-            parser_choice = 'direct_debit'
+            parser_choice = 'direct_debit_parser'
 
-        parser_osv = self.pool.get("account_credit_transfer.parser")
+        parser_id = getattr(data['debtor_bank'].bank, parser_choice, None)
 
-        parser_obj = getattr(data['debtor_bank'].bank, parser_choice)
-        parsers = parser_osv.browse(
-            cr, uid,
-            [parser_obj.id],
-            context=context
-        )
-
-        if not parsers:
+        print('operation: {}, choice:{}'.format(data.get('operation'), parser_choice))
+        if not parser_id:
             raise osv.except_osv(
-                _('No parser was found for this bank for transfer operation')
+                _('Error'),
+                _('No parser was found for this type of operation in {}'
+                  ).format(data['debtor_bank'].bank.name)
             )
 
-        # There should be at most one element in 'parsers'
-        parser = parser_osv.get_parser(cr, uid, parsers[0], context=context)
+        parser_osv = self.pool.get("account_credit_transfer.parser")
+        parser = parser_osv.get_parser(cr, uid, parser_id, context=context)
 
-        att_values = parser.compute(parsers[0].template, data)
+        att_values = parser.compute(parser_id.template, data)
         ir_attachment_osv = self.pool.get('ir.attachment')
         ir_attachment_osv.create(cr, uid, att_values, context=context)
 
