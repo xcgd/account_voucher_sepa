@@ -8,7 +8,7 @@
     <CstmrDrctDbtInitn>
         <!--! Header -->
         <GrpHdr>
-            <MsgId py:content="time.strftime('%Y%m%d%H%M%S')"></MsgId>
+            <MsgId py:content="data['batch'].name"></MsgId>
             <CreDtTm py:content="time.strftime('%Y-%m-%dT%H:%M:%S')"></CreDtTm>
             <NbOfTxs py:content="len(data['list_voucher'])"></NbOfTxs>
             <CtrlSum py:content="fpformat.fix(abs(data['total_amount']), 2)"></CtrlSum>
