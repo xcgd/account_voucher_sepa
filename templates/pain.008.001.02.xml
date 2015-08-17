@@ -3,6 +3,14 @@
   from datetime import datetime
   import time
   import fpformat
+
+  def get_journal_items(list):
+    """List of account.voucher.line records
+       :returns: list of names of account.move.line records
+    """
+    return map(lambda line: '{} ({})'.format(line.move_line_id.move_id.name,
+                                             line.move_line_id.ref), list)
+
 ?>
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.008.001.02" xmlns:py="http://genshi.edgewall.org/">
     <CstmrDrctDbtInitn>
@@ -173,7 +181,7 @@
                 </RgltryRptg>
                 <RmtInf>
                     <!--! 2.89 reason for payment -->
-                    <Ustrd py:content="'Placeholder'"></Ustrd>
+                    <Ustrd py:content="','.join(get_journal_items(voucher.line_cr_ids + voucher.line_dr_ids))"></Ustrd>
                 </RmtInf>
             </DrctDbtTxInf>
         </PmtInf>
