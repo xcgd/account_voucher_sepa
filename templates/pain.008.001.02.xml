@@ -6,7 +6,7 @@
 ?>
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.008.001.02" xmlns:py="http://genshi.edgewall.org/">
     <CstmrDrctDbtInitn>
-        <!-- Header -->
+        <!--! Header -->
         <GrpHdr>
             <MsgId py:content="time.strftime('%Y%m%d%H%M%S')"></MsgId>
             <CreDtTm py:content="time.strftime('%Y-%m-%dT%H:%M:%S')"></CreDtTm>
@@ -16,11 +16,11 @@
                 <Nm py:content="data['company_name'][:70]"></Nm>
             </InitgPty>
         </GrpHdr>
-        <!-- Payment Group -->
+        <!--! Payment Group -->
         <PmtInf>
             <PmtInfId py:content="data['list_voucher'][0].number"></PmtInfId>
             <PmtMtd>DD</PmtMtd>
-            <BtchBookg>true</BtchBookg> <!-- TODO -->
+            <BtchBookg>true</BtchBookg>
             <NbOfTxs py:content="len(data['list_voucher'])"></NbOfTxs>
             <CtrlSum py:content="fpformat.fix(data['total_amount'], 2)"></CtrlSum>
             <PmtTpInf>
@@ -28,9 +28,9 @@
                     <Cd>SEPA</Cd>
                 </SvcLvl>
                 <LclInstrm>
-                    <Cd>CORE</Cd> <!-- TODO Either CORE or B2B -->
+                    <Cd>CORE</Cd> <!--!  Either CORE or B2B -->
                 </LclInstrm>
-                <SeqTp py:content="data['sequence_type']"></SeqTp> <!-- One of FSRT, RCUR, FNAL, OOF -->
+                <SeqTp py:content="data['sequence_type']"></SeqTp> <!--! One of FSRT, RCUR, FNAL, OOF -->
             </PmtTpInf>
             <CtgyPurp py:if="False">
                 <Cd py:content="data['payment_purpose']"></Cd>
@@ -43,7 +43,7 @@
                 <Id>
                     <IBAN py:content="(data['creditor_bank'].iban or data['creditor_bank'].acc_number).replace(' ', '').upper()"></IBAN>
                 </Id>
-                <Ccy py:if="False"></Ccy> <!-- Currency -->
+                <Ccy py:if="False"></Ccy> <!--! Currency -->
             </CdtrAcct>
             <CdtrAgt>
                 <FinInstnId>
@@ -51,17 +51,17 @@
                 </FinInstnId>
             </CdtrAgt>
             <UltmtCdr py:if="False">
-                <Nm></Nm> <!-- TODO creditor name -->
+                <Nm></Nm> <!--!  creditor name -->
                 <Id>
-                    <OrgId></OrgId> <!-- TODO either BIC or BEI -->
+                    <OrgId></OrgId> <!--!  either BIC or BEI -->
                 </Id>
             </UltmtCdr>
-            <ChrgBr>SLEV</ChrgBr> <!-- TODO optional element, figure out when to specify  -->
+            <ChrgBr>SLEV</ChrgBr> <!--!  optional element, figure out when to specify  -->
             <CdtrSchmeId>
                 <Id>
                     <PrvtId>
                         <Othr>
-                            <Id py:content="data['creditor_identifier']"></Id> <!-- 2.27 SEPA creditor Id -->
+                            <Id py:content="data['creditor_identifier']"></Id> <!--! 2.27 SEPA creditor Id -->
                             <SchmeNm>
                                 <Prtry>SEPA</Prtry>
                             </SchmeNm>
@@ -69,22 +69,22 @@
                     </PrvtId>
                 </Id>
             </CdtrSchmeId>
-            <!-- Transactions -->
+            <!--! Transactions -->
             <DrctDbtTxInf py:if="True" py:for="(i, (voucher, wizard_voucher)) in enumerate(zip(data['list_voucher'], data['list_voucher_wizard']))">
                 <?python 
                     mandate = wizard_voucher.mandate_id
                     original_mandate = wizard_voucher.mandate_id.original_mandate_id
                 ?>
                 <PmtId>
-                    <InstrId py:if="False"></InstrId> <!-- 2.30 TODO assigned by instructing party -->
-                    <EndToEndId py:content="voucher.number"></EndToEndId> <!-- 2.31 TODO assigned by initiating party -->
+                    <InstrId py:if="False"></InstrId> <!--! 2.30  assigned by instructing party -->
+                    <EndToEndId py:content="voucher.number"></EndToEndId> <!--! 2.31  assigned by initiating party -->
                 </PmtId>
-                <InstdAmt Ccy="${voucher.currency_id.name}" py:content="fpformat.fix(voucher.amount, 2)"></InstdAmt> <!-- 2.44 TODO amount -->
-                <DrctDbtTx> <!-- 2.46 mandate stuff -->
+                <InstdAmt Ccy="${voucher.currency_id.name}" py:content="fpformat.fix(voucher.amount, 2)"></InstdAmt> <!--! 2.44  amount -->
+                <DrctDbtTx> <!--! 2.46 mandate stuff -->
                     <MndtRltdInf>
-                        <MndtId py:content="mandate.identification"></MndtId> <!-- 2.48 TODO Identifier -->
-                        <DtOfSgntr py:content="mandate.date_of_signature"></DtOfSgntr> <!-- 2.49 TODO signature -->
-                        <AmdmntInd py:content="repr(mandate.amends_mandate).lower()"></AmdmntInd> <!-- 2.50 TODO true/false -->
+                        <MndtId py:content="mandate.identification"></MndtId> <!--! 2.48  Identifier -->
+                        <DtOfSgntr py:content="mandate.date_of_signature"></DtOfSgntr> <!--! 2.49  signature -->
+                        <AmdmntInd py:content="repr(mandate.amends_mandate).lower()"></AmdmntInd> <!--! 2.50  true/false -->
                         <AmdmntInfDtls py:if="mandate.amends_mandate">
                             <OrgnMndtId py:content="original_mandate.amends_mandate"></OrgnMndtId>
                             <OrgnCdtrSchmeId py:if="mandate.creditor != original_mandate.creditor">
@@ -92,7 +92,7 @@
                                 <Id>
                                     <PrvtId>
                                         <Othr>
-                                            <Id py:content="original_mandate.identifier"></Id> <!-- 2.53 TODO SEPA creditor id -->
+                                            <Id py:content="original_mandate.identifier"></Id> <!--! 2.53  SEPA creditor id -->
                                             <SchmeNm>
                                                 <Prtry>SEPA</Prtry>
                                             </SchmeNm>
@@ -116,12 +116,12 @@
                     </MndtRltdInf>
                 </DrctDbtTx>
                 <UltmtCdr py:if="False">
-                    <Nm py:content="mandate.ultimate_creditor_id.name"></Nm> <!-- 2.69 creditor reference party -->
+                    <Nm py:content="mandate.ultimate_creditor_id.name"></Nm> <!--! 2.69 creditor reference party -->
                     <Id>
-                        <!-- 2.69 TODO BIR/BEI??? -->
+                        <!--! 2.69  BIR/BEI??? -->
                         <OrgId>
                             <Othr>
-                                <!-- TODO find SIRET code in res.company -->
+                                <!--!  find SIRET code in res.company -->
                                 <Id py:content="mandate.ultimate_creditor_id.siret"></Id>
                                 <SchmeNm>
                                     <Prtry>SIRET</Prtry>
@@ -132,47 +132,47 @@
                 </UltmtCdr>
                 <DbtrAgt>
                     <FinInstnId>
-                        <!-- 2.70 TODO debtor's bank -->
+                        <!--! 2.70  debtor's bank -->
                         <BIC py:content="mandate.debtor_agent_id.bic"></BIC>
                     </FinInstnId>
                 </DbtrAgt>
                 <Dbtr>
-                    <!-- 2.72 TODO debtor name -->
+                    <!--! 2.72  debtor name -->
                     <Nm py:content="mandate.debtor_id.name"></Nm>
                     <Id py:if="False">
-                        <!-- 2.72 TODO BIC/BEI -->
+                        <!--! 2.72  BIC/BEI -->
                         <OrgId></OrgId>
                     </Id>
                 </Dbtr>
                 <DbtrAcct>
                     <Id>
-                        <!-- -2.73 debtor account -->
+                        <!--! -2.73 debtor account -->
                         <IBAN py:content="mandate.debtor_account_id.iban"></IBAN>
                     </Id>
                 </DbtrAcct>
                 <UltmtDbtr py:if="False">
-                    <!-- 2.74 TODO  -->
+                    <!--! 2.74   -->
                     <Nm py:content="mandate.ultimate_creditor_id.name"></Nm>
                     <Id>
                         <OrgId>
-                            <!-- 2.74 BIC/BEI -->
+                            <!--! 2.74 BIC/BEI -->
                             <BIC py:content="mandate.ultimate_creditor_id.bic"></BIC>
                         </OrgId>
                     </Id>
                 </UltmtDbtr>
                 <Purp py:if="False">
-                    <!-- 2.77 TODO from list of purpose codes -->
+                    <!--! 2.77  from list of purpose codes -->
                     <Cd py:content="voucher.purpose_code"></Cd>
                 </Purp>
-                <!-- Single occurence see section 2.11 -->
+                <!--! Single occurence see section 2.11 -->
                 <RgltryRptg py:if="False">
                     <Dtls>
-                        <!-- 2.79 TODO -->
+                        <!--! 2.79  -->
                         <Cd></Cd>
                     </Dtls>
                 </RgltryRptg>
                 <RmtInf>
-                    <!-- 2.89 reason for payment -->
+                    <!--! 2.89 reason for payment -->
                     <Ustrd py:content="'Placeholder'"></Ustrd>
                 </RmtInf>
             </DrctDbtTxInf>
