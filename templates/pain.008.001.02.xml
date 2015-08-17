@@ -11,7 +11,7 @@
             <MsgId py:content="time.strftime('%Y%m%d%H%M%S')"></MsgId>
             <CreDtTm py:content="time.strftime('%Y-%m-%dT%H:%M:%S')"></CreDtTm>
             <NbOfTxs py:content="len(data['list_voucher'])"></NbOfTxs>
-            <CtrlSum py:content="fpformat.fix(data['total_amount'], 2)"></CtrlSum>
+            <CtrlSum py:content="fpformat.fix(abs(data['total_amount']), 2)"></CtrlSum>
             <InitgPty>
                 <Nm py:content="data['company_name'][:70]"></Nm>
             </InitgPty>
@@ -22,7 +22,7 @@
             <PmtMtd>DD</PmtMtd>
             <BtchBookg>true</BtchBookg>
             <NbOfTxs py:content="len(data['list_voucher'])"></NbOfTxs>
-            <CtrlSum py:content="fpformat.fix(data['total_amount'], 2)"></CtrlSum>
+            <CtrlSum py:content="fpformat.fix(abs(data['total_amount']), 2)"></CtrlSum>
             <PmtTpInf>
                 <SvcLvl>
                     <Cd>SEPA</Cd>
