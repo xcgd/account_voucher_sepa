@@ -146,6 +146,7 @@ class account_voucher_sepa(osv.TransientModel):
             'list_voucher_wizard': list_voucher_wizard,
             'batch': batch_br,
             'date': date,
+            'operation': operation,
             'sequence_type': sequence_type,
         }
 
@@ -289,6 +290,7 @@ class account_voucher_sepa(osv.TransientModel):
             list_voucher_wizard,
             list_voucher,
             data['execution_date'],
+            data['operation'],
             self._translate_sequence_type(cr, uid, data['sequence_type'],
                                           context),
             context=context
