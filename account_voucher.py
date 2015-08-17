@@ -107,7 +107,7 @@ class account_voucher_sepa(osv.TransientModel):
             parser_choice = 'direct_debit'
 
         parser_osv = self.pool.get("account_credit_transfer.parser")
-        print("parser: {}".format(getattr(data['debtor_bank'].bank, parser_choice).id))
+
         parser_obj = getattr(data['debtor_bank'].bank, parser_choice)
         parsers = parser_osv.browse(
             cr, uid,
