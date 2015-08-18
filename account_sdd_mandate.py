@@ -31,13 +31,13 @@ class account_sdd_mandate(osv.Model):
 
     def create(self, cr, uid, vals, context=None):
         if(not vals['ultimate_debtor_id']):
-            vals['ultimate_debtor'] = vals['debtor']
+            vals['ultimate_debtor_id'] = vals['debtor_id']
 
         if(not vals['ultimate_creditor_id']):
-            vals['ultimate_creditor'] = vals['ultimate_creditor']
+            vals['ultimate_creditor_id'] = vals['ultimate_creditor_id']
 
         res_partner_osv = self.pool['res.partner']
-        debtor = res_partner_osv.browse(cr, uid, [vals['ultimate_debtor_id']],
+        debtor = res_partner_osv.browse(cr, uid, vals['ultimate_debtor_id'],
                                         context=context)[0]
 
         if not debtor.bank_ids:
