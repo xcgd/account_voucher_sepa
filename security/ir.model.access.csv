@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 sdd_mandate_all_user,sdd_mandate_all_user_id,model_account_sdd_mandate,base.group_user,1,0,0,0
 sepa_batch_all_user,sepa_batch_all_user_id,model_account_voucher_sepa_batch,base.group_user,1,1,1,1
+sdd_mandate_invoice_user,sdd_mandate_invoice_user_id,model_account_sdd_mandate,account.group_account_invoice,1,1,1,0
