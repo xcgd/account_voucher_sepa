@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="base.view_res_bank_form" />
             <field name="arch" type="xml">
                 <xpath expr="//sheet/group[position()=2]" position="inside">
-                    <group string="Parsers">
+                    <group name="sepa" string="SEPA">
                         <field name="sdd_creditor_indentifier"/>
                         <field name="direct_debit_parser" />
                         <field name="transfer_parser" />
