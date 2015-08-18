@@ -92,6 +92,7 @@ class account_sdd_mandate(osv.Model):
         'debtor_id': fields.many2one(
             'res.partner',
             string='Debtor',
+            domain=[('is_company', '=', True)],
             required=True,
         ),
         'debtor_account_id': fields.many2one(
@@ -106,6 +107,7 @@ class account_sdd_mandate(osv.Model):
         'creditor_id': fields.many2one(
             'res.partner',
             string='Creditor Name',
+            domain=[('is_company', '=', True)],
             required=True,
         ),
         'count': fields.integer(
