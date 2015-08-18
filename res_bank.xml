@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//sheet/group[position()=2]" position="inside">
                     <group string="Parsers">
+                        <field name="sdd_creditor_indentifier"/>
                         <field name="direct_debit_parser" />
                         <field name="transfer_parser" />
                     </group>
