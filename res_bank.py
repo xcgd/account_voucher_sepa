@@ -41,5 +41,10 @@ class res_bank(osv.Model):
             string='Transfer Parser',
             help='The parser to use for creating transfer payment files',
         ),
+        'sdd_creditor_indentifier': fields.char(
+            size=35,
+            string="SDD CORE Creditor Identifier",
+            help="Required for SDD CORE payments",
+        ),
     }
 
