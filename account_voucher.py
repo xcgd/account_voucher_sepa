@@ -85,8 +85,7 @@ class account_voucher_sepa(osv.TransientModel):
     }
 
     def generate_credit_transfer_file(self, cr, uid, data, context=None):
-        """
-        Looks for the appropriate parser for data['debtor_bank'] then
+        """Looks for the appropriate parser for data['debtor_bank'] then
         creates an ir.attachment record with the XML document created
         by said parser.
 
@@ -123,8 +122,7 @@ class account_voucher_sepa(osv.TransientModel):
         ir_attachment_osv.create(cr, uid, att_values, context=context)
 
     def _parser_sanity_check(self, cr, uid, data, context=None):
-        """
-        Makes sure that the data that is about to be fed to the parser is
+        """Makes sure that the data that is about to be fed to the parser is
         correct.
 
         :param data: dictionary of values to be passed on to the parser
@@ -218,8 +216,7 @@ class account_voucher_sepa(osv.TransientModel):
 
     def _check_voucher_wizards(self, cr, uid, list_voucher_wizard,
                                context=None):
-        """
-        Makes sure that mandates are specified.
+        """Makes sure that mandates are specified.
         Raises an exception if some mandates are missing.
 
         :param list_voucher_wizard: list of 'account.voucher.wizard' records
@@ -232,8 +229,7 @@ class account_voucher_sepa(osv.TransientModel):
                 )
 
     def _translate_sequence_type(self, cr, uid, sequence_type, context=None):
-        """
-        Translates the value of 'sequence_type' to something that is acceptable
+        """Translates the value of 'sequence_type' to something that is acceptable
         for the SEPA SDD format.
         """
         return {

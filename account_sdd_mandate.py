@@ -24,8 +24,7 @@ from openerp.tools.translate import _
 
 
 class account_sdd_mandate(osv.Model):
-    """
-    Represents the mandate document used to generate SDD SEPA payments
+    """Represents the mandate document used to generate SDD SEPA payments
     """
     _name = 'account.sdd.mandate'
 
@@ -51,8 +50,7 @@ class account_sdd_mandate(osv.Model):
                                                        context=context)
 
     def get_sequence_type(self, cr, uid, id, number, context=None):
-        """
-        Returns the 'sequence type' of the SDD SEPA mandate.
+        """Returns the 'sequence type' of the SDD SEPA mandate.
         This value depends on the number of times this mandate was
         used in the context of a 'payment information' block.
 
@@ -165,8 +163,7 @@ class account_sdd_mandate(osv.Model):
     }
 
     def _check_original_mandate(self, cr, uid, ids, context=None):
-        """
-        Makes sure that 'original_mandate_id' is filled in when
+        """Makes sure that 'original_mandate_id' is filled in when
         'ammends_mandate' is  checked
         """
         for record in self.browse(cr, uid, ids, context=context):

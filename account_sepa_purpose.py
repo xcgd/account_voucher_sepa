@@ -24,8 +24,7 @@ from openerp.tools.translate import _
 
 
 class account_sepa_purpose(osv.Model):
-    """
-    Represents the payment category purpose code for SEPA payments specified
+    """Represents the payment category purpose code for SEPA payments specified
     by ISO 20022.
     """
     _name = 'account.sepa.purpose'
