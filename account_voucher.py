@@ -122,6 +122,21 @@ class account_voucher_sepa(osv.TransientModel):
         ir_attachment_osv = self.pool.get('ir.attachment')
         ir_attachment_osv.create(cr, uid, att_values, context=context)
 
+    def _parser_sanity_check(self, cr, uid, data, context=None):
+        """
+        Makes sure that the data that is about to be fed to the parser is
+        correct.
+
+        :param data: dictionary of values to be passed on to the parser
+        """
+        if data['operation'] == 'direct_debit':
+            if not data.get('creditor_identifier', None):
+                raise osv.except_osv(
+                    _('Error'),
+                    _('No SDD creditor identifier associated with {}'
+                      ).format(data['debtor_bank'].bank.name)
+                )
+
     def generate_sepa(self, cr, uid, batch_id,
                       list_voucher_wizard, list_voucher, date, operation,
                       sequence_type, context=None):
@@ -145,6 +160,8 @@ class account_voucher_sepa(osv.TransientModel):
             'operation': operation,
             'sequence_type': sequence_type,
         }
+
+        self._parser_sanity_check(cr, uid, data, context=context)
 
         self.generate_credit_transfer_file(
             cr, uid, data, context=context
