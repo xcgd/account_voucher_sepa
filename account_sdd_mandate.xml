@@ -8,14 +8,13 @@
                 <form>
                     <sheet>
                         <h1>
-                            <field name="name" readonly="1"/>
+                            <field name="identification"/>
                         </h1>
                         <group>
                             <field name="active"/>
                         </group>
                         <group col="2">
                             <group>
-                                <field name="identification"/>
                                 <field name="sequence_type" invisible="1"/>
                                 <field name="count"/>
                             </group>
