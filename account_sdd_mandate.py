@@ -86,6 +86,7 @@ class account_sdd_mandate(osv.Model):
         'name': fields.related(
             'identification',
             type='char',
+            string="Name",
         ),
         'debtor_id': fields.many2one(
             'res.partner',
