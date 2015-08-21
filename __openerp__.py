@@ -44,6 +44,7 @@
         'account_sdd_mandate.xml',
         'sepa_batch.xml',
         'res_bank.xml',
+        'res_partner_bank.xml',
         'data/batch_sequence.xml',
         'security/ir.model.access.csv',
         'security/security.xml',
