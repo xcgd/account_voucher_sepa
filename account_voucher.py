@@ -106,7 +106,6 @@ class account_voucher_sepa(osv.TransientModel):
 
         parser_id = getattr(data['debtor_bank'].bank, parser_choice, None)
 
-        print('operation: {}, choice:{}'.format(data.get('operation'), parser_choice))
         if not parser_id:
             raise osv.except_osv(
                 _('Error'),
