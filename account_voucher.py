@@ -127,6 +127,7 @@ class account_voucher_sepa(osv.TransientModel):
         :param data: dictionary of values to be passed on to the parser
         """
         if data['operation'] == 'direct_debit':
+            # Making sure that the SDD creditor identifier is defined
             if not data.get('creditor_identifier', None):
                 raise osv.except_osv(
                     _('Error'),
