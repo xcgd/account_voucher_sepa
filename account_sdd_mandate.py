@@ -118,8 +118,6 @@ class account_sdd_mandate(osv.Model):
             type='many2one',
             obj='res.partner',
             string='Creditor Name',
-            domain=[('is_company', '=', True)],
-            required=True,
         ),
         'count': fields.integer(
             string='Count',
