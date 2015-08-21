@@ -8,8 +8,7 @@
     """List of account.voucher.line records
        :returns: list of names of account.move.line records
     """
-    return map(lambda line: '{} ({})'.format(line.move_line_id.move_id.name,
-                                             line.move_line_id.ref), list)
+    return map(lambda line: line.move_line_id.move_id.name, list)
 
   def format_msg_id(batch):
     """Returns the content of 'MsgId' with the intended format which is
