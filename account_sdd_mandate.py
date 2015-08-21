@@ -107,8 +107,16 @@ class account_sdd_mandate(osv.Model):
             readonly=True,
             string='Financial Institution',
         ),
-        'creditor_id': fields.many2one(
-            'res.partner',
+        'creditor_company_id': fields.many2one(
+            'res.company',
+            string='Creditor',
+            required=True,
+        ),
+        'creditor_id': fields.related(
+            'creditor_company_id',
+            'partner_id',
+            type='many2one',
+            obj='res.partner',
             string='Creditor Name',
             domain=[('is_company', '=', True)],
             required=True,
