@@ -26,7 +26,7 @@
                         </group>
                         <group col="2">
                             <group string="Creditor Information">
-                                <field name="creditor_id"/>
+                                <field name="creditor_company_id"/>
                                 <field name="ultimate_creditor_id" invisible="1"/>
                             </group>
                             <group string="Debtor Information">
