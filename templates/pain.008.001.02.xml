@@ -11,12 +11,21 @@
     return map(lambda line: '{} ({})'.format(line.move_line_id.move_id.name,
                                              line.move_line_id.ref), list)
 
+  def format_msg_id(batch):
+    """Returns the content of 'MsgId' with the intended format which is
+    <date time><batch name>
+    The function is also used to fill 'PmtInfId'.
+    :param batch: 'account.sepa.batch' record
+    :returns: string
+    """
+    return time.strftime('Y%m%d%H%M%S') + batch.name
+
 ?>
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.008.001.02" xmlns:py="http://genshi.edgewall.org/">
     <CstmrDrctDbtInitn>
         <!--! Header -->
         <GrpHdr>
-            <MsgId py:content="data['batch'].name"></MsgId>
+            <MsgId py:content="format_msg_id(data['batch'])"></MsgId>
             <CreDtTm py:content="time.strftime('%Y-%m-%dT%H:%M:%S')"></CreDtTm>
             <NbOfTxs py:content="len(data['list_voucher'])"></NbOfTxs>
             <CtrlSum py:content="fpformat.fix(abs(data['total_amount']), 2)"></CtrlSum>
@@ -26,7 +35,7 @@
         </GrpHdr>
         <!--! Payment Group -->
         <PmtInf>
-            <PmtInfId py:content="data['list_voucher'][0].number"></PmtInfId>
+            <PmtInfId py:content="format_msg_id(data['batch'])"></PmtInfId>
             <PmtMtd>DD</PmtMtd>
             <BtchBookg>true</BtchBookg>
             <NbOfTxs py:content="len(data['list_voucher'])"></NbOfTxs>
