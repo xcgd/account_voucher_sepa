@@ -133,6 +133,13 @@ class account_voucher_sepa(osv.TransientModel):
                     _('No SDD creditor identifier associated with {}'
                       ).format(data['debtor_bank'].bank.name)
                 )
+            # Making sure that the creditor's bank has a BIC
+            if not data['creditor_bank'].bank_bic:
+                raise osv.except_osv(
+                    _('Error'),
+                    _('No BIC associated with {}'
+                      ).format(data['creditor_bank'].name)
+                )
 
     def generate_sepa(self, cr, uid, batch_id,
                       list_voucher_wizard, list_voucher, date, operation,
