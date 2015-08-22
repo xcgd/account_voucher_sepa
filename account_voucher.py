@@ -336,13 +336,31 @@ class account_voucher_sepa(osv.TransientModel):
         vouchers = voucher_obj.read(
             cr, uid,
             context['active_ids'],
-            ['partner_id', 'amount', 'partner_bank_id', 'type'],
+            ['partner_id', 'amount', 'partner_bank_id', 'type', 'company_id'],
             context=context
         )
         our_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         vals['operation'] = (context.get('operation', 'transfer')
                              if context else 'transfer')
         for v in vouchers:
+            if context.get('operation') == 'direct_debit':
+                mandate_ids = self.pool['account.sdd.mandate'].search(
+                    cr, uid, [
+                        ('active', '=', True),
+                        ('debtor_id', '=', v['partner_id'][0]),
+                        ('creditor_company_id', '=', v['company_id'][0])
+                    ], limit=1, context=context
+                )
+                if mandate_ids:
+                    v['mandate_id'] = mandate_ids[0]
+                else:
+                    raise osv.except_osv(
+                        _("Error"),
+                        _("No suitable mandate found for creditor {0} "
+                          "and debtor {1}, consider creating one or "
+                          "check whether the mandate you wish to use is active"
+                          ).format(v['company_id'][1], v['partner_id'][1])
+                    )
             v['voucher_id'] = v.pop('id')
             v['partner_id'] = v['partner_id'][0]
             v['operation'] = vals['operation']
@@ -352,16 +370,6 @@ class account_voucher_sepa(osv.TransientModel):
             if v['type'] == 'receipt':
                 v['amount'] = -v['amount']
             # TODO remove type from dic
-            if context.get('operation') == 'direct_debit':
-                mandate_ids = self.pool['account.sdd.mandate'].search(
-                    cr, uid, [
-                        ('active', '=', True),
-                        ('debtor_id', '=', v['partner_id']),
-                        ('creditor_id', '=', our_user.partner_id.id)
-                    ], limit=1, context=context
-                )
-                if mandate_ids:
-                    v['mandate_id'] = mandate_ids[0]
 
         vals['voucher_wizard_ids'] = [(0, 0, v) for v in vouchers]
         return vals
