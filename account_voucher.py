@@ -48,6 +48,10 @@ class account_voucher_wizard(osv.TransientModel):
         'mandate_id': fields.many2one(
             'account.sdd.mandate',
             'Mandate',
+            domain='''[
+                ('active', '=', True),
+                ('debtor_id', '=', partner_id),
+            ]''',
         ),
         'sepa_id': fields.many2one('account.voucher.sepa'),
         'sepa_regeneration_id': fields.many2one('account.voucher.sepa_regeneration'),
