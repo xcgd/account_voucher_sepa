@@ -17,7 +17,7 @@
     :param batch: 'account.sepa.batch' record
     :returns: string
     """
-    return time.strftime('Y%m%d%H%M%S') + batch.name
+    return time.strftime('%Y%m%d%H%M%S') + batch.name
 
 ?>
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.008.001.02" xmlns:py="http://genshi.edgewall.org/">
