@@ -339,7 +339,6 @@ class account_voucher_sepa(osv.TransientModel):
             ['partner_id', 'amount', 'partner_bank_id', 'type', 'company_id'],
             context=context
         )
-        our_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         vals['operation'] = (context.get('operation', 'transfer')
                              if context else 'transfer')
         for v in vouchers:
