@@ -213,15 +213,15 @@ class account_voucher_sepa(osv.TransientModel):
         if not len(banks):
             raise osv.except_osv(
                 _("No origin bank account found"),
-                _("Bank account for journal %s is not found" % 
+                _("Bank account for journal {} is not found").format(
                   voucher.journal_id.name))
 
         bank = banks[0]
         if not bank.bank_bic:
             raise osv.except_osv(
                 _("Bank BIC"),
-                _("Please set the bank BIC for the bank %s" % 
-                  bank.name))
+                _("Please set the bank BIC for the bank {}").format(
+                    bank.bank_name))
         return bank
 
     def _check_voucher_wizards(self, cr, uid, list_voucher_wizard,
