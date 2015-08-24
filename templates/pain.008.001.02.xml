@@ -149,7 +149,7 @@
                 <DbtrAgt>
                     <FinInstnId>
                         <!--! 2.70  debtor's bank -->
-                        <BIC py:content="mandate.debtor_agent_id.bic"></BIC>
+                        <BIC py:content="mandate.debtor_account_id.bank_bic"></BIC>
                     </FinInstnId>
                 </DbtrAgt>
                 <Dbtr>
