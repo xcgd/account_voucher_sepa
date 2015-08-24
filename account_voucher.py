@@ -159,7 +159,7 @@ class account_voucher_sepa(osv.TransientModel):
             'company_name': list_voucher[0].company_id.name,
             'creditor_bank': list_voucher[0].company_id.partner_id.bank_ids[0],
             'creditor_identifier': (list_voucher[0].company_id.partner_id
-                                    .sdd_creditor_indentifier),
+                                    .bank_ids[0].sdd_creditor_indentifier),
             'debtor_bank': batch_br.creditor_bank_id,
             'list_voucher': list_voucher,
             'list_voucher_wizard': list_voucher_wizard,
