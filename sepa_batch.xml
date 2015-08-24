@@ -40,7 +40,6 @@
                         <field name="creditor_bank_id" />
                         <field name="wording" />
                         <field name="execution_date" />
-                        <field name="mandate_id"/>
                         <field name="line_ids">
                             <tree string="Lines" version="7.0">
                                 <field name="number" />

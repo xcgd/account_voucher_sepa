@@ -37,7 +37,6 @@ class account_voucher_sepa_batch(osv.Model):
         'wording': fields.char("Wording", size=20),
         'execution_date': fields.date('Execution Date'),
         'company_id': fields.many2one('res.company', "Company", select=1),
-        'mandate_id': fields.many2one('account.sdd.mandate', 'Mandate'),
     }
 
     _defaults = {
