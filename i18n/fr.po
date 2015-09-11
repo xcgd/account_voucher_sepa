@@ -3,14 +3,15 @@
 # * account_voucher_sepa
 # Alexandre BRUN, 2014.
 # Vincent Hatakeyama <vincent.lhote@xcg-consulting.fr>, 2015.
+# Brendan Masson <brendan.masson@xcg-consulting.fr>, 2015.
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-28 15:53+0000\n"
-"PO-Revision-Date: 2015-01-28 16:56+0200\n"
-"Last-Translator: Vincent Hatakeyama <vincent.lhote@xcg-consulting.fr>\n"
-"Language-Team: XCG Consulting\n"
+"POT-Creation-Date: 2015-09-11 13:26+0000\n"
+"PO-Revision-Date: 2015-09-11 15:56+0200\n"
+"Last-Translator: Brendan Masson <brendan.masson@xcg-consulting.fr>\n"
+"Language-Team: XCG\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,110 +20,69 @@ msgstr ""
 "X-Generator: Virtaal 0.7.1\n"
 
 #. module: account_voucher_sepa
-#: view:account.voucher.sepa:0
-#: view:account.voucher.sepa_regeneration:0
-msgid "No bank account found. Cannot generate file"
-msgstr "Pas de compte de banque trouvé. Impossible de générer le fichier"
-
-#. module: account_voucher_sepa
 #: model:ir.model,name:account_voucher_sepa.model_account_voucher
 msgid "Accounting Voucher"
 msgstr "Justificatif comptable"
 
 #. module: account_voucher_sepa
-#: code:addons/account_voucher_sepa/account_voucher.py:126
+#: field:account.sdd.mandate,active:0
+msgid "Active"
+msgstr "Actif"
+
+#. module: account_voucher_sepa
+#: field:account.sdd.mandate,amends_mandate:0
+msgid "Amends another mandate"
+msgstr "Remplace un autre mandat"
+
+#. module: account_voucher_sepa
+#: model:ir.model,name:account_voucher_sepa.model_res_bank
+msgid "Bank"
+msgstr "Banque"
+
+#. module: account_voucher_sepa
+#: model:ir.model,name:account_voucher_sepa.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Compte bancaire"
+
+#. module: account_voucher_sepa
+#: code:addons/account_voucher_sepa/account_voucher.py:222
 #, python-format
-msgid "Please set the bank BIC for the bank %s"
-msgstr "Veuillez définir le BIC de la banque %s"
+msgid "Bank BIC"
+msgstr "BIC banque"
 
 #. module: account_voucher_sepa
-#: model:ir.actions.server,name:account_voucher_sepa.action_regenerate_sepa
-msgid "Regenerate Sepa"
-msgstr "Régénérer le Sepa"
-
-#. module: account_voucher_sepa
-#: field:account.voucher.sepa,group_suppliers:0
-#: code:addons/account_voucher_sepa/account_voucher.py:54
+#: code:addons/account_voucher_sepa/account_voucher.py:216
 #, python-format
-msgid "Group suppliers"
-msgstr "Grouper par fournisseur"
+msgid "Bank account for journal {} is not found"
+msgstr "Le journal {} n'est pas associé à un compte bancaire"
 
 #. module: account_voucher_sepa
-#: code:addons/account_voucher_sepa/account_voucher.py:344
+#: help:account.sdd.mandate,ultimate_creditor_id:0
+msgid "Can be the same as the Creditor"
+msgstr "Peut être identique au créancier"
+
+#. module: account_voucher_sepa
+#: help:account.sdd.mandate,ultimate_debtor_id:0
+msgid "Can be the same as the Debtor"
+msgstr "Peut être identique au débiteur"
+
+# Insert in French translation
+#. module: account_voucher_sepa
+#: view:account.voucher.sepa:account_voucher_sepa.view_account_voucher_sepa
+#: view:account.voucher.sepa_regeneration:account_voucher_sepa.view_account_voucher_sepa_regeneration
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: account_voucher_sepa
+#: code:addons/account_voucher_sepa/account_voucher.py:103
 #, python-format
-msgid "The voucher %s is already attached to a batch.\n"
-"\n"
-""
-msgstr ""
-"Le bon de règlement %s est déjà attaché à un lot.\n"
-"\n"
+msgid "Cannot create SEPA batch: no IBAN number."
+msgstr "Impossible de créer le lot SEPA: le numéro IBAN n'est pas renseigné"
 
 #. module: account_voucher_sepa
-#: code:addons/account_voucher_sepa/account_voucher.py:353
-#, python-format
-msgid "Invalid Voucher(s)"
-msgstr "Bon(s) de règlement invalide(s)"
-
-#. module: account_voucher_sepa
-#: view:account.voucher.sepa_batch:0
-msgid "SEPA Batch"
-msgstr "Lot SEPA"
-
-#. module: account_voucher_sepa
-#: code:addons/account_voucher_sepa/account_voucher.py:118
-#, python-format
-msgid "No origin bank account found"
-msgstr "Aucune banque d'origine trouvée"
-
-#. module: account_voucher_sepa
-#: code:addons/account_voucher_sepa/account_voucher.py:426
-#, python-format
-msgid "Sepa:"
-msgstr "Sepa :"
-
-#. module: account_voucher_sepa
-#: code:addons/account_voucher_sepa/account_voucher.py:329
-#, python-format
-msgid "The voucher %s is not of type 'payment' nor 'receipt'.\n"
-"\n"
-""
-msgstr ""
-"Le bon de règlement %s n'est pas de type 'paiement'\n"
-"\n"
-
-#. module: account_voucher_sepa
-#: model:ir.actions.server,name:account_voucher_sepa.action_generate_sepa
-msgid "Generate Sepa"
-msgstr "Générer le Sepa"
-
-#. module: account_voucher_sepa
-#: view:account.voucher.sepa:0
-#: field:account.voucher.sepa,voucher_wizard_ids:0
-#: view:account.voucher.sepa_batch:0
-#: field:account.voucher.sepa_batch,line_ids:0
-#: view:account.voucher.sepa_regeneration:0
-#: field:account.voucher.sepa_regeneration,voucher_wizard_ids:0
-#, python-format
-msgid "Lines"
-msgstr "Lignes"
-
-#. module: account_voucher_sepa
-#: model:ir.model,name:account_voucher_sepa.model_account_voucher_sepa_regeneration
-msgid "account.voucher.sepa_regeneration"
-msgstr "account.voucher.sepa_regeneration"
-
-#. module: account_voucher_sepa
-#: code:addons/account_voucher_sepa/sepa_batch.py:65
-#, python-format
-msgid "Please select only one Batch."
-msgstr "Veuillez seulement sélectionner un Lot."
-
-#. module: account_voucher_sepa
-#: field:account.voucher.wizard,sepa_id:0
-#: field:account.voucher.wizard,sepa_regeneration_id:0
-#: field:account.voucher.wizard,voucher_id:0
-msgid "unknown"
-msgstr "inconnu"
+#: field:account.sepa.purpose,code:0
+msgid "Code"
+msgstr "Code"
 
 #. module: account_voucher_sepa
 #: field:account.voucher.sepa_batch,company_id:0
@@ -130,56 +90,105 @@ msgid "Company"
 msgstr "Entreprise"
 
 #. module: account_voucher_sepa
+#: field:account.sdd.mandate,count:0
+msgid "Count"
+msgstr "Nombre d'utilisation"
+
+#. module: account_voucher_sepa
+#: field:account.sdd.mandate,create_uid:0
+#: field:account.sepa.purpose,create_uid:0
+#: field:account.voucher.sepa,create_uid:0
+#: field:account.voucher.sepa_batch,create_uid:0
+#: field:account.voucher.sepa_regeneration,create_uid:0
+#: field:account.voucher.wizard,create_uid:0
+msgid "Created by"
+msgstr "Auteur"
+
+#. module: account_voucher_sepa
+#: field:account.sdd.mandate,create_date:0
+#: field:account.sepa.purpose,create_date:0
+#: field:account.voucher.sepa,create_date:0
+#: field:account.voucher.sepa_batch,create_date:0
+#: field:account.voucher.sepa_regeneration,create_date:0
+#: field:account.voucher.wizard,create_date:0
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: account_voucher_sepa
+#: field:account.sdd.mandate,creditor_company_id:0
+msgid "Creditor"
+msgstr "Créancier"
+
+#. module: account_voucher_sepa
+#: view:account.sdd.mandate:account_voucher_sepa.view_account_sdd_mandate_form
+msgid "Creditor Information"
+msgstr "Informations portant sur le créancier"
+
+#. module: account_voucher_sepa
+#: field:account.sdd.mandate,creditor_id:0
+msgid "Creditor Name"
+msgstr "Nom du créancier"
+
+#. module: account_voucher_sepa
 #: field:account.voucher.sepa_batch,creditor_bank_id:0
 msgid "Creditor bank"
 msgstr "Banque créditeur"
 
 #. module: account_voucher_sepa
-#: model:ir.model,name:account_voucher_sepa.model_account_voucher_sepa
-msgid "account.voucher.sepa"
-msgstr "account.voucher.sepa"
+#: field:account.sdd.mandate,date_of_signature:0
+msgid "Date of Signature"
+msgstr "Date de signature"
 
 #. module: account_voucher_sepa
-#: code:addons/account_voucher_sepa/account_voucher.py:334
+#: field:account.sdd.mandate,debtor_id:0
+msgid "Debtor"
+msgstr "Débiteur"
+
+#. module: account_voucher_sepa
+#: field:account.sdd.mandate,debtor_account_id:0
+msgid "Debtor Account"
+msgstr "Compte du débit"
+
+#. module: account_voucher_sepa
+#: view:account.sdd.mandate:account_voucher_sepa.view_account_sdd_mandate_form
+msgid "Debtor Information"
+msgstr "Informations portant sur le débiteur"
+
+#. module: account_voucher_sepa
+#: selection:account.voucher.sepa,operation:0
+#: selection:account.voucher.wizard,operation:0
+msgid "Direct Debit"
+msgstr "Prélèvement"
+
+#. module: account_voucher_sepa
+#: field:res.bank,direct_debit_parser:0
+msgid "Direct Debit Parser"
+msgstr "Parseur de prélèvement"
+
+#. module: account_voucher_sepa
+#: help:account.voucher.sepa,operation:0
+msgid "Either Direct Debit or Transfer"
+msgstr "Prélèvement ou virement"
+
+#. module: account_voucher_sepa
+#: code:addons/account_voucher_sepa/sepa_batch.py:110
+#: model:ir.actions.server,name:account_voucher_sepa.action_sepa_email_remittance
 #, python-format
-msgid "The voucher %s has an incorrect amount considering its type.\n"
-"\n"
-""
-msgstr ""
-"Le bon de règlement %s a un montant incorrect au vu de son type.\n"
-"\n"
+msgid "Email Remittance Letters"
+msgstr "Email des avis de règlement"
 
 #. module: account_voucher_sepa
-#: code:addons/account_voucher_sepa/account_voucher.py:119
+#: code:addons/account_voucher_sepa/account_voucher.py:102
+#: code:addons/account_voucher_sepa/account_voucher.py:115
+#: code:addons/account_voucher_sepa/account_voucher.py:137
+#: code:addons/account_voucher_sepa/account_voucher.py:144
+#: code:addons/account_voucher_sepa/account_voucher.py:357
+#: code:addons/account_voucher_sepa/account_voucher.py:654
+#: code:addons/account_voucher_sepa/sepa_batch.py:64
+#: code:addons/account_voucher_sepa/sepa_batch.py:94
 #, python-format
-msgid "Bank account for journal %s is not found"
-msgstr "Le compte de banque pour le journal %s est introuvable"
-
-#. module: account_voucher_sepa
-#: view:account.voucher.sepa:0
-msgid "Generate SEPA"
-msgstr "Générer SEPA"
-
-#. module: account_voucher_sepa
-#: view:account.voucher:0
-msgid "True"
-msgstr "Vrai"
-
-#. module: account_voucher_sepa
-#: model:ir.model,name:account_voucher_sepa.model_account_voucher_sepa_batch
-msgid "account.voucher.sepa_batch"
-msgstr "account.voucher.sepa_batch"
-
-#. module: account_voucher_sepa
-#: field:account.voucher,partner_bank_id:0
-#: field:account.voucher.wizard,partner_bank_id:0
-msgid "Partner Bank"
-msgstr "Banque du tiers"
-
-#. module: account_voucher_sepa
-#: field:account.voucher.sepa_batch,name:0
-msgid "Name"
-msgstr "Nom"
+msgid "Error"
+msgstr "Erreur"
 
 #. module: account_voucher_sepa
 #: field:account.voucher.sepa,execution_date:0
@@ -189,9 +198,140 @@ msgid "Execution Date"
 msgstr "Date d'exécution"
 
 #. module: account_voucher_sepa
-#: view:account.voucher:0
-msgid "blue:state == 'draft';gray:state == 'cancel';red:audit;green:batch_id"
-msgstr "blue:state == 'draft';gray:state == 'cancel';red:audit;green:batch_id"
+#: field:account.sdd.mandate,debtor_agent_id:0
+msgid "Financial Institution"
+msgstr "Banque"
+
+#. module: account_voucher_sepa
+#: selection:account.voucher.sepa,sequence_type:0
+msgid "First"
+msgstr "Première fois"
+
+#. module: account_voucher_sepa
+#: view:account.voucher.sepa:account_voucher_sepa.view_account_voucher_sepa
+msgid "Generate SEPA"
+msgstr "Générer SEPA"
+
+#. module: account_voucher_sepa
+#: model:ir.actions.server,name:account_voucher_sepa.action_generate_sepa
+msgid "Generate Sepa"
+msgstr "Générer le Sepa"
+
+#. module: account_voucher_sepa
+#: field:account.voucher.sepa,group_suppliers:0
+#: code:addons/account_voucher_sepa/account_voucher.py:81
+#, python-format
+msgid "Group suppliers"
+msgstr "Grouper par fournisseur"
+
+#. module: account_voucher_sepa
+#: field:account.sdd.mandate,id:0
+#: field:account.sepa.purpose,id:0
+#: field:account.voucher.sepa,id:0
+#: field:account.voucher.sepa_batch,id:0
+#: field:account.voucher.sepa_regeneration,id:0
+#: field:account.voucher.wizard,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: account_voucher_sepa
+#: code:addons/account_voucher_sepa/account_voucher.py:441
+#: code:addons/account_voucher_sepa/account_voucher.py:453
+#, python-format
+msgid "Integrity Error"
+msgstr "Erreur d'intégrité"
+
+#. module: account_voucher_sepa
+#: code:addons/account_voucher_sepa/account_voucher.py:530
+#, python-format
+msgid "Invalid Voucher(s)"
+msgstr "Bon(s) de règlement invalide(s)"
+
+#. module: account_voucher_sepa
+#: field:account.sdd.mandate,write_uid:0
+#: field:account.sepa.purpose,write_uid:0
+#: field:account.voucher.sepa,write_uid:0
+#: field:account.voucher.sepa_batch,write_uid:0
+#: field:account.voucher.sepa_regeneration,write_uid:0
+#: field:account.voucher.wizard,write_uid:0
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: account_voucher_sepa
+#: field:account.sdd.mandate,write_date:0
+#: field:account.sepa.purpose,write_date:0
+#: field:account.voucher.sepa,write_date:0
+#: field:account.voucher.sepa_batch,write_date:0
+#: field:account.voucher.sepa_regeneration,write_date:0
+#: field:account.voucher.wizard,write_date:0
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: account_voucher_sepa
+#: view:account.voucher.sepa:account_voucher_sepa.view_account_voucher_sepa
+#: field:account.voucher.sepa,voucher_wizard_ids:0
+#: view:account.voucher.sepa_batch:account_voucher_sepa.view_account_voucher_sepa_batch_form
+#: field:account.voucher.sepa_batch,line_ids:0
+#: view:account.voucher.sepa_regeneration:account_voucher_sepa.view_account_voucher_sepa_regeneration
+#: field:account.voucher.sepa_regeneration,voucher_wizard_ids:0
+#, python-format
+msgid "Lines"
+msgstr "Lignes"
+
+#. module: account_voucher_sepa
+#: field:account.voucher.wizard,mandate_id:0
+#: model:ir.actions.act_window,name:account_voucher_sepa.action_acccount_sdd_mandate_view
+#: model:ir.ui.menu,name:account_voucher_sepa.menu_sdd_mandate_view
+msgid "Mandate"
+msgstr "Mandat"
+
+#. module: account_voucher_sepa
+#: field:account.sdd.mandate,identification:0
+msgid "Mandate Identification"
+msgstr "Référence du mandat"
+
+#. module: account_voucher_sepa
+#: help:account.sdd.mandate,amends_mandate:0
+msgid "Means that this mandate replace another if ticked"
+msgstr ""
+"Cochez cette cas si le mandat apporte des modifications par rapport à un "
+"autre mandat"
+
+#. module: account_voucher_sepa
+#: help:account.sdd.mandate,original_mandate_id:0
+msgid "Must be specified if the mandate is theamendment of another"
+msgstr "A spécifier si le mandat remplace un autre"
+
+#. module: account_voucher_sepa
+#: field:account.sdd.mandate,name:0
+#: field:account.sepa.purpose,name:0
+#: field:account.voucher.sepa_batch,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: account_voucher_sepa
+#: code:addons/account_voucher_sepa/account_voucher.py:145
+#, python-format
+msgid "No BIC associated with {}"
+msgstr "Aucun BIC associé à {}"
+
+#. module: account_voucher_sepa
+#: code:addons/account_voucher_sepa/account_voucher.py:138
+#, python-format
+msgid "No SDD creditor identifier associated with {}"
+msgstr "Aucune référence de créancier SDD n'est associé à {}"
+
+#. module: account_voucher_sepa
+#: view:account.voucher.sepa:account_voucher_sepa.view_account_voucher_sepa
+#: view:account.voucher.sepa_regeneration:account_voucher_sepa.view_account_voucher_sepa_regeneration
+msgid "No bank account found. Cannot generate file"
+msgstr "Pas de compte de banque trouvé. Impossible de générer le fichier"
+
+#. module: account_voucher_sepa
+#: code:addons/account_voucher_sepa/account_sdd_mandate.py:43
+#, python-format
+msgid "No bank accounts associated with {}"
+msgstr "Aucun compte bancaire n'est associé à {}"
 
 #. module: account_voucher_sepa
 #: code:addons/account_voucher_sepa/sepa_batch.py:95
@@ -200,53 +340,114 @@ msgid "No item selected."
 msgstr "Aucune entrée sélectionnée."
 
 #. module: account_voucher_sepa
-#: code:addons/account_voucher_sepa/account_voucher.py:339
+#: code:addons/account_voucher_sepa/account_voucher.py:215
 #, python-format
-msgid "The voucher %s must be posted before generating SEPA file\n"
+msgid "No origin bank account found"
+msgstr "Aucune banque d'origine trouvée"
+
+#. module: account_voucher_sepa
+#: code:addons/account_voucher_sepa/account_voucher.py:116
+#, python-format
+msgid "No parser was found for this type of operation in {}"
+msgstr "Aucun parseur n'a été trouvé pour ce type d'opération dans {}"
+
+#. module: account_voucher_sepa
+#: code:addons/account_voucher_sepa/account_voucher.py:358
+#, python-format
+msgid "No suitable mandate found for creditor {0} and debtor {1}, consider creating one or check whether the mandate you wish to use is active"
+msgstr "Aucun mandat n'a été trouvé pour le créancier {0] et le débiteur {1}"
+
+#. module: account_voucher_sepa
+#: help:account.sdd.mandate,count:0
+msgid "Number of times this mandate has been used"
+msgstr "Nombre de fois ce mandat a été utilisé"
+
+#. module: account_voucher_sepa
+#: selection:account.sdd.mandate,sequence_type:0
+msgid "One Off"
+msgstr "Ponctuel"
+
+#. module: account_voucher_sepa
+#: field:account.sdd.mandate,original_mandate_id:0
+msgid "Original Mandate"
+msgstr "Mandat d'origine"
+
+#. module: account_voucher_sepa
+#: view:account.voucher:account_voucher_sepa.view_low_priority_payment_form
+#: field:account.voucher.wizard,partner_id:0
+#: model:ir.model,name:account_voucher_sepa.model_res_partner
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: account_voucher_sepa
+#: field:account.voucher,partner_bank_id:0
+#: field:account.voucher.wizard,partner_bank_id:0
+msgid "Partner Bank"
+msgstr "Banque du tiers"
+
+#. module: account_voucher_sepa
+#: code:addons/account_voucher_sepa/sepa_batch.py:65
+#, python-format
+msgid "Please select only one Batch."
+msgstr "Veuillez seulement sélectionner un Lot."
+
+#. module: account_voucher_sepa
+#: code:addons/account_voucher_sepa/account_voucher.py:525
+#, python-format
+msgid "Please set a bank account on the partner %s.\n"
 "\n"
 ""
 msgstr ""
-"Le bon de règlement %s doit être posté pour pouvoir générer le fichier SEPA\n"
+"Veuillez définir le compte de banque pour le partenaire %s.\n"
 "\n"
 
 #. module: account_voucher_sepa
-#: model:ir.model,name:account_voucher_sepa.model_account_voucher_wizard
-msgid "account.voucher.wizard"
-msgstr "account.voucher.wizard"
-
-#. module: account_voucher_sepa
-#: model:ir.actions.server,name:account_voucher_sepa.action_validate_selected
-msgid "Validate Selected Vouchers"
-msgstr "Valider les bons sélectionnés"
-
-#. module: account_voucher_sepa
-#: code:addons/account_voucher_sepa/account_voucher.py:475
-#: code:addons/account_voucher_sepa/sepa_batch.py:64
-#: code:addons/account_voucher_sepa/sepa_batch.py:94
+#: code:addons/account_voucher_sepa/account_voucher.py:223
 #, python-format
-msgid "Error"
-msgstr "Erreur"
+msgid "Please set the bank BIC for the bank {}"
+msgstr "Aucun code BIC n'est associé à la banque {}"
 
 #. module: account_voucher_sepa
-#: code:addons/account_voucher_sepa/account_voucher.py:125
-#, python-format
-msgid "Bank BIC"
-msgstr "BIC banque"
+#: constraint:account.sdd.mandate:0
+msgid "Please specify mandate"
+msgstr "Veuillez renseigner un mandat"
 
 #. module: account_voucher_sepa
-#: field:account.voucher.sepa,wording:0
-#: field:account.voucher.sepa_batch,wording:0
-#: field:account.voucher.sepa_regeneration,wording:0
-msgid "Wording"
-msgstr "Intitulé"
+#: selection:account.sdd.mandate,sequence_type:0
+#: selection:account.voucher.sepa,sequence_type:0
+msgid "Recurring"
+msgstr "Récurrent"
 
 #. module: account_voucher_sepa
-#: code:addons/account_voucher_sepa/account_voucher.py:476
-#, python-format
-msgid "You can't cancel a voucher attached to a batch."
-msgstr ""
-"Vous ne pouvez pas annuler le rapprochement d'un bon de règlement dont le "
-"Sepa a été généré."
+#: view:account.voucher.sepa_regeneration:account_voucher_sepa.view_account_voucher_sepa_regeneration
+msgid "Regenerate SEPA"
+msgstr "Régénérer le SEPA"
+
+#. module: account_voucher_sepa
+#: model:ir.actions.server,name:account_voucher_sepa.action_regenerate_sepa
+msgid "Regenerate Sepa"
+msgstr "Régénérer le Sepa"
+
+#. module: account_voucher_sepa
+#: help:res.partner.bank,sdd_creditor_indentifier:0
+msgid "Required for SDD CORE payments"
+msgstr "Requis pour les prélèvement SDD"
+
+#. module: account_voucher_sepa
+#: field:res.partner.bank,sdd_creditor_indentifier:0
+msgid "SDD CORE Creditor Identifier"
+msgstr "Référence de créancier SDD CORE"
+
+#. module: account_voucher_sepa
+#: view:res.bank:account_voucher_sepa.view_res_bank_with_parser_form
+msgid "SEPA"
+msgstr "SEPA"
+
+#. module: account_voucher_sepa
+#: view:account.voucher.sepa_batch:account_voucher_sepa.view_account_voucher_sepa_batch_form
+#: view:account.voucher.sepa_batch:account_voucher_sepa.view_account_voucher_sepa_batch_tree
+msgid "SEPA Batch"
+msgstr "Lot SEPA"
 
 #. module: account_voucher_sepa
 #: field:account.voucher,batch_id:0
@@ -257,19 +458,111 @@ msgid "Sepa Batch"
 msgstr "Lot Sepa"
 
 #. module: account_voucher_sepa
-#: code:addons/account_voucher_sepa/account_voucher.py:348
+#: code:addons/account_voucher_sepa/account_voucher.py:605
 #, python-format
-msgid "Please set a bank account on the partner %s.\n"
+msgid "Sepa:"
+msgstr "Sepa :"
+
+#. module: account_voucher_sepa
+#: field:account.sdd.mandate,sequence_type:0
+#: field:account.voucher.sepa,sequence_type:0
+msgid "Sequence Type"
+msgstr "Type de séquence"
+
+#. module: account_voucher_sepa
+#: sql_constraint:account.voucher.sepa_batch:0
+msgid "The name must be unique by company!"
+msgstr "Le nom doit être unique par entreprise!"
+
+#. module: account_voucher_sepa
+#: help:res.bank,direct_debit_parser:0
+msgid "The parser to use for creating direct debit payment files"
+msgstr "Le parseur à utiliser pour les prélèvements"
+
+#. module: account_voucher_sepa
+#: help:res.bank,transfer_parser:0
+msgid "The parser to use for creating transfer payment files"
+msgstr "Le parseur à utiliser pour les virements"
+
+#. module: account_voucher_sepa
+#: help:account.voucher.sepa,sequence_type:0
+msgid "The sequence type to use for the batch, the SEPA standardrequires this information for SDD payments which is manifested in the SeqTyp tag as \"FRST\" or \"RCUR\""
+msgstr ""
+"Le type de séquence à utiliser pour les lots, cela correspond à l'élément "
+"SeqTyp dans le fichier généré"
+
+#. module: account_voucher_sepa
+#: code:addons/account_voucher_sepa/account_voucher.py:511
+#, python-format
+msgid "The voucher %s has an incorrect amount considering its type.\n"
 "\n"
 ""
 msgstr ""
-"Veuillez définir le compte de banque pour le partenaire %s.\n"
+"Le bon de règlement %s a un montant incorrect au vu de son type.\n"
 "\n"
 
 #. module: account_voucher_sepa
-#: view:account.voucher.sepa_regeneration:0
-msgid "Regenerate SEPA"
-msgstr "Régénérer le SEPA"
+#: code:addons/account_voucher_sepa/account_voucher.py:521
+#, python-format
+msgid "The voucher %s is already attached to a batch.\n"
+"\n"
+""
+msgstr ""
+"Le bon de règlement %s est déjà attaché à un lot.\n"
+"\n"
+
+#. module: account_voucher_sepa
+#: code:addons/account_voucher_sepa/account_voucher.py:506
+#, python-format
+msgid "The voucher %s is not of type 'payment' nor 'receipt'.\n"
+"\n"
+""
+msgstr ""
+"Le bon de règlement %s n'est pas de type 'paiement'\n"
+"\n"
+
+#. module: account_voucher_sepa
+#: code:addons/account_voucher_sepa/account_voucher.py:516
+#, python-format
+msgid "The voucher %s must be posted before generating SEPA file\n"
+"\n"
+""
+msgstr ""
+"Le bon de règlement %s doit être posté pour pouvoir générer le fichier SEPA\n"
+"\n"
+
+#. module: account_voucher_sepa
+#: field:account.voucher.sepa_batch,amount:0
+#: field:account.voucher.wizard,amount:0
+msgid "Total"
+msgstr "Total"
+
+#. module: account_voucher_sepa
+#: selection:account.voucher.sepa,operation:0
+#: selection:account.voucher.wizard,operation:0
+msgid "Transfer"
+msgstr "Virement"
+
+#. module: account_voucher_sepa
+#: field:res.bank,transfer_parser:0
+msgid "Transfer Parser"
+msgstr "Parseur de virement"
+
+#. module: account_voucher_sepa
+#: view:account.voucher:account_voucher_sepa.view_account_voucher_form
+msgid "True"
+msgstr "Vrai"
+
+#. module: account_voucher_sepa
+#: field:account.voucher.sepa,operation:0
+msgid "Type of operation"
+msgstr "Type d'opération"
+
+#. module: account_voucher_sepa
+#: field:account.sdd.mandate,ultimate_creditor_id:0
+#: field:account.sdd.mandate,ultimate_debtor_id:0
+msgid "Ultimate Debtor"
+msgstr "Tier débiteur"
 
 #. module: account_voucher_sepa
 #: field:account.voucher,sepa_valid:0
@@ -278,48 +571,87 @@ msgid "Valid for SEPA payments"
 msgstr "Valide pour le paiement SEPA"
 
 #. module: account_voucher_sepa
-#: code:addons/account_voucher_sepa/sepa_batch.py:110
-#: model:ir.actions.server,name:account_voucher_sepa.action_sepa_email_remittance
-#, python-format
-msgid "Email Remittance Letters"
-msgstr "Email des avis de règlement"
+#: model:ir.actions.server,name:account_voucher_sepa.action_validate_selected
+msgid "Validate Selected Vouchers"
+msgstr "Valider les bons sélectionnés"
 
 #. module: account_voucher_sepa
-#: code:addons/account_voucher_sepa/account_voucher.py:281
-#: code:addons/account_voucher_sepa/account_voucher.py:292
+#: code:addons/account_voucher_sepa/account_voucher.py:237
 #, python-format
-msgid "Integrity Error"
-msgstr "Erreur d'intégrité"
+msgid "Validation Error"
+msgstr "Erreur de validation"
 
 #. module: account_voucher_sepa
-#: code:addons/account_voucher_sepa/account_voucher.py:282
-#: code:addons/account_voucher_sepa/account_voucher.py:293
+#: code:addons/account_voucher_sepa/account_voucher.py:238
+#, python-format
+msgid "Vouchers must be associated to a mandate."
+msgstr "Les paiements doivement être assocé à des mandats"
+
+#. module: account_voucher_sepa
+#: field:account.voucher.sepa,wording:0
+#: field:account.voucher.sepa_batch,wording:0
+#: field:account.voucher.sepa_regeneration,wording:0
+msgid "Wording"
+msgstr "Intitulé"
+
+#. module: account_voucher_sepa
+#: code:addons/account_voucher_sepa/account_voucher.py:655
+#, python-format
+msgid "You can't cancel a voucher attached to a batch."
+msgstr ""
+"Vous ne pouvez pas annuler le rapprochement d'un bon de règlement dont le "
+"Sepa a été généré."
+
+#. module: account_voucher_sepa
+#: code:addons/account_voucher_sepa/account_voucher.py:442
+#: code:addons/account_voucher_sepa/account_voucher.py:454
 #, python-format
 msgid "You must select one voucher to generate SEPA file."
 msgstr ""
 "Vous devez sélectionner un bon de règlement pour générer le fichier SEPA."
 
 #. module: account_voucher_sepa
-#: sql_constraint:account.voucher.sepa_batch:0
-msgid "The name must be unique by company!"
-msgstr "Le nom doit être unique par entreprise!"
+#: view:account.voucher:account_voucher_sepa.view_account_voucher_tree
+msgid "blue:state == 'draft';gray:state == 'cancel';red:audit;green:batch_id"
+msgstr "blue:state == 'draft';gray:state == 'cancel';red:audit;green:batch_id"
 
 #. module: account_voucher_sepa
-#: view:account.voucher.sepa:0
-#: view:account.voucher.sepa_regeneration:0
-msgid "Cancel"
-msgstr "Annuler"
+#: field:account.voucher.wizard,operation:0
+#: field:account.voucher.wizard,sepa_id:0
+#: field:account.voucher.wizard,sepa_regeneration_id:0
+#: field:account.voucher.wizard,voucher_id:0
+msgid "unknown"
+msgstr "inconnu"
 
 #. module: account_voucher_sepa
-#: field:account.voucher.wizard,partner_id:0
-msgid "Partner"
-msgstr "Partenaire"
+#: view:account.voucher:account_voucher_sepa.view_low_priority_payment_form
+msgid "{'invisible': [('type', '=', 'payment'), ('line_cr_ids', '=', False)]}"
+msgstr ""
 
 #. module: account_voucher_sepa
-#: field:account.voucher.sepa_batch,amount:0
-#: field:account.voucher.wizard,amount:0
-msgid "Total"
-msgstr "Total"
+#: view:account.voucher:account_voucher_sepa.view_low_priority_payment_form
+msgid "{'invisible': [('type', '=', 'receipt'), ('line_dr_ids', '=', False)]}"
+msgstr ""
+
+#, python-format
+#~ msgid "Please set the bank BIC for the bank %s"
+#~ msgstr "Veuillez définir le BIC de la banque %s"
+
+#~ msgid "account.voucher.sepa_regeneration"
+#~ msgstr "account.voucher.sepa_regeneration"
+
+#~ msgid "account.voucher.sepa"
+#~ msgstr "account.voucher.sepa"
+
+#, python-format
+#~ msgid "Bank account for journal %s is not found"
+#~ msgstr "Le compte de banque pour le journal %s est introuvable"
+
+#~ msgid "account.voucher.sepa_batch"
+#~ msgstr "account.voucher.sepa_batch"
+
+#~ msgid "account.voucher.wizard"
+#~ msgstr "account.voucher.wizard"
 
 #, python-format
 #~ msgid "The voucher %s is not of type 'payment'\n"
@@ -384,11 +716,3 @@ msgstr "Total"
 
 #~ msgid "The name must be unique."
 #~ msgstr "Le nom doît être unique."
-
-# Insert in French translation
-
-#. module: account_voucher
-#: view:account.statement.from.invoice.lines:0
-#: view:account.voucher:0
-msgid "Cancel"
-msgstr "Annuler"
