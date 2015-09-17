@@ -56,6 +56,12 @@ class account_voucher_wizard(osv.TransientModel):
         'sepa_id': fields.many2one('account.voucher.sepa'),
         'sepa_regeneration_id': fields.many2one('account.voucher.sepa_regeneration'),
         'voucher_id': fields.many2one('account.voucher'),
+        # Used for direct debits
+        'previous_occurs_counts': fields.integer(
+            string="Number of previous payments",
+            help="""The number of vouchers in existing SEPA batches that use the
+                    given mandate",""",
+        ),
     }
 
 
