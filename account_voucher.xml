@@ -95,6 +95,9 @@
                             <field name="mandate_id" 
                                    invisible="context.get('operation') != 'direct_debit'"
                                    attrs="{'required': [('operation','=', 'direct_debit')]}"/>
+                            <field name="previous_occurs_counts"
+                                   invisible="context.get('operation') != 'direct_debit'"
+                                   readonly="1"/>
                         </tree>
                     </field>
                     <footer>
