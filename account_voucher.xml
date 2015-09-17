@@ -101,6 +101,9 @@
                             <field name="current_occurs_count"
                                    invisible="context.get('operation') != 'direct_debit'"
                                    readonly="1"/>
+                            <field name="sequence_type"
+                                   invisible="context.get('operation') != 'direct_debit'"
+                                   readonly="1"/>
                         </tree>
                     </field>
                     <footer>
