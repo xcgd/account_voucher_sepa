@@ -352,6 +352,7 @@ class account_voucher_sepa(osv.TransientModel):
         )
         vals['operation'] = (context.get('operation', 'transfer')
                              if context else 'transfer')
+        count_per_mandate = {}
         for v in vouchers:
             if context.get('operation') == 'direct_debit':
                 mandate_ids = self.pool['account.sdd.mandate'].search(
@@ -368,6 +369,9 @@ class account_voucher_sepa(osv.TransientModel):
                         ('mandate_id', '=', mandate_ids[0]),
                     ])
                     v['previous_occurs_count'] = len(previous_vouchers)
+                    count_per_mandate[mandate_ids[0]] = count_per_mandate.get(
+                        mandate_ids[0], 0) + 1
+                    v['current_occurs_count'] = count_per_mandate[mandate_ids[0]]
                 else:
                     raise osv.except_osv(
                         _("Error"),
