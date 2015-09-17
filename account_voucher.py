@@ -364,6 +364,20 @@ class account_voucher_sepa(osv.TransientModel):
         vals['operation'] = (context.get('operation', 'transfer')
                              if context else 'transfer')
         count_per_mandate = {}
+        ir_config_parameter_osv = self.pool.get('ir.config_parameter')
+        sdd_delay_param_ids = ir_config_parameter_osv.search(
+            cr, uid, [
+                ('key', 'in', ['account.sdd.seq.type.first.delay',
+                               'account.sdd.seq.type.recurring.delay']),
+            ])
+        sdd_delay_params = ir_config_parameter_osv.read(
+            cr, uid, sdd_delay_param_ids, ['key', 'value'], context=context)
+        sdd_delay_params = dict(
+            [(val['key'], val['value']) for val in sdd_delay_params])
+        sdd_delay_params = {
+            'first': sdd_delay_params['account.sdd.seq.type.first.delay'],
+            'recurring': sdd_delay_params['account.sdd.seq.type.recurring.delay'],
+        }
         for v in vouchers:
             if context.get('operation') == 'direct_debit':
                 mandate_ids = self.pool['account.sdd.mandate'].search(
@@ -384,6 +398,14 @@ class account_voucher_sepa(osv.TransientModel):
                     count_per_mandate[mandate_id] = count_per_mandate.get(
                         mandate_id, 0) + 1
                     v['current_occurs_count'] = count_per_mandate[mandate_id]
+                    if (
+                        v['current_occurs_count'] + 
+                        v['previous_occurs_count'] == 1
+                    ):
+                        v['sequence_type'] = 'first'
+                    else:
+                        v['sequence_type'] = 'recurring'
+                    v['sdd_delay'] = int(sdd_delay_params[v['sequence_type']])
                 else:
                     raise osv.except_osv(
                         _("Error"),
