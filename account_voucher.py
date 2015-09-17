@@ -73,6 +73,11 @@ class account_voucher_wizard(osv.TransientModel):
             string="Sequence Type",
             help="The sequence type to use for this",
         ),
+        'sdd_delay': fields.integer(
+            string="Delay",
+            help="""The number of days between the time the batch is submitted
+                    to the bank and the time the debit takes effect""",
+        ),
     }
 
 
