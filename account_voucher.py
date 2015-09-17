@@ -62,6 +62,11 @@ class account_voucher_wizard(osv.TransientModel):
             help="""The number of vouchers in existing SEPA batches that use the
                     given mandate",""",
         ),
+        'current_occurs_count': fields.integer(
+            string="Number of payments",
+            help="""The number of times the mandate will be used in the
+                    current batch""",
+        ),
     }
 
 
