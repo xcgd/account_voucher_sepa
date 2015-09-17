@@ -67,6 +67,12 @@ class account_voucher_wizard(osv.TransientModel):
             help="""The number of times the mandate will be used in the
                     current batch""",
         ),
+        'sequence_type': fields.selection(
+            [('first', "FRST"),
+             ('recurring', "RCUR")],
+            string="Sequence Type",
+            help="The sequence type to use for this",
+        ),
     }
 
 
