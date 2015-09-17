@@ -57,7 +57,7 @@ class account_voucher_wizard(osv.TransientModel):
         'sepa_regeneration_id': fields.many2one('account.voucher.sepa_regeneration'),
         'voucher_id': fields.many2one('account.voucher'),
         # Used for direct debits
-        'previous_occurs_counts': fields.integer(
+        'previous_occurs_count': fields.integer(
             string="Number of previous payments",
             help="""The number of vouchers in existing SEPA batches that use the
                     given mandate",""",
@@ -362,7 +362,7 @@ class account_voucher_sepa(osv.TransientModel):
                     previous_vouchers = voucher_obj.search(cr, uid, [
                         ('mandate_id', '=', mandate_ids[0]),
                     ])
-                    v['previous_occurs_counts'] = len(previous_vouchers)
+                    v['previous_occurs_count'] = len(previous_vouchers)
                 else:
                     raise osv.except_osv(
                         _("Error"),
