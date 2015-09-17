@@ -98,6 +98,9 @@
                             <field name="previous_occurs_count"
                                    invisible="context.get('operation') != 'direct_debit'"
                                    readonly="1"/>
+                            <field name="current_occurs_count"
+                                   invisible="context.get('operation') != 'direct_debit'"
+                                   readonly="1"/>
                         </tree>
                     </field>
                     <footer>
