@@ -369,15 +369,16 @@ class account_voucher_sepa(osv.TransientModel):
                     ], limit=1, context=context
                 )
                 if mandate_ids:
-                    v['mandate_id'] = mandate_ids[0]
+                    mandate_id = mandate_ids[0]
+                    v['mandate_id'] = mandate_id
                     # TODO optimize search
                     previous_vouchers = voucher_obj.search(cr, uid, [
-                        ('mandate_id', '=', mandate_ids[0]),
+                        ('mandate_id', '=', mandate_id),
                     ])
                     v['previous_occurs_count'] = len(previous_vouchers)
-                    count_per_mandate[mandate_ids[0]] = count_per_mandate.get(
-                        mandate_ids[0], 0) + 1
-                    v['current_occurs_count'] = count_per_mandate[mandate_ids[0]]
+                    count_per_mandate[mandate_id] = count_per_mandate.get(
+                        mandate_id, 0) + 1
+                    v['current_occurs_count'] = count_per_mandate[mandate_id]
                 else:
                     raise osv.except_osv(
                         _("Error"),
