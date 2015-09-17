@@ -358,6 +358,11 @@ class account_voucher_sepa(osv.TransientModel):
                 )
                 if mandate_ids:
                     v['mandate_id'] = mandate_ids[0]
+                    # TODO optimize search
+                    previous_vouchers = voucher_obj.search(cr, uid, [
+                        ('mandate_id', '=', mandate_ids[0]),
+                    ])
+                    v['previous_occurs_counts'] = len(previous_vouchers)
                 else:
                     raise osv.except_osv(
                         _("Error"),
