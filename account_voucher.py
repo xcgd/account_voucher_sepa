@@ -441,7 +441,7 @@ class account_voucher_sepa(osv.TransientModel):
             cr, uid,
             context['active_ids'],
             ['partner_id', 'amount', 'partner_bank_id', 'type', 'company_id',
-             'date_due'],
+             'date'],
             context=context
         )
         vals['operation'] = (context.get('operation', 'transfer')
@@ -490,7 +490,7 @@ class account_voucher_sepa(osv.TransientModel):
                         v['sequence_type'] = 'recurring'
                     v['sdd_delay'] = int(sdd_delay_params[v['sequence_type']])
                     pay_date = datetime.datetime.strptime(
-                        v.pop('date_due'), tools.DEFAULT_SERVER_DATE_FORMAT)
+                        v.pop('date'), tools.DEFAULT_SERVER_DATE_FORMAT)
                     pay_date = (pay_date + relativedelta(days=v['sdd_delay']))
                     pay_date = datetime.datetime.strftime(
                         pay_date, tools.DEFAULT_SERVER_DATE_FORMAT)
