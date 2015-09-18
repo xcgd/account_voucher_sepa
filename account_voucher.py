@@ -29,6 +29,26 @@ import openerp.tools as tools
 from dateutil.relativedelta import relativedelta
 
 
+class account_voucher2(osv.Model):
+    """Big ugly hack: This is a partial copy of 'account_voucher' defined
+       below. The point of this class is to make the 'mandate_id' field
+       available inside the 'account_voucher_sepa' class that can't use the
+       field otherwise.
+       """
+    _name = "account.voucher"
+    _inherit = "account.voucher"
+
+    _columns = {
+        'mandate_id': fields.many2one(
+            'account.sdd.mandate',
+            string='Mandate',
+            help='Optional, specify if you want to use a particular mandate'
+                 'for this voucher',
+            domain="[('creditor', '=', 'partner_id')]",
+        ),
+    }
+
+
 class account_voucher_wizard(osv.TransientModel):
     _name = "account.voucher.wizard"
 
