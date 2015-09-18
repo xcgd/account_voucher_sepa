@@ -376,17 +376,47 @@ class account_voucher_sepa(osv.TransientModel):
             context=context
         )
 
-        batch_vals = {
-            'amount': total_amount,
-            'creditor_bank_id': bank.id,
-            'wording': data['wording'],
-            'execution_date': data['execution_date']
-        }
+        # Partition list_voucher_wizard by sequence type when applicable
+        vouchers_by_type = {}
+        batch_vals_by_type = {}
+        if context['operation'] == 'direct_debit':
+            vouchers_by_type = {
+                'first': [],
+                'recurring': []
+            }
+            for voucher in list_voucher_wizard:
+                vouchers_by_type[voucher.sequence_type].append(voucher)
 
-        batch_id = self._create_sepa_batch(
-            cr, uid, batch_vals, data, list_voucher_wizard,
-            context=context
-        )
+            for sequence_type, vouchers in vouchers_by_type.items():
+                total_amount = sum([v.amount for v in vouchers])
+                batch_vals = {
+                    'amount': total_amount,
+                    'creditor_bank_id': bank.id,
+                    'wording': data['wording'],
+                    'execution_date': data['execution_date']
+                }
+                batch_vals_by_type[sequence_type] = batch_vals
+        else:
+            vouchers_by_type = {'other': list_voucher_wizard}
+            total_amount = sum([v.amount for v in list_voucher_wizard])
+            batch_vals = {
+                'amount': total_amount,
+                'creditor_bank_id': bank.id,
+                'wording': data['wording'],
+                'execution_date': data['execution_date']
+            }
+            batch_vals_by_type['other'] = batch_vals
+
+        # Generate batches
+        for sequence_type in vouchers_by_type:
+            batch_id = self._create_sepa_batch(
+                cr, uid,
+                batch_vals_by_type[sequence_type],
+                data,
+                vouchers_by_type[sequence_type],
+                sequence_type,
+                context=context
+            )
 
         context['active_id'] = batch_id
         context['active_model'] = 'account.voucher.sepa_batch'
