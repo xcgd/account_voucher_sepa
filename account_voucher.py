@@ -296,17 +296,20 @@ class account_voucher_sepa(osv.TransientModel):
         }.get(sequence_type)
 
     def _create_sepa_batch(self, cr, uid, batch_vals, data,
-                           list_voucher_wizard, context=None):
+                           list_voucher_wizard, sequence_type, context=None):
         """Creates an 'account.voucher.sepa_batch' object and calculates the
-           appropriate SEPA document.
+        appropriate SEPA document.
 
-           :param voucher_ids: list of 'account.voucher.wizard' records
-           :param batch_vals: dictionary of values to be passed to the batch
-           :param data: dictionary of values to be passed to SEPA template
-           :param list_voucher_wizard: dictionary of 'account.voucher.wizard'
-                                       records
-           :returns: integer, id of a 'account.voucher.sepa_batch' object
-            """
+        :param voucher_ids: list of 'account.voucher.wizard' records
+        :param batch_vals: dictionary of values to be passed to the batch
+        :param data: dictionary of values to be passed to SEPA template
+        :param list_voucher_wizard: dictionary of 'account.voucher.wizard'
+                                    records
+        :param sequence_type: string, the sequence type to use for the batch,
+                              used for direct debit operations, one of
+                              'first', 'recurring'.
+        :returns: integer, id of a 'account.voucher.sepa_batch' object
+        """
         batch_osv = self.pool['account.voucher.sepa_batch']
         voucher_osv = self.pool['account.voucher']
 
@@ -329,8 +332,8 @@ class account_voucher_sepa(osv.TransientModel):
             list_voucher,
             data['execution_date'],
             data['operation'],
-            self._translate_sequence_type(cr, uid, data['sequence_type'],
-                                          context),
+            self._translate_sequence_type(
+                cr, uid, sequence_type, context=context),
             context=context
         )
 
