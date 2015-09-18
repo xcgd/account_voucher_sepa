@@ -25,6 +25,8 @@ import datetime
 from lxml import etree
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 import openerp.addons.decimal_precision as dp
+import openerp.tools as tools
+from dateutil.relativedelta import relativedelta
 
 
 class account_voucher_wizard(osv.TransientModel):
@@ -362,7 +364,8 @@ class account_voucher_sepa(osv.TransientModel):
         vouchers = voucher_obj.read(
             cr, uid,
             context['active_ids'],
-            ['partner_id', 'amount', 'partner_bank_id', 'type', 'company_id'],
+            ['partner_id', 'amount', 'partner_bank_id', 'type', 'company_id',
+             'date_due'],
             context=context
         )
         vals['operation'] = (context.get('operation', 'transfer')
@@ -410,6 +413,12 @@ class account_voucher_sepa(osv.TransientModel):
                     else:
                         v['sequence_type'] = 'recurring'
                     v['sdd_delay'] = int(sdd_delay_params[v['sequence_type']])
+                    pay_date = datetime.datetime.strptime(
+                        v.pop('date_due'), tools.DEFAULT_SERVER_DATE_FORMAT)
+                    pay_date = (pay_date + relativedelta(days=v['sdd_delay']))
+                    pay_date = datetime.datetime.strftime(
+                        pay_date, tools.DEFAULT_SERVER_DATE_FORMAT)
+                    v['earliest_payment_date'] = pay_date
                 else:
                     raise osv.except_osv(
                         _("Error"),
