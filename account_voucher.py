@@ -78,6 +78,10 @@ class account_voucher_wizard(osv.TransientModel):
             help="""The number of days between the time the batch is submitted
                     to the bank and the time the debit takes effect""",
         ),
+        'earliest_payment_date': fields.date(
+            string="Earliest Date",
+            help="The earliest date a payment can be made for this voucher",
+        )
     }
 
 
