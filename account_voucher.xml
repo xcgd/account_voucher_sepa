@@ -107,6 +107,9 @@
                             <field name="sdd_delay"
                                    invisible="context.get('operation') != 'direct_debit'"
                                    readonly="1"/>
+                            <field name="earliest_payment_date"
+                                   invisible="context.get('operation') != 'direct_debit'"
+                                   readonly="1"/>
                         </tree>
                     </field>
                     <footer>
