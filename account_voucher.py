@@ -392,7 +392,8 @@ class account_voucher_sepa(osv.TransientModel):
                 batch_vals = {
                     'amount': total_amount,
                     'creditor_bank_id': bank.id,
-                    'wording': data['wording'],
+                    'wording': data['wording'] + self._translate_sequence_type(
+                        cr, uid, sequence_type, context=context),
                     'execution_date': data['execution_date']
                 }
                 batch_vals_by_type[sequence_type] = batch_vals
