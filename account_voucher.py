@@ -295,6 +295,47 @@ class account_voucher_sepa(osv.TransientModel):
             'first': 'FRST',
         }.get(sequence_type)
 
+    def _create_sepa_batch(self, cr, uid, batch_vals, data,
+                           list_voucher_wizard, context=None):
+        """Creates an 'account.voucher.sepa_batch' object and calculates the
+           appropriate SEPA document.
+
+           :param voucher_ids: list of 'account.voucher.wizard' records
+           :param batch_vals: dictionary of values to be passed to the batch
+           :param data: dictionary of values to be passed to SEPA template
+           :param list_voucher_wizard: dictionary of 'account.voucher.wizard'
+                                       records
+           :returns: integer, id of a 'account.voucher.sepa_batch' object
+            """
+        batch_osv = self.pool['account.voucher.sepa_batch']
+        voucher_osv = self.pool['account.voucher']
+
+        list_voucher = [v.voucher_id for v in list_voucher_wizard]
+        voucher_ids = [v.voucher_id.id for v in list_voucher_wizard]
+
+        # Create the batch, associate all voucher with that batch
+        batch_id = batch_osv.create(cr, uid, batch_vals, context=context)
+        voucher_osv.write(
+            cr, uid,
+            voucher_ids,
+            {'batch_id': batch_id},
+            context=context
+        )
+
+        self.generate_sepa(
+            cr, uid,
+            batch_id,
+            list_voucher_wizard,
+            list_voucher,
+            data['execution_date'],
+            data['operation'],
+            self._translate_sequence_type(cr, uid, data['sequence_type'],
+                                          context),
+            context=context
+        )
+
+        return batch_id
+
     def prepare_sepa(self, cr, uid, ids, context=None):
         if not context:
             context = {}
@@ -322,10 +363,7 @@ class account_voucher_sepa(osv.TransientModel):
             total_amount += voucher.amount
 
         voucher_osv = self.pool['account.voucher']
-        voucher_ids = [v.voucher_id.id for v in list_voucher_wizard]
-        list_voucher = voucher_osv.browse(
-            cr, uid, voucher_ids, context=context
-        )
+        list_voucher = [v.voucher_id for v in list_voucher_wizard]
 
         # Get the creditor bank
 
@@ -342,24 +380,8 @@ class account_voucher_sepa(osv.TransientModel):
             'execution_date': data['execution_date']
         }
 
-        # Create the batch, associate all voucher with that batch
-        batch_id = batch_osv.create(cr, uid, batch_vals, context=context)
-        voucher_osv.write(
-            cr, uid,
-            voucher_ids,
-            {'batch_id': batch_id},
-            context=context
-        )
-
-        self.generate_sepa(
-            cr, uid,
-            batch_id,
-            list_voucher_wizard,
-            list_voucher,
-            data['execution_date'],
-            data['operation'],
-            self._translate_sequence_type(cr, uid, data['sequence_type'],
-                                          context),
+        batch_id = self._create_sepa_batch(
+            cr, uid, batch_vals, data, list_voucher_wizard,
             context=context
         )
 
